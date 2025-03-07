@@ -1,26 +1,520 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-sm: 320px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1025px;
+  --breakpoint-4sm: 1280px;
+  --breakpoint-xl: 1440px;
 
-@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* color */
+
+  --color-primary: #d9c382;
+  --color-primary-400: #b09e69;
+  --color-primary-300: #5d5438;
+  /* --color-primary: #f2d5a0; */
+  --color-secondary: #1a1a1e;
+
+  --color-gray-25: #fcfcfc;
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f4f4f5;
+  --color-gray-200: #e4e4e7;
+  --color-gray-300: #d1d1d6;
+  --color-gray-400: #a0a0ab;
+  --color-gray: #70707b;
+  --color-gray-600: #51525c;
+  --color-gray-700: #3f3f46;
+  --color-gray-800: #26272b;
+  --color-gray-900: #1a1a1e;
+  --color-gray-950: #131316;
+
+  --animate-loading: loading 0.6s ease-in-out infinite;
+  @keyframes loading {
+    33% {
+      transform: translateY(10px);
+    }
+    66% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+.delay7 {
+  animation-delay: 0.07s;
+}
+.delay14 {
+  animation-delay: 0.14s;
+}
+.delay21 {
+  animation-delay: 0.21s;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+:root {
+  --background: #eeeeee;
+  --foreground: #ffffff;
+}
+
+:focus-visible {
+  outline: none;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #1a1a1e;
+    /* --foreground: #0a0a0a; */
+    /* 여기 디폴트 */
+    --foreground: var(--color-gray-25);
   }
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  letter-spacing: -0.2px;
+  -webkit-text-smoothing: antialiased;
+}
+
+button:enabled,
+[role='button'] {
+  cursor: pointer;
+}
+
+.popover:popover-open {
+  inset: unset;
+}
+
+.popover:popover-open + div {
+  display: flex;
+}
+
+.lang.popover:popover-open {
+  top: 45px;
+  right: 0;
+  /* @media (max-width: 1440px) {
+    todo temp
+  } */
+  @media (width > 1440px) {
+    right: calc(50% - 720px);
+  }
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* embla: --slide-height,slide-spacing,slide-size */
+.embla {
+  margin: auto;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla__slide {
+  transform: translate3d(0, 0, 0);
+  padding-left: var(--slide-spacing);
+  min-width: 0;
+}
+
+.embla__slide__img {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+}
+
+.embla__slide__number {
+  display: block;
+  max-width: calc(var(--slide-size) - 24px);
+  object-fit: cover;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* dialog */
+dialog {
+  background: var(--background);
+}
+dialog::backdrop {
+  background-color: rgb(0 0 0 / 0%);
+  transition: all 0.5s allow-discrete;
+}
+
+dialog[open]::backdrop {
+  background-color: rgb(0 0 0 / 70%);
+}
+
+dialog[open] {
+  --layer-size: 400px;
+}
+
+dialog[open].layer {
+  margin: auto;
+  padding: 24px;
+  height: 500px;
+  width: var(--layer-size);
+}
+dialog[open].layer.layer-md {
+  --layer-size: 600px;
+  width: var(--layer-size);
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    background-color: rgb(0 0 0 / 0%);
+  }
+}
+
+/* right dialog */
+dialog[open]#right {
+  transform: translateX(0);
+  transition: all 0.5s allow-discrete;
+}
+@starting-style {
+  dialog[open]#right {
+    transform: translateX(384px);
+  }
+}
+
+dialog#right {
+  width: 384px;
+  transform: translateX(384px);
+  transition: all 0.5s allow-discrete;
+}
+
+/* left dialog */
+dialog[open]#left {
+  transform: translateX(0);
+  transition: all 0.5s allow-discrete;
+}
+@starting-style {
+  dialog[open]#left {
+    transform: translateX(-384px);
+  }
+}
+
+dialog#left {
+  width: 384px;
+  transform: translateX(-384px);
+  transition: all 0.5s allow-discrete;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.dark-theme .fr-box {
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+}
+.dark-theme .fr-toolbar {
+  background: #333 !important;
+  border-color: #444 !important;
+}
+.dark-theme .fr-wrapper {
+  background: #1e1e1e !important;
+}
+.dark-theme.fr-box.fr-basic .fr-element {
+  color: #ffffff !important;
+}
+.dark-theme .fr-second-toolbar {
+  background: #1e1e1e !important;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.fr-box.fr-basic .fr-element.fr-view {
+  font-family: Pretendard;
+  color: white;
+}
+
+.animated-background {
+  background-size: 200%;
+  animation: animation 6s ease infinite;
+}
+
+@keyframes animation {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* sidebar & topbar */
+.sidebar {
+  width: 260px;
+  background-color: #2e384e;
+  color: white;
+  height: 100vh;
+  padding: 60px 20px;
+  box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  left: 0;
+  top: 0;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar h2 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar ul {
+  margin-top: 10px;
+}
+
+.menu-item {
+  width: 220px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.menu-item:hover {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.submenu {
+  padding-left: 16px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.submenu.open {
+  max-height: 200px;
+}
+
+.submenu-item {
+  height: 40px;
+}
+
+.topbar {
+  background: #1f2937;
+  color: white;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.sidebar-toggle {
+  position: relative;
+  left: 245px;
+  top: 10px;
+  width: 30px;
+  height: 30px;
+  background: #17b0af;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+
+.sidebar-toggle:hover {
+  transform: scale(1.1);
+}
+
+.sidebar-toggle::before {
+  content: '\25C0'; /* ◀ (닫기 아이콘) */
+  color: white;
+  font-size: 16px;
+}
+
+.sidebar.hidden .sidebar-toggle {
+  right: -45px;
+  background: #0f304e;
+}
+
+.sidebar.hidden .sidebar-toggle::before {
+  content: '\25B6'; /* ▶ (열기 아이콘) */
+}
+
+.main-content {
+  /* flex-grow: 1; */
+  /* padding: 24px; */
+  background: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 64px;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
+}
+/* login */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #435376, #1a1a1a);
+}
+
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  overflow: visible;
+  /* background: white; */
+}
+
+.login-box {
+  padding: 10px;
+  border-radius: 12px;
+  width: 350px;
+  text-align: center;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 6px;
+  background: white;
+  color: black;
+  font-size: 16px;
+}
+
+.login-box input::placeholder {
+  color: var(--color-gray-400);
+}
+
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  color: white;
+  border: 2px solid;
+  border-radius: 6px;
+  border-color: #ffffff;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.login-box button:hover {
+  background: #607f8e;
+}
+
+/* datepicker */
+.react-datepicker-popper .react-datepicker {
+  background-color: var(--color-gray-950);
+  border-color: var(--color-gray-700);
+}
+
+.react-datepicker-popper .react-datepicker .react-datepicker__day-name,
+.react-datepicker-popper .react-datepicker .react-datepicker__day,
+.react-datepicker-popper .react-datepicker .react-datepicker__time-name {
+  color: var(--color-gray-25);
+}
+
+.react-datepicker-popper .react-datepicker .react-datepicker__header {
+  background-color: var(--color-gray-950);
+  border-color: var(--color-gray-700);
+}
+
+.react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__header
+  .react-datepicker__current-month,
+.react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__header
+  .react-datepicker-time__header,
+.react-datepicker-popper
+  .react-datepicker
+  .react-datepicker__header
+  .react-datepicker-year-header {
+  color: var(--color-gray-25);
+}
+
+.react-datepicker-popper
+  .react-datepicker__day:not([aria-disabled='true']):hover,
+.react-datepicker-popper
+  .react-datepicker__month-text:not([aria-disabled='true']):hover,
+.react-datepicker-popper
+  .react-datepicker__quarter-text:not([aria-disabled='true']):hover,
+.react-datepicker-popper
+  .react-datepicker__year-text:not([aria-disabled='true']):hover {
+  background-color: var(--color-gray-700) !important;
+}
+
+.react-datepicker-popper .react-datepicker__day--keyboard-selected,
+.react-datepicker-popper .react-datepicker__month-text--keyboard-selected,
+.react-datepicker-popper .react-datepicker__quarter-text--keyboard-selected,
+.react-datepicker-popper .react-datepicker__year-text--keyboard-selected {
+  background-color: var(--color-primary) !important;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--in-selecting-range,
+.react-datepicker__day--in-range,
+.react-datepicker__month-text--selected,
+.react-datepicker__month-text--in-selecting-range,
+.react-datepicker__month-text--in-range,
+.react-datepicker__quarter-text--selected,
+.react-datepicker__quarter-text--in-selecting-range,
+.react-datepicker__quarter-text--in-range,
+.react-datepicker__year-text--selected,
+.react-datepicker__year-text--in-selecting-range,
+.react-datepicker__year-text--in-range {
+  background-color: var(--color-primary-300) !important;
 }

@@ -11,7 +11,7 @@ import ProtectedRoute from "@/app/components/ProtectedRoute";
 export default function PortalLayout({ children }) {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isSidebarHidden, setIsSidebarHidden] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     // const token = getAccessToken();
@@ -28,34 +28,33 @@ export default function PortalLayout({ children }) {
     //   });
 
     const handleResize = () => {
-      if (window.innerWidth < 1024) {
-        setIsSidebarHidden(true); // 화면이 작아지면 자동으로 사이드바 닫기
-      } else {
-        setIsSidebarHidden(false);
-      }
+      setIsSidebarOpen(window.innerWidth >= 1024);
     };
-
     window.addEventListener("resize", handleResize);
-    handleResize(); // 초기 로딩 시 체크
+    handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // if (!isAuthenticated) return <p>Loading...</p>;
 
   return (
-    // <ProtectedRoute>
-    <div className="flex h-screen w-screen overflow-hidden">
-      <Sidebar
-        isHidden={isSidebarHidden}
-        toggleSidebar={() => setIsSidebarHidden(!isSidebarHidden)}
-      />
-      <div className="flex flex-col flex-1 h-screen overflow-hidden">
-        <TopBar />
-        <main className="main-content flex-1 flex flex-col gap-6 overflow-auto p-6">
-          {children}
-        </main>
+    <ProtectedRoute>
+      <div className="layout-container">
+        {/* 사이드바 */}
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+        />
+
+        {/* 메인 컨텐츠 영역 */}
+        <div className="main-wrapper">
+          {/* 탑바 */}
+          <TopBar />
+
+          {/* 페이지 컨텐츠 */}
+          <main className="content-container">{children}</main>
+        </div>
       </div>
-    </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 }

@@ -17,7 +17,21 @@ const TopBar = () => {
 
   return (
     <header className="topbar">
-      {user ? <p>{user.name} 님 환영합니다.</p> : <p>로딩 중...</p>}
+      <div className="flex justify-between">
+        <div></div>
+        <div className="flex">
+          <div className="mx-5">
+            {user ? (
+              <p className="text-left">{user.name}dfsfds</p>
+            ) : (
+              <p>로딩 중...</p>
+            )}
+          </div>
+          <div>
+            <button>로그아웃</button>
+          </div>
+        </div>
+      </div>
     </header>
   );
 };

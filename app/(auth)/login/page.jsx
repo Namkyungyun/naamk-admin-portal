@@ -29,9 +29,7 @@ const LoginPage = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <div className="logo-container">
-          <Logo className="logo" />
-        </div>
+        <div className="logo-container">{/* <Logo /> */}</div>
         <form onSubmit={handleLogin}>
           <input
             type="string"

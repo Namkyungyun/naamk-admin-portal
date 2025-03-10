@@ -280,12 +280,45 @@ input[type='number'] {
 /* layout */
 /* 전체 레이아웃 설정 */
 .layout-container {
-  display: flex;
+  /* display: flex; */
   height: 100vh;
   width: 100vw;
   background-color: #f3f4f6; /* bg-gray-100 */
   overflow: hidden;
 }
+
+
+/* 메인 컨텐츠 영역 */
+.main-wrapper {
+  display: flex;
+  flex-grow: 1;
+  height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+  margin-left: 0;
+}
+
+/* 탑바 스타일 */
+.topbar {
+  height: 4rem;
+  background-color: #2a394f;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  transition: width 0.3s ease-in-out;
+  /* width: 100%; */
+  margin-left: 0;
+}
+
+
+
+/* 페이지 컨텐츠 영역 */
+.content-container {
+  flex-grow: 1;
+  overflow-y: auto;
+  height: calc(100vh - 4rem);
+  padding: 3rem;
+}
+
 
 
 /* 사이드바 스타일 */
@@ -315,7 +348,7 @@ input[type='number'] {
 }
 
 .menu-label-open {
-  color: rgb(252, 203, 78);  /* yellow-400 */
+  color: rgb(255, 248, 231);  /* yellow-400 */
   font-weight: 800;
 }
 
@@ -335,7 +368,7 @@ input[type='number'] {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1rem;
+  padding: 0 1rem;
 }
 
 .sidebar-title {
@@ -363,7 +396,7 @@ input[type='number'] {
 /* 사이드바 토글 버튼 */
 .sidebar-toggle-button {
   position: absolute;
-  top: 9%;
+  top: 6rem;
   left: 16.5rem;
   transform: translateY(-50%);
   background-color: #435376; /* bg-gray-200 */
@@ -408,38 +441,6 @@ input[type='number'] {
 
 .submenu-item:hover {
   background-color: #374151; /* hover:bg-gray-700 */
-}
-
-/* 메인 컨텐츠 영역 */
-.main-wrapper {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100vh;
-  transition: margin-left 0.3s ease-in-out;
-  margin-left: 0;
-}
-
-/* 탑바 스타일 */
-.topbar {
-  height: 4rem;
-  background-color: #2a394f;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-  align-items: center;
-  padding: 1.2rem 1.5rem;
-  transition: width 0.3s ease-in-out;
-  width: 100%;
-  margin-left: 0;
-}
-
-
-
-/* 페이지 컨텐츠 영역 */
-.content-container {
-  flex-grow: 1;
-  overflow-y: auto;
-  height: calc(100vh - 4rem);
-  padding: 1.5rem;
 }
 
 

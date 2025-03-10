@@ -1,5 +1,6 @@
 "use client";
 import "@/app/globals.css";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import apiClient from "@/app/lib/apiClient";
 
@@ -18,7 +19,9 @@ const TopBar = () => {
   return (
     <header className="topbar">
       <div className="flex justify-between">
-        <div></div>
+        <Link href="/dashboard" replace>
+          <h2 className="sidebar-title">Community Admin</h2>
+        </Link>
         <div className="flex">
           <div className="mx-5">
             {user ? (

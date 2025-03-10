@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAccessToken } from "@/app/lib/auth";
 import apiClient from "@/app/lib/apiClient";
-import Sidebar from "@/app/components/Sidebar";
+import SideBar from "@/app/components/SideBar";
 import TopBar from "@/app/components/TopBar";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 
@@ -40,16 +40,16 @@ export default function PortalLayout({ children }) {
   return (
     <ProtectedRoute>
       <div className="layout-container">
-        {/* 사이드바 */}
-        <Sidebar
-          isSidebarOpen={isSidebarOpen}
-          toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-        />
+        {/* 탑바 */}
+        <TopBar />
 
         {/* 메인 컨텐츠 영역 */}
         <div className="main-wrapper">
-          {/* 탑바 */}
-          <TopBar />
+          {/* 사이드바 */}
+          <SideBar
+            isSidebarOpen={isSidebarOpen}
+            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
 
           {/* 페이지 컨텐츠 */}
           <main className="content-container">{children}</main>

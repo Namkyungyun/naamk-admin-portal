@@ -30,6 +30,7 @@ export default function PortalLayout({ children }) {
     const handleResize = () => {
       setIsSidebarOpen(window.innerWidth >= 1024);
     };
+
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);

@@ -2,13 +2,12 @@
 
 import "@/app/globals.css";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import apiClient from "@/app/lib/apiClient";
-import { setAccessToken } from "@/app/lib/auth";
+import useAuth from "@/app/hooks/checkAuth";
 import Logo from "@/app/svg/logo.svg";
 
 const LoginPage = () => {
-  const router = useRouter();
+  const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,9 +17,9 @@ const LoginPage = () => {
     setError("");
 
     try {
-      const response = await apiClient.post("/login", { email, password });
-      setAccessToken(response.data.accessToken);
-      router.replace("/dashboard");
+      // const response = await apiClient.post("/login", { email, password });
+      // auth.login(response.data.accessToken);
+      auth.login("accesstoken");
     } catch (err) {
       setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
     }
@@ -29,8 +28,10 @@ const LoginPage = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <div className="logo-container">{/* <Logo /> */}</div>
-        <form onSubmit={handleLogin}>
+        <div className="logo-container">
+          <Logo />
+        </div>
+        <form onSubmit={(e) => handleLogin(e)}>
           <input
             type="string"
             placeholder="이메일"

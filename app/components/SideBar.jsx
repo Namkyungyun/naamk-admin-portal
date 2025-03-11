@@ -13,36 +13,6 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
   const [openMenus, setOpenMenus] = useState([]);
   const [currentMenu, setCurrentMenu] = useState(null);
 
-  // await setMenus([
-  //   {
-  //     id: 1,
-  //     name: "대시보드",
-  //     url: "/dashboard",
-  //     submenus: [],
-  //     parentId: null,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "사용자 관리",
-  //     url: null,
-  //     submenus: [
-  //       { id: 4, name: "사용자 목록", url: "/test", parentId: 2 },
-  //       { id: 5, name: "권한 관리", url: "/test1", parentId: 2 },
-  //     ],
-  //     parentId: null,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "시스템 관리",
-  //     url: null,
-  //     submenus: [
-  //       { id: 6, name: "환경 설정", url: "/test2", parentId: 3 },
-  //       { id: 7, name: "로그 관리", url: "/test3", parentId: 3 },
-  //     ],
-  //     parentId: null,
-  //   },
-  // ]);
-
   /// API
   useEffect(() => {
     const menuArr = [
@@ -55,21 +25,83 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
       },
       {
         id: 2,
-        name: "사용자 관리",
+        name: "회원 관리",
         url: null,
         submenus: [
-          { id: 4, name: "사용자 목록", url: "/test", parentId: 2 },
-          { id: 5, name: "권한 관리", url: "/test1", parentId: 2 },
+          { id: 3, name: "회원 관리", url: "/test", parentId: 2 },
+          {
+            id: 4,
+            name: "회원 신고 관리",
+            url: "/user-management/penalties",
+            parentId: 2,
+          },
+          {
+            id: 5,
+            name: "POP-POINT 관리",
+            url: "/user-management/poppoint",
+            parentId: 2,
+          },
         ],
         parentId: null,
       },
       {
-        id: 3,
+        id: 6,
+        name: "채널 관리",
+        url: null,
+        submenus: [
+          {
+            id: 7,
+            name: "채널 관리",
+            url: "/channel-management",
+            parentId: 6,
+          },
+          {
+            id: 8,
+            name: "추천 채널 관리",
+            url: "/channel-management/rocommends",
+            parentId: 6,
+          },
+        ],
+        parentId: null,
+      },
+      {
+        id: 9,
+        name: "게시글 관리",
+        url: null,
+        submenus: [
+          { id: 10, name: "게시글 관리", url: "/post-management", parentId: 9 },
+          {
+            id: 11,
+            name: "게시글 신고관리",
+            url: "/post-management/penalties",
+            parentId: 9,
+          },
+        ],
+        parentId: null,
+      },
+      {
+        id: 12,
         name: "시스템 관리",
         url: null,
         submenus: [
-          { id: 6, name: "환경 설정", url: "/test2", parentId: 3 },
-          { id: 7, name: "로그 관리", url: "/test3", parentId: 3 },
+          {
+            id: 13,
+            name: "메뉴 관리",
+            url: "/system-management/menus",
+            parentId: 12,
+          },
+          {
+            id: 14,
+            name: "역할 관리",
+            url: "/system-management/roles",
+            parentId: 12,
+          },
+          {
+            id: 15,
+            name: "어드민 관리",
+            url: "/system-management/admins",
+            parentId: 12,
+          },
         ],
         parentId: null,
       },

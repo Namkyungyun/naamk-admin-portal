@@ -1,20 +1,22 @@
-"use client"; // ✅ 클라이언트 전용 설정
+"use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { setAccessToken, removeAccessToken, getAccessToken } from "@/app/lib/auth";
+import { useState, useRef } from "react";
+import { redirect, useRouter } from "next/navigation";
 
 export default function useAuth() {
-  const [token, setToken] = useState(
-    typeof window !== "undefined" ? sessionStorage.getItem("accessToken") : null
-  );
   const router = useRouter();
+  const [token, setToken] = useState(
+    typeof window !== "undefined" ? getAccessToken() : null
+  );
   const isLoggingOut = useRef(false);
 
   // 로그인 함수
   const login = (newToken) => {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem("accessToken", newToken);
       setToken(newToken);
+      setAccessToken(newToken);
+
       router.push("/dashboard");
     }
   };
@@ -24,23 +26,16 @@ export default function useAuth() {
     if (isLoggingOut.current || typeof window === "undefined") return;
     isLoggingOut.current = true;
 
-    sessionStorage.removeItem("accessToken");
     setToken(null);
-
-    router.push("/login");
-
+    removeAccessToken();
+    
     setTimeout(() => {
       isLoggingOut.current = false;
     }, 1000);
+
+    redirect("/login");
   };
 
-  // ✅ 로그인 상태를 감지하고, `token`이 변경될 때 `logout()` 실행하도록 수정
-  const checkAuth = () => {
-      if (token === null && typeof window !== "undefined") {
-        const storedToken = sessionStorage.getItem("accessToken");
-        if (!storedToken) logout(); // 🔥 무한 루프 방지
-      }
-  }
 
-  return { token, login, logout, checkAuth };
+  return { token, login, logout };
 }

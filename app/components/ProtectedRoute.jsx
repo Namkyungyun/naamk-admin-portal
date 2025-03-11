@@ -1,23 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { getAccessToken } from "@/app/lib/auth";
+import useAuth from "@/app/hooks/checkAuth";
 
 const ProtectedRoute = ({ children }) => {
-  const router = useRouter();
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const auth = useAuth();
+  const [loading, setLoading] = useState(true);
 
+  /// mount
   useEffect(() => {
-    setToken(getAccessToken());
-
-    // if (!token) {
-    //   console.log("?! ");
-    //   router.replace("/login");
-    // } else {
-    //   setLoading(false); // ✅ 토큰 확인 후 로딩 종료
-    // }
-  }, [token]);
+    if (!auth.token) {
+      auth.logout();
+    } else {
+      setLoading(false); // ✅ 토큰 확인 후 로딩 종료
+    }
+  }, []);
 
   return <> {loading ? <p> Loading...</p> : children}</>;
 };

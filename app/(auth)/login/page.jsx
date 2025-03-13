@@ -1,6 +1,5 @@
 "use client";
 
-import "@/app/globals.css";
 import { useState } from "react";
 import apiClient from "@/app/lib/apiClient";
 import useAuth from "@/app/hooks/checkAuth";

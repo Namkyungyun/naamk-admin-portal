@@ -1,5 +1,4 @@
 "use client";
-import "@/app/globals.css";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import apiClient from "@/app/lib/apiClient";

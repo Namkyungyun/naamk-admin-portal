@@ -1,7 +1,12 @@
 "use client";
+
+const style = {
+  disabled: "text-fg-disabled bg-disabled",
+};
+
 export function SmallButton({
   className = "",
-  bgClassName = "bg-primary border border-primary text-black disabled:bg-gray-700",
+  bgClassName = "bg-primary border border-primary text-black disabled:bg-disabled",
   type = "button",
   text,
   btnRef,
@@ -10,7 +15,7 @@ export function SmallButton({
 }) {
   return (
     <button
-      className={`rounded-lg text-sm font-semibold px-3 py-2 disabled:border-gray-700 disabled:text-gray disabled:cursor-not-allowed ${className} ${bgClassName}`}
+      className={`rounded-lg text-sm font-semibold px-3 py-2 disabled:bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed ${className} ${bgClassName}`}
       ref={btnRef}
       type={type}
       {...props}
@@ -22,7 +27,7 @@ export function SmallButton({
 }
 export function SmallBorderButton({
   className = "",
-  bgClassName = "bg-gray-900 text-white border-gray disabled:border-gray-700",
+  bgClassName = "bg-gray-900 text-white border-gray disabled:border-disabled",
   iconClassName = "",
   ...props
 }) {
@@ -81,7 +86,7 @@ export default function LargeButton({
 export function LargeBorderButton({
   className = "",
   iconClassName = "",
-  bgClassName = "bg-gray-900 disabled:border-gray-700 text-white border-gray",
+  bgClassName = "bg-gray-900 disabled:bd-disabled text-white border-gray",
   ...props
 }) {
   return (
@@ -95,7 +100,7 @@ export function LargeBorderButton({
 
 export function LargePrimaryBorderButton({
   className = "",
-  bgClassName = "bg-gray-900 disabled:border-gray-700 text-primary border-primary",
+  bgClassName = "bg-gray-900 disabled:bd-disabled text-primary border-primary",
   ...props
 }) {
   return (

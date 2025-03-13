@@ -19,11 +19,13 @@ const dayjsToString = (value) => {
 };
 
 export function RangeDatePicker({
+  isRequired = false,
   defaultPeriod = 3,
   maxPeriod = 6, // 1주일
   handleDates,
 }) {
   const [dates, setDates] = useState([null, null]);
+  const [validation, setValidation] = useState(true);
 
   //// init
   useEffect(() => {
@@ -62,11 +64,9 @@ export function RangeDatePicker({
       setDates([start, end]);
 
       // callback
-      handleDates({
-        result: start != null && end != null,
-        startDate: dayjsToString(start),
-        endDate: dayjsToString(end),
-      });
+      const result = start != null && end != null;
+      onCallback(result, start, end);
+      setValidation(result);
     }
   };
 
@@ -74,14 +74,23 @@ export function RangeDatePicker({
   const onOpenChange = (open) => {
     if (open) {
       setDates([null, null]);
+      onCallback(isRequired, null, null);
     }
+  };
+
+  const onCallback = (result, startDate, endDate) => {
+    handleDates({
+      result: result,
+      startDate: startDate,
+      endDate: endDate,
+    });
   };
 
   return (
     <>
       <div className="my-2 flex">
         <RangePicker
-          status={dates[0] && dates[1] ? null : "warning"}
+          status={isRequired || !validation ? "error" : null}
           disabledDate={disabledDate}
           onCalendarChange={onCalendarChange}
           onOpenChange={onOpenChange}

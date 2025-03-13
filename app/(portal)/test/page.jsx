@@ -1,4 +1,7 @@
 "use client";
+
+import { useState, useEffect } from "react";
+
 import {
   SaveButton,
   UpdateButton,
@@ -13,6 +16,10 @@ import { RangeDatePicker } from "../component/DatePicker";
 import { SelectBox } from "../component/SelectBox";
 
 const Test = () => {
+  const [completedDate, setCompletedDate] = useState();
+
+  useEffect(() => {}, [completedDate]);
+
   return (
     <div>
       {/* 제목 & 설명 영역 */}
@@ -23,8 +30,12 @@ const Test = () => {
       {/* 검색 영역 */}
       <section className="bg-gray-300 text-white p-6 rounded-lg w-full my-10">
         <RangeDatePicker
+          isRequired={completedDate}
+          defaultPeriod={6}
+          maxPeriod={13}
           handleDates={(value) => {
-            console.log("result >>>>> " + value.result);
+            setCompletedDate(!value.result);
+            console.log(value.result);
             console.log("dates >>>>> " + value.startDate + "/" + value.endDate);
           }}
         />

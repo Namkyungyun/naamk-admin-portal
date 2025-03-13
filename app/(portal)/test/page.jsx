@@ -11,16 +11,20 @@ import {
   DownloadButton,
 } from "../component/Buttons";
 
-import { Table } from "../component/Table";
+import { ListTable } from "../component/ListTable";
 import { RangeDatePicker } from "../component/DatePicker";
 import { SelectBox } from "../component/SelectBox";
 import { SearchInput } from "../component/SearchInput";
 import { LimitedLengthTextArea } from "../component/TextArea";
 
 const Test = () => {
+  const [reset, setReset] = useState(false);
   const [completedDate, setCompletedDate] = useState();
+  const [search, setSearch] = useState({
+    userName: "",
+  });
 
-  useEffect(() => {}, [completedDate]);
+  useEffect(() => {}, []);
 
   return (
     <div>
@@ -29,7 +33,12 @@ const Test = () => {
         제목이랑 설명이 들어갈 영역
         {/* ///// */}
         <div className="flex justify-end">
-          <SaveButton disabled={false} onClick={() => {}} />
+          <SaveButton
+            disabled={false}
+            onClick={() => {
+              setReset(true);
+            }}
+          />
           <UpdateButton disabled={false} onClick={() => {}} />
           <ConfirmButton disabled={false} onClick={() => {}} />
           <CancelButton disabled={false} onClick={() => {}} />
@@ -46,8 +55,6 @@ const Test = () => {
           maxPeriod={13}
           handleDates={(value) => {
             setCompletedDate(!value.result);
-            console.log(value.result);
-            console.log("dates >>>>> " + value.startDate + "/" + value.endDate);
           }}
         />
 
@@ -60,32 +67,30 @@ const Test = () => {
         />
 
         <SearchInput
-          id={"id1"}
+          isReset={reset}
           isLoading={false}
           isRequired={false}
           hidden={false}
           placeholder={"회원 ID를 입력하세요."}
           value={""}
-          handleInput={(obj) => {
-            console.log(obj);
+          handleInput={(obj) => {}}
+          handleReset={(val) => {
+            setReset(val);
           }}
         />
 
         <LimitedLengthTextArea
-          id={"id2"}
           readOnly={false}
           isRequired={false}
           placeholder={"Custom TextArea Placeholder"}
-          handleTextArea={(obj) => {
-            console.log(obj);
-          }}
           value={""}
+          handleTextArea={(obj) => {}}
         />
       </section>
 
       {/* 표 영역 */}
       <section className="border text-white p-6 rounded-lg flex-grow w-full my-10">
-        <Table
+        <ListTable
           headers={["header1", "header2", "header3", "header4", "header5"]}
           body={[
             { header1: "value1-1 of header1", header2: "value2-1 of header2" },

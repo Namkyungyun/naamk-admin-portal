@@ -3,7 +3,6 @@ import { Input } from "antd";
 import { useState, useEffect } from "react";
 
 export function LimitedLengthTextArea({
-  id,
   isLoading = false,
   readOnly = false,
   isRequired = false,
@@ -43,7 +42,6 @@ export function LimitedLengthTextArea({
   return (
     <div className={`my-2 flex`}>
       <TextArea
-        id={id}
         showCount
         allowClear
         onClear={onClear}

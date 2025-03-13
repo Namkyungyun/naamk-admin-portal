@@ -9,18 +9,18 @@ const style = {
   body: "border",
 };
 
-export function Table({ headers, body }) {
+export function ListTable({ headers, body }) {
   return (
     <div className={`overflow-x-auto ${style.container}`}>
       <table className={`min-w-full table-auto ${style.table}`}>
-        <TableHeader headers={headers} />
-        <TableBody headers={headers} body={body} />
+        <ListTableHeader headers={headers} />
+        <ListTableBody headers={headers} body={body} />
       </table>
     </div>
   );
 }
 
-export function TableHeader({ headers }) {
+export function ListTableHeader({ headers }) {
   return (
     <thead>
       <tr>
@@ -38,7 +38,7 @@ export function TableHeader({ headers }) {
   );
 }
 
-export function TableBody({ headers, body }) {
+export function ListTableBody({ headers, body }) {
   if (body == null || body === undefined) {
     return (
       <div className="text-center my-10 bg-disabled">

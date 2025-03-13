@@ -10,12 +10,12 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* color */
 
+  /* color */
   --color-primary: #d9c382;
   --color-primary-400: #b09e69;
   --color-primary-300: #5d5438;
-  /* --color-primary: #f2d5a0; */
+  --color-primary: #f2d5a0;
   --color-secondary: #1a1a1e;
 
   --color-gray-25: #fcfcfc;
@@ -30,6 +30,74 @@
   --color-gray-800: #26272b;
   --color-gray-900: #1a1a1e;
   --color-gray-950: #131316;
+
+  /* color : brand */
+  --color-brand-20 : #F0EDFF;
+  --color-brand-30 : #DBD4FF;
+  --color-brand-10 : #F6F5FF;
+  --color-brand-40 : #B4A6FF;
+  --color-brand-50 : #907AFF;
+  --color-brand-60 : #7257FF;
+  --color-brand-70 : #7257FF;
+  --color-brand-80 : #7257FF;
+  --color-brand-90 : #7257FF;
+  --color-brand-100: #7257FF;
+
+  --color-brand-s10: #D7FEFC;
+  --color-brand-s20: #B0FDF8;
+  --color-brand-s30: #8EFBF3;
+  --color-brand-s40: #70F7EE;
+  --color-brand-s50: #59F2E8;
+  --color-brand-s60: #46E9DE;
+  --color-brand-s70: #36D7CD;
+  --color-brand-s80: #25ADA4;
+  --color-brand-s90: #156B65;
+
+  /* color : background */
+  --color-canvas: #FFFFFF;
+  --color-subtle: #F4F6F7;
+  --color-muted: #E6E9EB;
+  --color-surface: #FFFFFF;
+  --color-contrast: #131214;
+  --color-interactive-primary: #E6E9EB;
+  --color-interactive-secondary: #DADDDE;
+  --color-interactive-tertiary: #C1C4C6;
+  --color-disabled: #DADDDE;
+  --color-success: #E8FAF0;
+  --color-success-contrast: #008557;
+  --color-error: #FFF3F0;
+  --color-error-contrast: #DB340B;
+  --color-warning: #FFF9E6;
+  --color-warning-constrast: #FFD84D;
+  --color-info: #F2F7FF;
+  --color-info-contrast: #0A69FA;
+  --color-notification: #DB340B;
+  --color-danger-primary: #FF5226;
+  --color-danger-secondary: #DB340B;
+  --color-danger-teriary: #AD1D00;
+
+  /* color : foreground */
+  --color-fg-base: #131214;
+  --color-fg-muted: #6E7375;
+  --color-fg-subtle: #898D8F;
+  --color-fg-on-contrast: #FFFFFF;
+  --color-fg-disabled: #898D8F;
+  --color-fg-link: #7257FF;
+  --color-fg-success: #008557;
+  --color-fg-warning: #B26205;
+  --color-fg-error: #DB340B;
+  --color-fg-info: #0A69FA;
+  --color-fg-danger: #DB340B;
+  --color-fg-static-light: #FFFFFF;
+  --color-fg-static-dart: #131214;
+
+  /* color : border */
+  --color-bd-subtle: #E8EBEB;
+  --color-bd-muted: #DADDDE;
+  --color-bd-interactive-primary: #DADDDE;
+  --color-bd-contrast: #131214;
+  --color-bd-disabled: #C1C4C6;
+  --color-bd-error: #FF9175;
 
   --animate-loading: loading 0.6s ease-in-out infinite;
   @keyframes loading {
@@ -73,7 +141,7 @@
 }
 
 :root {
-  --background: #eeeeee;
+  --background: #ffffff;
   --foreground: #ffffff;
 }
 
@@ -313,6 +381,7 @@ input[type='number'] {
 
 /* 페이지 컨텐츠 영역 */
 .content-container {
+  background-color: var(--background);
   flex-grow: 1;
   overflow-y: auto;
   height: calc(100vh - 4rem);

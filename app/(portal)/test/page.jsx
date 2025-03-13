@@ -14,6 +14,7 @@ import {
 import { Table } from "../component/Table";
 import { RangeDatePicker } from "../component/DatePicker";
 import { SelectBox } from "../component/SelectBox";
+import { SearchInput } from "../component/SearchInput";
 
 const Test = () => {
   const [completedDate, setCompletedDate] = useState();
@@ -48,19 +49,23 @@ const Test = () => {
           optionData={[{ id: 1, value: "value1", label: "선택1" }]}
         />
 
+        <SearchInput
+          id={"id1"}
+          isLoading={false}
+          isRequired={false}
+          hidden={false}
+          placeholder={"회원 ID를 입력하세요."}
+          value={""}
+        />
+
         {/* ///// */}
-        <div className="flex justify-around">
-          <SaveButton
-            disabled={false}
-            onClick={() => {
-              alert("@");
-            }}
-          />
+        <div className="flex justify-end">
+          <SaveButton disabled={false} onClick={() => {}} />
           <UpdateButton disabled={false} onClick={() => {}} />
-          <DeleteButton disabled={false} onClick={() => {}} />
-          <CancelButton disabled={false} onClick={() => {}} />
           <ConfirmButton disabled={false} onClick={() => {}} />
-          <DownloadButton disabled={false} text="엑셀" onClick={() => {}} />
+          <CancelButton disabled={false} onClick={() => {}} />
+          <DeleteButton disabled={false} onClick={() => {}} />
+          <DownloadButton disabled={false} prefix="엑셀" onClick={() => {}} />
         </div>
       </section>
 

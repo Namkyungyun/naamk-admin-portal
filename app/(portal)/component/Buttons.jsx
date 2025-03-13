@@ -77,13 +77,13 @@ export function CancelButton({ disabled, onClick }) {
   );
 }
 
-export function DownloadButton({ disabled, text, onClick }) {
+export function DownloadButton({ disabled, prefix = "", onClick }) {
   return (
     <div className="m-2">
       <SmallIconButton
         disabled={disabled}
         bgClassName={style.download}
-        text={text + " 다운로드"}
+        text={prefix + "다운로드"}
         onClick={onClick}
       />
     </div>

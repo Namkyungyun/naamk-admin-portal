@@ -26,8 +26,6 @@ export function SelectBox({
     }
   }, []);
 
-  useEffect(() => {}, [options.length, selectedValue]);
-
   const onChange = (val) => {
     setSelectValue(val);
     handleChange(val);

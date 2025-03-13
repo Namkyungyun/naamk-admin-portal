@@ -88,7 +88,7 @@ export function RangeDatePicker({
 
   return (
     <>
-      <div className="my-2 flex">
+      <div className="my-2">
         <RangePicker
           status={isRequired || !validation ? "error" : null}
           disabledDate={disabledDate}
@@ -96,6 +96,7 @@ export function RangeDatePicker({
           onOpenChange={onOpenChange}
           value={dates}
           maxDate={dayjs()}
+          style={{ width: "100%" }}
         />
       </div>
     </>

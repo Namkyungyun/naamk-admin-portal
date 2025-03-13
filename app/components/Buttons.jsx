@@ -15,7 +15,7 @@ export function SmallButton({
 }) {
   return (
     <button
-      className={`rounded-lg text-sm font-semibold px-3 py-2 disabled:bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed ${className} ${bgClassName}`}
+      className={`rounded-lg text-sm font-semibold px-5 py-2 disabled:bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed ${className} ${bgClassName}`}
       ref={btnRef}
       type={type}
       {...props}

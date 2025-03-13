@@ -15,6 +15,7 @@ import { Table } from "../component/Table";
 import { RangeDatePicker } from "../component/DatePicker";
 import { SelectBox } from "../component/SelectBox";
 import { SearchInput } from "../component/SearchInput";
+import { LimitedLengthTextArea } from "../component/TextArea";
 
 const Test = () => {
   const [completedDate, setCompletedDate] = useState();
@@ -26,10 +27,19 @@ const Test = () => {
       {/* 제목 & 설명 영역 */}
       <section className="bg-gray-300 text-white p-6 rounded-lg w-full my-10">
         제목이랑 설명이 들어갈 영역
+        {/* ///// */}
+        <div className="flex justify-end">
+          <SaveButton disabled={false} onClick={() => {}} />
+          <UpdateButton disabled={false} onClick={() => {}} />
+          <ConfirmButton disabled={false} onClick={() => {}} />
+          <CancelButton disabled={false} onClick={() => {}} />
+          <DeleteButton disabled={false} onClick={() => {}} />
+          <DownloadButton disabled={false} prefix="엑셀" onClick={() => {}} />
+        </div>
       </section>
 
       {/* 검색 영역 */}
-      <section className="bg-gray-300 text-white p-6 rounded-lg w-full my-10">
+      <section className="bg-gray-300 text-white p-6 rounded-lg w-full my-10 h-xl">
         <RangeDatePicker
           isRequired={completedDate}
           defaultPeriod={6}
@@ -56,17 +66,21 @@ const Test = () => {
           hidden={false}
           placeholder={"회원 ID를 입력하세요."}
           value={""}
+          handleInput={(obj) => {
+            console.log(obj);
+          }}
         />
 
-        {/* ///// */}
-        <div className="flex justify-end">
-          <SaveButton disabled={false} onClick={() => {}} />
-          <UpdateButton disabled={false} onClick={() => {}} />
-          <ConfirmButton disabled={false} onClick={() => {}} />
-          <CancelButton disabled={false} onClick={() => {}} />
-          <DeleteButton disabled={false} onClick={() => {}} />
-          <DownloadButton disabled={false} prefix="엑셀" onClick={() => {}} />
-        </div>
+        <LimitedLengthTextArea
+          id={"id2"}
+          readOnly={false}
+          isRequired={false}
+          placeholder={"Custom TextArea Placeholder"}
+          handleTextArea={(obj) => {
+            console.log(obj);
+          }}
+          value={""}
+        />
       </section>
 
       {/* 표 영역 */}

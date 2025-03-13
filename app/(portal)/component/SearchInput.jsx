@@ -8,33 +8,50 @@ export function SearchInput({
   isRequired = false,
   type = Input.Search,
   placeholder = "검색할 문구를 적어주세요.",
-  handleSearchInput = () => {},
   maxLength = 20,
   hidden = false,
   value = "",
+  handleInput = () => {},
 }) {
-  const [searchText, setSearchText] = useState(null);
+  const [text, setText] = useState(null);
+  const [validation, setValidation] = useState(true);
 
   useEffect(() => {
-    setSearchText(value);
+    setText(value);
   }, []);
 
-  const onInput = (e) => {
+  const onChange = (e) => {
     let text = e.target.value;
-    setSearchText(text);
-    handleSearchInput(text);
+
+    /// validation[정규식] 들어갈 내용
+    let validation = 4 < text.length;
+
+    setText(text);
+    setValidation(validation);
+
+    handleInput({
+      result: validation,
+      text: text,
+    });
+  };
+
+  const onClear = () => {
+    setText("");
+    setValidation(true);
   };
 
   return (
-    <div className={`flex ${hidden ? "hidden" : ""}`}>
+    <div className={`my-2 flex ${hidden ? "hidden" : ""}`}>
       <Input
         id={id}
-        value={searchText}
+        allowClear
+        value={text}
         type={type}
         disabled={isLoading}
-        status={isRequired ? "error" : null}
+        status={isRequired || (text && !validation) ? "error" : ""}
         placeholder={placeholder}
-        onInput={onInput}
+        onClear={onClear}
+        onChange={onChange}
         maxLength={maxLength}
       />
     </div>

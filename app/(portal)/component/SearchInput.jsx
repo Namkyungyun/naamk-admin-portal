@@ -52,7 +52,7 @@ export function SearchInput({
   };
 
   return (
-    <div className={`my-2 flex ${hidden ? "hidden" : ""}`}>
+    <div className={`flex ${hidden ? "hidden" : ""}`}>
       <Input
         allowClear
         value={text}

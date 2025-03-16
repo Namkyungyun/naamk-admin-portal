@@ -34,7 +34,7 @@ export function SelectBox({
   // x축 길이 : w-xl w-lg w-md w-sm w-xs w-2xs w-3xs
   return (
     <>
-      <div className="my-2 flex">
+      <div className="flex">
         <Select
           placeholder="선택"
           value={selectedValue}

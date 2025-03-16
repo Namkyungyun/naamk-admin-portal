@@ -88,7 +88,7 @@ export function RangeDatePicker({
 
   return (
     <>
-      <div className="my-2">
+      <div>
         <RangePicker
           status={isRequired || !validation ? "error" : null}
           disabledDate={disabledDate}

@@ -16,6 +16,8 @@ import { RangeDatePicker } from "../component/DatePicker";
 import { SelectBox } from "../component/SelectBox";
 import { SearchInput } from "../component/SearchInput";
 import { LimitedLengthTextArea } from "../component/TextArea";
+import { RowFor3Column, RowFor2Column } from "../component/Row";
+import { FullColumn, MDColumn } from "../component/Column";
 
 const Test = () => {
   const [reset, setReset] = useState(false);
@@ -51,112 +53,71 @@ const Test = () => {
       <section className="border text-white p-6 rounded-lg flex-grow w-full my-10">
         <p className="text-black">검색 모형</p>
         <form>
-          {/* 로우 */}
-          <div className="grid grid-cols-9 bg-canvas">
-            {/* 칼럼 */}
-            <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-              <div className="col-span-1 bg-brand-50 text-center">
-                <label className="text-black text-sm font-semibold leading-9">
-                  상태1
-                </label>
-              </div>
-              <div className="mx-1 col-span-2 content-center">
-                <SelectBox
-                  userAllOption={true}
-                  handleChange={(value) => {
-                    console.log(value);
-                  }}
-                  optionData={[{ id: 1, value: "value1", label: "선택1" }]}
-                />
-              </div>
-            </div>
+          <RowFor3Column>
+            <MDColumn title="상태1">
+              <SelectBox
+                userAllOption={true}
+                handleChange={(value) => {
+                  console.log(value);
+                }}
+                optionData={[{ id: 1, value: "value1", label: "선택1" }]}
+              />
+            </MDColumn>
 
-            {/* 칼럼 */}
-            <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-              <div className="col-span-1 bg-brand-50 text-center">
-                <label className="text-black text-sm font-semibold leading-9">
-                  상태2
-                </label>
-              </div>
-              <div className="mx-1 col-span-2 content-center">
-                <SelectBox
-                  userAllOption={true}
-                  handleChange={(value) => {
-                    console.log(value);
-                  }}
-                  optionData={[{ id: 1, value: "value1", label: "선택1" }]}
-                />
-              </div>
-            </div>
+            <MDColumn title="상태2">
+              <SelectBox
+                userAllOption={true}
+                handleChange={(value) => {
+                  console.log(value);
+                }}
+                optionData={[{ id: 1, value: "value1", label: "선택1" }]}
+              />
+            </MDColumn>
 
-            {/* 칼럼 */}
-            <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-              <div className="col-span-1 bg-brand-50 text-center">
-                <label className="text-black text-sm font-semibold leading-9">
-                  상태1
-                </label>
-              </div>
-              <div className="mx-1 col-span-2 content-center">
-                <RangeDatePicker
-                  isRequired={completedDate}
-                  defaultPeriod={6}
-                  maxPeriod={13}
-                  handleDates={(value) => {
-                    setCompletedDate(!value.result);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+            <MDColumn title="기간">
+              <RangeDatePicker
+                isRequired={completedDate}
+                defaultPeriod={6}
+                maxPeriod={13}
+                handleDates={(value) => {
+                  setCompletedDate(!value.result);
+                }}
+              />
+            </MDColumn>
+            {/* {/* </div> */}
+          </RowFor3Column>
 
           {/* 로우 */}
-          <div className="grid grid-cols-9 bg-canvas">
-            {/* 칼럼 */}
-            <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-              <div className="col-span-1 bg-brand-50 text-center">
-                <label className="text-black text-sm font-semibold leading-9">
-                  검색어1
-                </label>
-              </div>
-              <div className="mx-1 col-span-2 content-center">
-                <SearchInput
-                  isReset={reset}
-                  isLoading={false}
-                  isRequired={false}
-                  hidden={false}
-                  placeholder={"회원 ID를 입력하세요."}
-                  value={""}
-                  handleInput={(obj) => {}}
-                  handleReset={(val) => {
-                    setReset(val);
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* 칼럼 */}
-            <div className="flex col-span-6 grid grid-cols-6 border border-bd-subtle">
-              <div className="col-span-1 bg-brand-50 text-center">
-                <label className="text-black text-sm font-semibold leading-9">
-                  검색어2
-                </label>
-              </div>
-              <div className="mx-1 col-span-5 content-center">
-                <SearchInput
-                  isReset={reset}
-                  isLoading={false}
-                  isRequired={false}
-                  hidden={false}
-                  placeholder={"회원 ID를 입력하세요."}
-                  value={""}
-                  handleInput={(obj) => {}}
-                  handleReset={(val) => {
-                    setReset(val);
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          <RowFor3Column>
+            <MDColumn title="검색어1">
+              <SearchInput
+                isReset={reset}
+                isLoading={false}
+                isRequired={false}
+                hidden={false}
+                placeholder={"회원 ID를 입력하세요."}
+                value={""}
+                handleInput={(obj) => {}}
+                handleReset={(val) => {
+                  setReset(val);
+                }}
+              />
+            </MDColumn>
+            <FullColumn title="검색어2">
+              <SearchInput
+                isReset={reset}
+                isLoading={false}
+                isRequired={false}
+                hidden={false}
+                placeholder={"회원 ID를 입력하세요."}
+                value={""}
+                handleInput={(obj) => {}}
+                handleReset={(val) => {
+                  setReset(val);
+                }}
+              />
+            </FullColumn>
+          </RowFor3Column>
         </form>
       </section>
 
@@ -164,50 +125,18 @@ const Test = () => {
       <section className="border text-white p-6 rounded-lg flex-grow w-full my-10">
         <p className="text-black">상세페이지 표 (2 colum)</p>
         {/* 로우 */}
-        <div className="grid grid-cols-6 bg-canvas">
-          {/* 칼럼 */}
-          <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-            <div className="col-span-1 bg-brand-50 text-center">
-              <label className="text-black text-sm font-semibold leading-9">
-                variable name
-              </label>
-            </div>
-            <div className="mx-1 col-span-2 content-center">값</div>
-          </div>
-
-          {/* 칼럼 */}
-          <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-            <div className="col-span-1 bg-brand-50 text-center">
-              <label className="text-black text-sm font-semibold leading-9">
-                variable name
-              </label>
-            </div>
-            <div className="mx-1 col-span-2 content-center">값</div>
-          </div>
-        </div>
-
-        {/* 로우 */}
-        <div className="grid grid-cols-6 bg-canvas">
-          {/* 칼럼 */}
-          <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-            <div className="col-span-1 bg-brand-50 text-center">
-              <label className="text-black text-sm font-semibold leading-9">
-                variable name
-              </label>
-            </div>
-            <div className="mx-1 col-span-2 content-center">값</div>
-          </div>
-
-          {/* 칼럼 */}
-          <div className="flex col-span-3 grid grid-cols-3 border border-bd-subtle">
-            <div className="col-span-1 bg-brand-50 text-center">
-              <label className="text-black text-sm font-semibold leading-9">
-                variable name
-              </label>
-            </div>
-            <div className="mx-1 col-span-2 content-center">값</div>
-          </div>
-        </div>
+        <RowFor2Column>
+          <MDColumn title="variable name">값</MDColumn>
+          <MDColumn title="variable name">값</MDColumn>
+        </RowFor2Column>
+        <RowFor2Column>
+          <MDColumn title="variable name">값</MDColumn>
+          <MDColumn title="variable name">값</MDColumn>
+        </RowFor2Column>
+        <RowFor2Column>
+          <MDColumn title="variable name">값</MDColumn>
+          <MDColumn title="variable name">값</MDColumn>
+        </RowFor2Column>
       </section>
 
       {/* 표 영역 */}

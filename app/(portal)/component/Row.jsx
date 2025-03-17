@@ -3,5 +3,5 @@ export function RowFor3Column({ children }) {
 }
 
 export function RowFor2Column({ children }) {
-  reutrn(<div className="grid grid-cols-6 bg-canvas">{children}</div>);
+  return <div className="grid grid-cols-6 bg-canvas">{children}</div>;
 }

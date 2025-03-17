@@ -1,5 +1,3 @@
-"use client";
-
 import LoadingDot from "./LoadingDot";
 
 export default function LoadingPage() {

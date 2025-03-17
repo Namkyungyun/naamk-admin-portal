@@ -1,5 +1,3 @@
-"use client";
-
 import { SmallIconButton } from "@/app/components/Buttons";
 
 const style = {

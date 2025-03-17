@@ -1,5 +1,3 @@
-"use client";
-
 const style = {
   disabled: "text-fg-disabled bg-disabled",
 };

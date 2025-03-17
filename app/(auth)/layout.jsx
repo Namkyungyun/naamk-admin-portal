@@ -1,7 +1,5 @@
-import Link from "next/link";
+"use client";
 
-export default async function ContentLayout(props) {
-  const { children } = props;
-
+export default function AuthLayout({ children }) {
   return <div>{children}</div>;
 }

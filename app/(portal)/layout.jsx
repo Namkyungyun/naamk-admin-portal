@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getAccessToken } from "@/app/lib/auth";
-import apiClient from "@/app/lib/apiClient";
-import SideBar from "@/app/components/SideBar";
-import TopBar from "@/app/components/TopBar";
+// import { getAccessToken } from "@/app/lib/auth";
+// import apiClient from "@/app/lib/apiClient";
+import SideBar from "@/app/(portal)/component/SideBar";
+import TopBar from "@/app/(portal)/component/TopBar";
 import ProtectedRoute from "@/app/components/ProtectedRoute";
 
 export default function PortalLayout({ children }) {

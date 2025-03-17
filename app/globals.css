@@ -515,7 +515,7 @@ input[type='number'] {
 
 
 /* login */
-.login-container {
+.gradient-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -533,14 +533,14 @@ input[type='number'] {
   /* background: white; */
 }
 
-.login-box {
+.center-box {
   padding: 10px;
   border-radius: 12px;
   width: 350px;
   text-align: center;
 }
 
-.login-box input {
+.center-box input {
   width: 100%;
   padding: 12px;
   margin-bottom: 12px;
@@ -551,11 +551,11 @@ input[type='number'] {
   font-size: 16px;
 }
 
-.login-box input::placeholder {
+.center-box input::placeholder {
   color: var(--color-gray-400);
 }
 
-.login-box button {
+.center-box button {
   width: 100%;
   padding: 12px;
   color: white;
@@ -566,7 +566,7 @@ input[type='number'] {
   font-size: 16px;
 }
 
-.login-box button:hover {
+.center-box button:hover {
   background: #607f8e;
 }
 

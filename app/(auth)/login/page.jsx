@@ -3,9 +3,8 @@
 import { useState } from "react";
 import apiClient from "@/app/lib/apiClient";
 import useAuth from "@/app/hooks/checkAuth";
-import Logo from "@/app/svg/logo.svg";
 
-const LoginPage = () => {
+export default function LoginPage() {
   const auth = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,10 +24,10 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
+    <div className="gradient-container">
+      <div className="center-box">
         <div className="logo-container">
-          <Logo />
+          <img src="/logo.svg" alt="Logo" />
         </div>
         <form onSubmit={(e) => handleLogin(e)}>
           <input
@@ -49,6 +48,4 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
-
-export default LoginPage;
+}

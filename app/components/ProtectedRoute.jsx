@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import useAuth from "@/app/hooks/checkAuth";
+import LoadingPage from "./LoadingPage";
 
-const ProtectedRoute = ({ children }) => {
+export default function ProtectedRoute({ children }) {
   const auth = useAuth();
   const [loading, setLoading] = useState(true);
 
@@ -15,7 +16,5 @@ const ProtectedRoute = ({ children }) => {
     }
   }, []);
 
-  return <> {loading ? <p> Loading...</p> : children}</>;
-};
-
-export default ProtectedRoute;
+  return <> {loading ? <LoadingPage /> : children}</>;
+}

@@ -2,7 +2,7 @@
 
 import { setAccessToken, removeAccessToken, getAccessToken } from "@/app/lib/auth";
 import { useState, useRef } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function useAuth() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function useAuth() {
       setToken(newToken);
       setAccessToken(newToken);
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
     }
   };
 
@@ -33,7 +33,7 @@ export default function useAuth() {
       isLoggingOut.current = false;
     }, 1000);
 
-    redirect("/login");
+    router.replace("/login");
   };
 
 

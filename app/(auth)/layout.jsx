@@ -1,5 +1,11 @@
 "use client";
 
+import ProtectedRoute from "../components/ProtectedRoute";
+
 export default function AuthLayout({ children }) {
-  return <div>{children}</div>;
+  return (
+    <>
+      <ProtectedRoute>{children}</ProtectedRoute>
+    </>
+  );
 }

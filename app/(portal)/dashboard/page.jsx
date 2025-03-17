@@ -1,6 +1,6 @@
 "use client";
 
-const Dashboard = () => {
+export default function Dashboard() {
   return (
     <div className="flex flex-col">
       <div className="flex">
@@ -12,6 +12,4 @@ const Dashboard = () => {
       </div>
     </div>
   );
-};
-
-export default Dashboard;
+}

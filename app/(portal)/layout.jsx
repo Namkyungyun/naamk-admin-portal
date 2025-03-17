@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-// import { getAccessToken } from "@/app/lib/auth";
 // import apiClient from "@/app/lib/apiClient";
 import SideBar from "@/app/(portal)/component/SideBar";
 import TopBar from "@/app/(portal)/component/TopBar";
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function PortalLayout({ children }) {
   const router = useRouter();
@@ -13,11 +12,6 @@ export default function PortalLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
-    // const token = getAccessToken();
-    // if (!token) {
-    //   router.replace("/login");
-    //   return;
-    // }
     // API 호출 전 토큰 검증 (예: 프로필 API 요청)
     // apiClient
     //   .get("/user/profile")
@@ -34,8 +28,6 @@ export default function PortalLayout({ children }) {
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // if (!isAuthenticated) return <p>Loading...</p>;
 
   return (
     <ProtectedRoute>

@@ -1,7 +1,11 @@
 "use client";
 
-import ProtectedRoute from "@/app/components/ProtectedRoute";
+import LoadingPage from "../components/LoadingPage";
 
-export default function HomePage() {
-  return <ProtectedRoute />;
+export default function HomePage({ children }) {
+  return (
+    <>
+      <LoadingPage />
+    </>
+  );
 }

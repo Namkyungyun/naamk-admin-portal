@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "@/app/globals.css";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const pretendard = localFont({
   src: [
@@ -28,7 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body className={`${pretendard.variable} antialiased mb-12`}>
-        {children}
+        <ProtectedRoute>{children}</ProtectedRoute>
       </body>
     </html>
   );

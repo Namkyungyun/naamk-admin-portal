@@ -9,12 +9,20 @@ export default function ProtectedRoute({ children }) {
 
   /// mount
   useEffect(() => {
-    if (!auth.token) {
-      auth.logout();
-    } else {
+    setTimeout(() => {
       setLoading(false); // ✅ 토큰 확인 후 로딩 종료
-    }
-  }, []);
+
+      if (!auth.token) {
+        auth.logout();
+      } else {
+        const currentPath = window.location.pathname;
+
+        if (currentPath == "/login" || currentPath == "/") {
+          auth.login();
+        }
+      }
+    }, "100");
+  });
 
   return <> {loading ? <LoadingPage /> : children}</>;
 }

@@ -19,7 +19,8 @@ import { LimitedLengthTextArea } from "../component/TextArea";
 import { RowFor3Column, RowFor2Column } from "../component/Row";
 import { FullColumn, MDColumn } from "../component/Column";
 
-const Test = () => {
+
+export default function Test() {
   const [reset, setReset] = useState(false);
   const [completedDate, setCompletedDate] = useState();
   const [search, setSearch] = useState({
@@ -190,4 +191,3 @@ const Test = () => {
   );
 };
 
-export default Test;

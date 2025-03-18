@@ -11,13 +11,14 @@ export default function ProtectedRoute({ children }) {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false); // ✅ 토큰 확인 후 로딩 종료
-
+      
+      const currentPath = window.location.pathname;
       if (!auth.token) {
-        auth.logout();
+        if (currentPath != "/login" ) {
+          auth.logout();
+        }
       } else {
-        const currentPath = window.location.pathname;
-
-        if (currentPath == "/login" || currentPath == "/") {
+        if (currentPath == "/login") {
           auth.login();
         }
       }

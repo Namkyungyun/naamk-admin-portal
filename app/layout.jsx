@@ -29,7 +29,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body className={`${pretendard.variable} antialiased mb-12`}>
-        <ProtectedRoute>{children}</ProtectedRoute>
+      {children}
       </body>
     </html>
   );

@@ -101,6 +101,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
             url: "/system-management/admins",
             parentId: 12,
           },
+          {
+            id: 16,
+            name: "에디터테스트",
+            url: "/notice",
+            parentId: 12,
+          },
         ],
         parentId: null,
       },
@@ -206,7 +212,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                         className="submenu-item flex justify-between items-center w-full"
                         onClick={() => onClickCurrentMenu(submenu.id)}
                       >
-                        <Link href="/test">
+                        <Link href={submenu.url}>
                           <span
                             className={`submenu-label${
                               isCurrentMenu(submenu.id) ? "-open" : ""

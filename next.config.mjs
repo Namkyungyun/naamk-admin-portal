@@ -11,11 +11,6 @@ const nextConfig = {
 
     return config;
   },
-  // experimental: {
-  //   turbo: {
-  //     // ...
-  //   },
-  // },
   reactStrictMode: false,
 };
 

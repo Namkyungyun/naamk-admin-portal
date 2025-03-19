@@ -1,6 +1,8 @@
-import localFont from "next/font/local";
 import "@/app/globals.css";
-import ProtectedRoute from "./components/ProtectedRoute";
+import localFont from "next/font/local";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Head from "next/head";
 
 const pretendard = localFont({
   src: [
@@ -28,8 +30,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
+      <Head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
+      </Head>
       <body className={`${pretendard.variable} antialiased mb-12`}>
-      {children}
+        {children}
       </body>
     </html>
   );

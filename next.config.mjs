@@ -7,6 +7,8 @@ const nextConfig = {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       });
+
+      // config.resolve.alias['yjs'] = path.resolve(__dirname, 'node_modules/yjs')
     }
 
     return config;

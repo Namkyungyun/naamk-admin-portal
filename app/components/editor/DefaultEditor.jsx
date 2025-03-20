@@ -2,6 +2,7 @@
 
 import StarterKit from "@tiptap/starter-kit";
 import Document from "@tiptap/extension-document";
+import Paragraph from "@tiptap/extension-paragraph";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
@@ -20,6 +21,7 @@ export default function DefaultEditor() {
   const editor = useEditor({
     extensions: [
       Document,
+      Paragraph,
       StarterKit,
       Text,
       TextStyle.configure({ types: [ListItem.name] }),
@@ -35,7 +37,10 @@ export default function DefaultEditor() {
       TaskList.configure({
         itemTypeName: "taskItem",
       }),
-      TaskItem,
+      TaskItem.configure({
+        nested: true,
+      }),
+      ,
       TextAlign.configure({
         types: ["paragraph"],
       }),
@@ -49,9 +54,9 @@ export default function DefaultEditor() {
   }
 
   return (
-    <div className="rounded-lg control-group bg-canvas border border-bd-muted px-2 py-2">
+    <div className="rounded-lg control-group bg-canvas px-2 py-2">
       <Toolbar editor={editor} />
-      <EditorContent className="min-h-lvw z-0" editor={editor} />
+      <EditorContent className="z-0" editor={editor} />
     </div>
   );
 }

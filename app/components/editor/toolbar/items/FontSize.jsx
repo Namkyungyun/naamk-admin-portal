@@ -15,7 +15,7 @@ export default function FontSizeDropdown({ style, editor }) {
     editor.chain().focus().setFontSize(getFontSize(defaultFontSize)).run();
   }, []);
 
-  let fontSizeButtons = fontSizes.map((size) => {
+  const fontSizeButtons = fontSizes.map((size) => {
     return (
       <div
         onClick={() =>
@@ -38,7 +38,7 @@ export default function FontSizeDropdown({ style, editor }) {
     return (
       <div>
         <TextFieldsIcon style={style.default} />
-        <span>{currentFontSize}</span>
+        <span>{currentFontSize ?? defaultFontSize}</span>
       </div>
     );
   };

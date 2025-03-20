@@ -9,49 +9,51 @@ import {
   TaskListDropdown,
 } from "./items/TextList";
 
+const iconStyle = {
+  default: { fontSize: 20, color: "black", margin: 2 },
+  active: { fontSize: 20, color: "blue", margin: 2 },
+};
+
 export default function Toolbar({ editor }) {
   if (!editor) {
     return null;
   }
 
-  const iconStyle = {
-    default: { fontSize: 18, color: "black", margin: 2 },
-    active: { fontSize: 18, color: "blue", margin: 2 },
-  };
-
   return (
-    <div className="rounded-lg control-group bg-subtle border border-bd-subtle">
-      <div className="flex flex-row justify-between items-center px-5 py-1 ">
+    <div className="rounded-lg control-group bg-gray-400 border border-bd-subtle px-3 py-1">
+      <div className="flex grid grid-rows">
         {/* 텍스트 데코레이션 */}
-        <Bold style={iconStyle} editor={editor} />
-        <Italic style={iconStyle} editor={editor} />
-        <Underline style={iconStyle} editor={editor} />
-        <Strike style={iconStyle} editor={editor} />
+        <div className="flex flex-wrap justify-around">
+          <div className="flex items-center gap-5">
+            <Bold className="mx-" style={iconStyle} editor={editor} />
+            <Italic style={iconStyle} editor={editor} />
+            <Underline style={iconStyle} editor={editor} />
+            <Strike style={iconStyle} editor={editor} />
+            <TextAlignDropdown style={iconStyle} editor={editor} />
+            <FontSizeDropdown style={iconStyle} editor={editor} />
+          </div>
 
-        {/* 텍스트 정렬 및 사이즈 */}
+          <div className="flex items-center gap-5">
+            <BulletListDropdown style={iconStyle} editor={editor} />
+            <OrderListDropdown style={iconStyle} editor={editor} />
+            <TaskListDropdown style={iconStyle} editor={editor} />
+          </div>
 
-        <TextAlignDropdown style={iconStyle} editor={editor} />
-        <FontSizeDropdown style={iconStyle} editor={editor} />
-
-        {/* 리스트 */}
-        <BulletListDropdown style={iconStyle} editor={editor} />
-        <OrderListDropdown style={iconStyle} editor={editor} />
-        <TaskListDropdown style={iconStyle} editor={editor} />
-
-        {/* 첨부 */}
-        <div className="mx-2" />
-        <button>
-          <LinkIcon style={iconStyle} />
-        </button>
-        <button>
-          <ImageIcon style={iconStyle} />
-        </button>
-        <button>
-          <VideoCall style={iconStyle} />
-        </button>
-        <button>
-          <CodeIcon style={iconStyle} />
-        </button>
+          <div className="flex items-center gap-5">
+            <button>
+              <LinkIcon style={iconStyle} />
+            </button>
+            <button>
+              <ImageIcon style={iconStyle} />
+            </button>
+            <button>
+              <VideoCall style={iconStyle} />
+            </button>
+            <button>
+              <CodeIcon style={iconStyle} />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

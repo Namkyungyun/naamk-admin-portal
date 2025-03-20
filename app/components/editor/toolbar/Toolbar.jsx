@@ -8,6 +8,7 @@ import {
   OrderListDropdown,
   TaskListDropdown,
 } from "./items/TextList";
+import { RedoAction, UndoAction } from "./items/EditAction";
 
 const iconStyle = {
   default: { fontSize: 20, color: "black", margin: 2 },
@@ -23,20 +24,22 @@ export default function Toolbar({ editor }) {
     <div className="rounded-lg control-group bg-gray-400 border border-bd-subtle px-3 py-1">
       <div className="flex grid grid-rows">
         {/* 텍스트 데코레이션 */}
-        <div className="flex flex-wrap justify-around">
+        <div className="flex flex-wrap justify-start">
           <div className="flex items-center gap-5">
-            <Bold className="mx-" style={iconStyle} editor={editor} />
+            <UndoAction style={iconStyle} editor={editor} />
+            <RedoAction style={iconStyle} editor={editor} />
+            <Bold style={iconStyle} editor={editor} />
             <Italic style={iconStyle} editor={editor} />
             <Underline style={iconStyle} editor={editor} />
             <Strike style={iconStyle} editor={editor} />
-            <TextAlignDropdown style={iconStyle} editor={editor} />
-            <FontSizeDropdown style={iconStyle} editor={editor} />
           </div>
 
           <div className="flex items-center gap-5">
             <BulletListDropdown style={iconStyle} editor={editor} />
             <OrderListDropdown style={iconStyle} editor={editor} />
             <TaskListDropdown style={iconStyle} editor={editor} />
+            <TextAlignDropdown style={iconStyle} editor={editor} />
+            <FontSizeDropdown style={iconStyle} editor={editor} />
           </div>
 
           <div className="flex items-center gap-5">

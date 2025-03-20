@@ -1,6 +1,6 @@
 "use client";
 import { CancelButton, SaveButton } from "../component/Buttons";
-import DefaultEditor from "@/app/components/editor/DefaultEditor";
+import DefaultEditor from "@/app/components/editor/Editor";
 
 export default function EditorPage() {
   return (

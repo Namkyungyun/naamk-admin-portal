@@ -25,6 +25,8 @@ import SubdirectoryArrowRight from "@mui/icons-material/SubdirectoryArrowRight";
 import SubdirectoryArrowLeft from "@mui/icons-material/SubdirectoryArrowLeft";
 import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 import AddCircleOutlineOutlined from "@mui/icons-material/AddCircleOutlineOutlined";
+import Undo from "@mui/icons-material/Undo";
+import Redo from "@mui/icons-material/Redo";
 
 export {
   FormatBoldIcon,
@@ -54,4 +56,6 @@ export {
   SubdirectoryArrowLeft,
   PlaylistAdd,
   AddCircleOutlineOutlined,
+  Undo,
+  Redo,
 };

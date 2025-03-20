@@ -38,7 +38,7 @@ export default function FontSizeDropdown({ style, editor }) {
     return (
       <div>
         <TextFieldsIcon style={style.default} />
-        <span>{currentFontSize ?? defaultFontSize}</span>
+        <span className="text-sm">{currentFontSize ?? defaultFontSize}</span>
       </div>
     );
   };

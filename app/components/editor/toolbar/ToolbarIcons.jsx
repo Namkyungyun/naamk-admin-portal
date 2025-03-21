@@ -27,6 +27,7 @@ import PlaylistAdd from "@mui/icons-material/PlaylistAdd";
 import AddCircleOutlineOutlined from "@mui/icons-material/AddCircleOutlineOutlined";
 import Undo from "@mui/icons-material/Undo";
 import Redo from "@mui/icons-material/Redo";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 export {
   FormatBoldIcon,
@@ -58,4 +59,5 @@ export {
   AddCircleOutlineOutlined,
   Undo,
   Redo,
+  CloseOutlined,
 };

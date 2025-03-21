@@ -686,3 +686,17 @@ input[type='number'] {
   color: blue;
   text-decoration: underline;
 }
+
+.toolbar-wrapper {
+  margin: 8px 8px;
+  border-radius: 6px; /* rounded-md */
+}
+
+.toolbar-wrapper:hover {
+  background-color: #8c8c99; /* 기존 색상보다 어두운 hover 색상 */
+}
+
+.dropdown-item:hover {
+  border-radius: 6px; /* rounded-md */
+  background-color: #e3e3e68f; /* 기존 색상보다 어두운 hover 색상 */
+}

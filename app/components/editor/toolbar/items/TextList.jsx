@@ -18,15 +18,11 @@ export function BulletListDropdown({ style, editor }) {
   const dataType = "bulletList";
   const optionDataType = "listItem";
   const optionButton = <AddCircleOutlineOutlined style={{ fontSize: 18 }} />;
-  const options = [
-    <ListAddButton editor={editor} dataType={optionDataType} />,
-    <SubListApplyButton editor={editor} dataType={optionDataType} />,
-    <ListEscapeButton editor={editor} dataType={optionDataType} />,
-  ];
+  const options = commonOptions(style, editor, optionDataType);
 
   return (
     <>
-      <div>
+      <div className="toolbar-wrapper">
         <FormatListBulletedIcon
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={editor.isActive(dataType) ? "is-active" : ""}
@@ -34,7 +30,7 @@ export function BulletListDropdown({ style, editor }) {
         />
 
         <Dropdown
-          size={18}
+          isSmall={true}
           autoClose={false}
           items={options}
           selectedItem={optionButton}
@@ -52,23 +48,19 @@ export function OrderListDropdown({ style, editor }) {
   const dataType = "orderedList";
   const optionDataType = "listItem";
   const optionButton = <AddCircleOutlineOutlined style={{ fontSize: 18 }} />;
-  const options = [
-    <ListAddButton editor={editor} dataType={optionDataType} />,
-    <SubListApplyButton editor={editor} dataType={optionDataType} />,
-    <ListEscapeButton editor={editor} dataType={optionDataType} />,
-  ];
+  const options = commonOptions(style, editor, optionDataType);
 
   return (
     <>
-      <div className="button-group">
+      <div className="toolbar-wrapper">
         <FormatListNumberedIcon
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={editor.isActive(dataType) ? "is-active" : ""}
+          className={`${editor.isActive(dataType) ? "is-active" : ""}`}
           style={editor.isActive(dataType) ? style.active : style.default}
         />
 
         <Dropdown
-          size={18}
+          isSmall={true}
           autoClose={false}
           items={options}
           selectedItem={optionButton}
@@ -86,15 +78,11 @@ export function TaskListDropdown({ style, editor }) {
   const dataType = "taskList";
   const optionDataType = "taskItem";
   const optionButton = <AddCircleOutlineOutlined style={{ fontSize: 18 }} />;
-  const options = [
-    <ListAddButton editor={editor} dataType={optionDataType} />,
-    <SubListApplyButton editor={editor} dataType={optionDataType} />,
-    <ListEscapeButton editor={editor} dataType={optionDataType} />,
-  ];
+  const options = commonOptions(style, editor, optionDataType);
 
   return (
     <>
-      <div>
+      <div className="toolbar-wrapper">
         <Checklist
           onClick={() => editor.chain().focus().toggleTaskList().run()}
           className={editor.isActive(dataType) ? "is-active" : ""}
@@ -102,7 +90,7 @@ export function TaskListDropdown({ style, editor }) {
         />
 
         <Dropdown
-          size={18}
+          isSmall={true}
           autoClose={false}
           items={options}
           selectedItem={optionButton}
@@ -112,39 +100,50 @@ export function TaskListDropdown({ style, editor }) {
   );
 }
 
+function commonOptions(style, editor, dataType) {
+  return [
+    <ListAddButton style={style} editor={editor} dataType={dataType} />,
+    <SubListApplyButton style={style} editor={editor} dataType={dataType} />,
+    <ListEscapeButton style={style} editor={editor} dataType={dataType} />,
+  ];
+}
+
 /// options
-export function ListAddButton({ editor, dataType }) {
+export function ListAddButton({ style, editor, dataType }) {
   if (!editor) {
     return null;
   }
   return (
     <PlaylistAdd
+      style={style.default}
       onClick={() => editor.chain().focus().splitListItem(dataType).run()}
       disabled={!editor.can().splitListItem(dataType)}
     />
   );
 }
 
-export function SubListApplyButton({ editor, dataType }) {
+export function SubListApplyButton({ style, editor, dataType }) {
   if (!editor) {
     return null;
   }
 
   return (
     <SubdirectoryArrowRight
+      style={style.default}
       onClick={() => editor.chain().focus().sinkListItem(dataType).run()}
       disabled={!editor.can().sinkListItem()}
     />
   );
 }
 
-export function ListEscapeButton({ editor, dataType }) {
+export function ListEscapeButton({ style, editor, dataType }) {
   if (!editor) {
     return null;
   }
 
   return (
     <SubdirectoryArrowLeft
+      style={style.default}
       onClick={() => editor.chain().focus().liftListItem(dataType).run()}
       disabled={!editor.can().liftListItem(dataType)}
     />

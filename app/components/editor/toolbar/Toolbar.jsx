@@ -1,7 +1,8 @@
 import "./styles.scss";
+import { useEffect } from "react";
 import { Bold, Italic, Strike, Underline } from "./items/TextDecoration";
 import { TextAlignDropdown } from "./items/TextAlign";
-import { LinkIcon, ImageIcon, VideoCall, CodeIcon } from "./ToolbarIcons";
+import { ImageIcon, CodeIcon } from "./ToolbarIcons";
 import FontSizeDropdown from "./items/FontSize";
 import {
   BulletListDropdown,
@@ -9,9 +10,12 @@ import {
   TaskListDropdown,
 } from "./items/TextList";
 import { RedoAction, UndoAction } from "./items/EditAction";
+import { Link } from "./items/Link";
+import { VideoAttachment } from "./items/Video";
+import editorFile from "@/app/lib/editorFile";
 
 const iconStyle = {
-  default: { fontSize: 20, color: "black", margin: 2 },
+  default: { fontSize: 20, color: "white", margin: 2 },
   active: { fontSize: 20, color: "blue", margin: 2 },
 };
 
@@ -20,12 +24,20 @@ export default function Toolbar({ editor }) {
     return null;
   }
 
+  const fileManagement = editorFile();
+
+  useEffect(() => {
+    console.log(fileManagement.blobUrlObject);
+    const test = editor.getHTML();
+    console.log(test);
+  }, [fileManagement.blobUrlObject]);
+
   return (
-    <div className="rounded-lg control-group bg-gray-400 border border-bd-subtle px-3 py-1">
+    <div className="rounded-lg control-group bg-gray-500 border border-bd-subtle px-3 py-1">
       <div className="flex grid grid-rows">
         {/* 텍스트 데코레이션 */}
         <div className="flex flex-wrap justify-start">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 mx-1">
             <UndoAction style={iconStyle} editor={editor} />
             <RedoAction style={iconStyle} editor={editor} />
             <Bold style={iconStyle} editor={editor} />
@@ -34,7 +46,7 @@ export default function Toolbar({ editor }) {
             <Strike style={iconStyle} editor={editor} />
           </div>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 mx-1">
             <BulletListDropdown style={iconStyle} editor={editor} />
             <OrderListDropdown style={iconStyle} editor={editor} />
             <TaskListDropdown style={iconStyle} editor={editor} />
@@ -42,15 +54,15 @@ export default function Toolbar({ editor }) {
             <FontSizeDropdown style={iconStyle} editor={editor} />
           </div>
 
-          <div className="flex items-center gap-5">
-            <button>
-              <LinkIcon style={iconStyle} />
-            </button>
+          <div className="flex items-center gap-5 mx-1">
+            <Link style={iconStyle} editor={editor} />
+            <VideoAttachment
+              style={iconStyle}
+              editor={editor}
+              fileManagement={fileManagement}
+            />
             <button>
               <ImageIcon style={iconStyle} />
-            </button>
-            <button>
-              <VideoCall style={iconStyle} />
             </button>
             <button>
               <CodeIcon style={iconStyle} />

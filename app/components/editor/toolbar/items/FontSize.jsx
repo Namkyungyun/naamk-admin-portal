@@ -7,14 +7,13 @@ export default function FontSizeDropdown({ style, editor }) {
     return null;
   }
 
-  const defaultFontSize = 16;
-  const fontSizes = [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 32, 36, 48, 60, 72];
-  const getFontSize = (size) => `${size}px`;
-
   useEffect(() => {
     editor.chain().focus().setFontSize(getFontSize(defaultFontSize)).run();
   }, []);
 
+  const getFontSize = (size) => `${size}px`;
+  const defaultFontSize = 16;
+  const fontSizes = [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 32, 36, 48, 60, 72];
   const fontSizeButtons = fontSizes.map((size) => {
     return (
       <div

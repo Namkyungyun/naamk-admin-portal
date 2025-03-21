@@ -1,3 +1,4 @@
+import "../styles.scss";
 import { useState, useRef, useEffect } from "react";
 
 export function Dropdown({
@@ -24,11 +25,11 @@ export function Dropdown({
 
   return (
     <>
-      <div ref={dropdownRef} className={`relative inline-block text-left`}>
+      <div ref={dropdownRef} className="dropdown-warpper">
         {/* Dropdown button */}
         <button
           type="button"
-          className={`${isSmall ? "rounded-lg" : "px-1 py-1 rounded-md"} inline-flex items-center justify-center w-full shadow-sm dropdown-item`}
+          className={`${isSmall ? "rounded-lg" : "px-1 py-1 rounded-md"} dropdown-current-item`}
           onClick={(e) => {
             e.stopPropagation();
             toggleDropdown();
@@ -39,10 +40,10 @@ export function Dropdown({
 
         {/* Dropdown menu */}
         {isOpen && (
-          <div className="z-40 py-1 px-4 grid grid-cols-1 place-items-center absolute mt-0 rounded-md shadow-sm bg-white focus:outline-none">
+          <div className="dropdown-menu scrollable-content">
             {items.map((item, index) => (
               <button
-                className="gap-4 flex col-span-1 dropdown-item"
+                className="dropdown-menu-item "
                 key={index}
                 onClick={closeAuto ? toggleDropdown : null}
               >

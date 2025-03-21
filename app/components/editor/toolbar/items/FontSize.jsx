@@ -17,6 +17,7 @@ export default function FontSizeDropdown({ style, editor }) {
   const fontSizeButtons = fontSizes.map((size) => {
     return (
       <div
+        className={`py-1 text-sm text-${style.default.color}`}
         onClick={() =>
           editor.chain().focus().setFontSize(getFontSize(size)).run()
         }
@@ -37,7 +38,9 @@ export default function FontSizeDropdown({ style, editor }) {
     return (
       <div>
         <TextFieldsIcon style={style.default} />
-        <span className="text-sm">{currentFontSize ?? defaultFontSize}</span>
+        <span className={`text-sm text-${style.default.color}`}>
+          {currentFontSize ?? defaultFontSize}
+        </span>
       </div>
     );
   };

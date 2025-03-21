@@ -17,24 +17,28 @@ export function BulletListDropdown({ style, editor }) {
 
   const dataType = "bulletList";
   const optionDataType = "listItem";
-  const optionButton = <AddCircleOutlineOutlined style={{ fontSize: 18 }} />;
+  const optionButton = <AddButton style={style} />;
   const options = commonOptions(style, editor, optionDataType);
 
   return (
     <>
-      <div className="toolbar-wrapper">
-        <FormatListBulletedIcon
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={editor.isActive(dataType) ? "is-active" : ""}
-          style={editor.isActive(dataType) ? style.active : style.default}
-        />
+      <div className="toolbar-option-menu-wrapper">
+        <div className="toolbar-option-menu">
+          <FormatListBulletedIcon
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            className={editor.isActive(dataType) ? "is-active" : ""}
+            style={editor.isActive(dataType) ? style.active : style.default}
+          />
+        </div>
 
-        <Dropdown
-          isSmall={true}
-          autoClose={false}
-          items={options}
-          selectedItem={optionButton}
-        />
+        <div className="toolbar-option-btn">
+          <Dropdown
+            isSmall={true}
+            autoClose={false}
+            items={options}
+            selectedItem={optionButton}
+          />
+        </div>
       </div>
     </>
   );
@@ -47,24 +51,27 @@ export function OrderListDropdown({ style, editor }) {
 
   const dataType = "orderedList";
   const optionDataType = "listItem";
-  const optionButton = <AddCircleOutlineOutlined style={{ fontSize: 18 }} />;
+  const optionButton = <AddButton style={style} />;
   const options = commonOptions(style, editor, optionDataType);
 
   return (
     <>
-      <div className="toolbar-wrapper">
-        <FormatListNumberedIcon
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`${editor.isActive(dataType) ? "is-active" : ""}`}
-          style={editor.isActive(dataType) ? style.active : style.default}
-        />
-
-        <Dropdown
-          isSmall={true}
-          autoClose={false}
-          items={options}
-          selectedItem={optionButton}
-        />
+      <div className="toolbar-option-menu-wrapper">
+        <div className="toolbar-option-menu">
+          <FormatListNumberedIcon
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={`${editor.isActive(dataType) ? "is-active" : ""}`}
+            style={editor.isActive(dataType) ? style.active : style.default}
+          />
+        </div>
+        <div className="toolbar-option-btn">
+          <Dropdown
+            isSmall={true}
+            autoClose={false}
+            items={options}
+            selectedItem={optionButton}
+          />
+        </div>
       </div>
     </>
   );
@@ -77,24 +84,28 @@ export function TaskListDropdown({ style, editor }) {
 
   const dataType = "taskList";
   const optionDataType = "taskItem";
-  const optionButton = <AddCircleOutlineOutlined style={{ fontSize: 18 }} />;
+  const optionButton = <AddButton style={style} />;
   const options = commonOptions(style, editor, optionDataType);
 
   return (
     <>
-      <div className="toolbar-wrapper">
-        <Checklist
-          onClick={() => editor.chain().focus().toggleTaskList().run()}
-          className={editor.isActive(dataType) ? "is-active" : ""}
-          style={editor.isActive(dataType) ? style.active : style.default}
-        />
+      <div className="toolbar-option-menu-wrapper">
+        <div className="toolbar-option-menu">
+          <Checklist
+            onClick={() => editor.chain().focus().toggleTaskList().run()}
+            className={editor.isActive(dataType) ? "is-active" : ""}
+            style={editor.isActive(dataType) ? style.active : style.default}
+          />
+        </div>
 
-        <Dropdown
-          isSmall={true}
-          autoClose={false}
-          items={options}
-          selectedItem={optionButton}
-        />
+        <div className="toolbar-option-btn">
+          <Dropdown
+            isSmall={true}
+            autoClose={false}
+            items={options}
+            selectedItem={optionButton}
+          />
+        </div>
       </div>
     </>
   );
@@ -106,6 +117,10 @@ function commonOptions(style, editor, dataType) {
     <SubListApplyButton style={style} editor={editor} dataType={dataType} />,
     <ListEscapeButton style={style} editor={editor} dataType={dataType} />,
   ];
+}
+
+export function AddButton({ style }) {
+  return <AddCircleOutlineOutlined style={style.dropdown} />;
 }
 
 /// options

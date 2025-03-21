@@ -1,7 +1,7 @@
 import { VideoCall } from "../ToolbarIcons";
 import { useRef } from "react";
 
-export function VideoAttachment({ style, editor, fileManagement }) {
+export function Video({ style, editor, fileManagement }) {
   if (!editor) {
     return null;
   }

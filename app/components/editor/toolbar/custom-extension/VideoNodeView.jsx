@@ -9,7 +9,7 @@ export default function VideoNodeView({
   deleteNode,
   selected,
 }) {
-  const { src, width, height, alignment } = node.attrs;
+  const { src, width, height, alignment, embedType } = node.attrs;
   const [hovered, setHovered] = useState(false);
 
   const handleResize = (e, { size }) => {
@@ -25,6 +25,11 @@ export default function VideoNodeView({
     right: "justify-end",
   }[alignment || "center"];
 
+  // YouTube 여부 판단 함수
+  const isYouTubeUrl = (url) => {
+    return /(?:youtu\.be\/|youtube\.com\/)/.test(url);
+  };
+
   return (
     <NodeViewWrapper
       className={`my-2 flex ${alignmentClass} relative group`}
@@ -38,7 +43,11 @@ export default function VideoNodeView({
         resizeHandles={["se"]}
         minConstraints={[200, 150]}
         maxConstraints={[800, 600]}
-        className={selected ? "border-2 border-blue-500" : ""}
+        className={
+          selected
+            ? "border-2 border-blue-500 overflow-hidden"
+            : "overflow-hidden"
+        }
       >
         {/* ❌ 삭제 버튼 - 비디오 위에 딱 붙게 */}
         {hovered && (
@@ -50,11 +59,37 @@ export default function VideoNodeView({
             ×
           </button>
         )}
-        <video
-          src={src}
-          controls
-          style={{ width: "100%", height: "100%", display: "block" }}
-        />
+
+        {embedType === "iframe" ? (
+          <iframe
+            src={src}
+            width="100%"
+            height="100%"
+            allow={
+              isYouTubeUrl(src)
+                ? "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                : "accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            }
+            allowFullScreen
+            style={{
+              display: "block",
+              borderRadius: "4px",
+              objectFit: "contain",
+            }}
+          />
+        ) : (
+          <video
+            src={src}
+            controls
+            autoPlay={false}
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "block",
+              objectFit: "contain",
+            }}
+          />
+        )}
       </ResizableBox>
     </NodeViewWrapper>
   );

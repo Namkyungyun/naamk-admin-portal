@@ -28,6 +28,7 @@ import AddCircleOutlineOutlined from "@mui/icons-material/AddCircleOutlineOutlin
 import Undo from "@mui/icons-material/Undo";
 import Redo from "@mui/icons-material/Redo";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import FileUploadOutlined from "@mui/icons-material/FileUploadOutlined";
 
 export {
   FormatBoldIcon,
@@ -60,4 +61,5 @@ export {
   Undo,
   Redo,
   CloseOutlined,
+  FileUploadOutlined,
 };

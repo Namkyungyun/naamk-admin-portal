@@ -1,4 +1,4 @@
-import { Node, mergeAttributes, nodeViewProps } from "@tiptap/core";
+import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import VideoNodeView from "./VideoNodeView.jsx"; // 직접 만든 컴포넌트
 
@@ -14,26 +14,46 @@ export const CustomVideo = Node.create({
       width: { default: 480 },
       height: { default: 270 },
       controls: { default: true },
+      embedType: { default: "video" }, // "video" or "iframe"
     };
   },
 
   parseHTML() {
-    return [{ tag: "video" }];
+    return [{ tag: "video" }, { tag: "iframe" }];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ["video", mergeAttributes(HTMLAttributes)];
+    const { embedType, ...attrs } = HTMLAttributes;
+    if (embedType === "iframe") {
+      return ["iframe", mergeAttributes(attrs)];
+    }
+    return ["video", mergeAttributes(attrs)];
   },
 
   addCommands() {
     return {
       setVideo:
-        ({ id, src }) =>
-        ({ commands }) => {
-          return commands.insertContent({
-            type: this.name,
-            attrs: { id, src },
-          });
+        ({ id, src, embedType = "video" }) =>
+        ({ tr, state, dispatch }) => {
+          const videoNode = this.type.create({ id, src, embedType });
+          const paragraphNode = state.schema.nodes.paragraph.create();
+
+          // 1. 현재 위치에 비디오 삽입
+          tr.replaceSelectionWith(videoNode);
+
+          // 2. 비디오 뒤에 문단 삽입
+          const insertPos = tr.selection.$to.pos + 1;
+          const safePos = Math.min(insertPos, tr.doc.content.size);
+          tr.insert(safePos, paragraphNode);
+
+          // 3. 커서를 새 문단으로 이동
+          const resolvedPos = tr.doc.resolve(
+            Math.min(safePos + 1, tr.doc.content.size)
+          );
+          tr.setSelection(state.selection.constructor.near(resolvedPos));
+
+          if (dispatch) dispatch(tr);
+          return true;
         },
     };
   },
@@ -42,100 +62,3 @@ export const CustomVideo = Node.create({
     return ReactNodeViewRenderer(VideoNodeView); // 📌 여기서 React 렌더링 사용
   },
 });
-
-// export const CustomVideo = Node.create({
-//   name: "video",
-//   group: "block",
-//   atom: true,
-
-//   addAttributes() {
-//     return {
-//       id: { default: null },
-//       src: { default: null },
-//       controls: { default: true },
-//       width: { default: "500px" }, // 기본값
-//       height: { default: null }, // 선택값
-//     };
-//   },
-
-//   parseHTML() {
-//     return [{ tag: "video" }];
-//   },
-
-//   renderHTML({ HTMLAttributes }) {
-//     return [
-//       "video",
-//       {
-//         ...HTMLAttributes,
-//         width: HTMLAttributes.width || "500px",
-//       },
-//     ];
-//   },
-
-//   addCommands() {
-//     return {
-//       setVideo:
-//         ({ id, src, width }) =>
-//         ({ commands }) => {
-//           return commands.insertContent({
-//             type: this.name,
-//             attrs: { id, src, width },
-//           });
-//         },
-
-//       updateVideoSize:
-//         ({ width }) =>
-//         ({ tr, state, dispatch }) => {
-//           const { selection } = state;
-//           const { $from } = selection;
-
-//           if ($from.nodeAfter?.type.name !== "video") return false;
-
-//           const pos = $from.pos;
-//           const node = $from.nodeAfter;
-
-//           const newNode = node.type.create({ ...node.attrs, width });
-
-//           tr.replaceWith(pos, pos + node.nodeSize, newNode);
-//           dispatch(tr);
-//           return true;
-//         },
-//     };
-//   },
-// });
-
-// export const CustomVideo = Node.create({
-//   name: "video",
-//   group: "block",
-//   atom: true, // 단일 노드로 다룸
-
-//   addAttributes() {
-//     return {
-//       id: { default: null },
-//       src: { default: null },
-//       controls: { default: true },
-//       width: { default: "500px" },
-//     };
-//   },
-
-//   parseHTML() {
-//     return [{ tag: "video" }];
-//   },
-
-//   renderHTML({ HTMLAttributes }) {
-//     return ["video", mergeAttributes(HTMLAttributes)];
-//   },
-
-//   addCommands() {
-//     return {
-//       setVideo:
-//         ({ id, src }) =>
-//         ({ commands }) => {
-//           return commands.insertContent({
-//             type: this.name,
-//             attrs: { id, src },
-//           });
-//         },
-//     };
-//   },
-// });

@@ -1,6 +1,4 @@
 import "./styles.scss";
-import editorFile from "@/app/lib/editorFile";
-import { useEffect } from "react";
 import { Bold, Italic, Strike, Underline } from "./items/TextDecoration";
 import { TextAlignDropdown } from "./items/TextAlign";
 import { ImageIcon, CodeIcon } from "./ToolbarIcons";
@@ -20,18 +18,10 @@ const iconStyle = {
   dropdown: { fontSize: 18, color: "white" },
 };
 
-export default function Toolbar({ editor }) {
+export default function Toolbar({ editor, fileManagement }) {
   if (!editor) {
     return null;
   }
-
-  const fileManagement = editorFile();
-
-  useEffect(() => {
-    console.log(fileManagement.blobUrlObject);
-    const test = editor.getHTML();
-    console.log(test);
-  }, [fileManagement.blobUrlObject]);
 
   return (
     <div className="rounded-lg control-group bg-gray-500 border border-bd-subtle px-3 py-1">

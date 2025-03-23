@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 
 export function Dropdown({
   isSmall = false,
+  isClose = false,
   closeAuto = true,
   items,
   selectedItem,
@@ -14,14 +15,20 @@ export function Dropdown({
   };
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setIsOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (isClose) {
+      setIsOpen(false);
+    }
+  }, [isClose]);
 
   return (
     <>
@@ -42,13 +49,13 @@ export function Dropdown({
         {isOpen && (
           <div className="dropdown-menu scrollable-content">
             {items.map((item, index) => (
-              <button
-                className="dropdown-menu-item "
+              <div
                 key={index}
                 onClick={closeAuto ? toggleDropdown : null}
+                className="cursor-pointer dropdown-menu-item "
               >
                 {item}
-              </button>
+              </div>
             ))}
           </div>
         )}

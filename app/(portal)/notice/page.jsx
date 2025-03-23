@@ -1,8 +1,11 @@
 "use client";
+import { useEffect, useState } from "react";
 import { CancelButton, SaveButton } from "../component/Buttons";
 import DefaultEditor from "@/app/components/editor/Editor";
 
 export default function EditorPage() {
+  const [exportHtml, setExportHtml] = useState(false);
+
   return (
     <section className="border text-black p-6 rounded-lg flex-grow w-full my-10">
       {/* title  */}
@@ -18,13 +21,17 @@ export default function EditorPage() {
       {/* content */}
       <div>
         <label className="text-lg font-bold">Content</label>
-        <DefaultEditor className="rounded-lg border border-bd-muted px-2 py-8" />
+        <DefaultEditor
+          exportHtml={exportHtml}
+          setExportHtml={setExportHtml}
+          className="rounded-lg border border-bd-muted px-2 py-8"
+        />
       </div>
 
       {/* buttons */}
       <div className="flex justify-end">
         <CancelButton />
-        <SaveButton />
+        <SaveButton onClick={() => setExportHtml(true)} />
       </div>
     </section>
   );

@@ -94,7 +94,6 @@
 
 
 
-
 .dropdown-warpper {
   position: relative;         // relative
   display: inline-block;      // inline-block
@@ -168,5 +167,28 @@
   &::-webkit-scrollbar-thumb {
     background-color: #7d7e7f;       // 스크롤바 색 (gray-300)
     border-radius: 4px;
+  }
+}
+
+.popup-wrapper {
+  position: fixed;
+  display: inline-block;
+  z-index: 50;  
+  top: 45%;    
+  left: 25%;
+
+  .popup {
+    position: absolute;
+    top: 100%;              // 버튼 하단
+    left: 0;
+    margin-top: 0.5rem;     // mt-2
+    z-index: 9999;          // 최상단
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    width: 18rem;
   }
 }

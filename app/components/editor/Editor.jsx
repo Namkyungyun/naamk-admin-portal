@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import editorFile from "@/app/lib/editorFile";
 import StarterKit from "@tiptap/starter-kit";
 import Document from "@tiptap/extension-document";
 import Paragraph from "@tiptap/extension-paragraph";
@@ -20,23 +19,23 @@ import { Color } from "@tiptap/extension-color";
 import Toolbar from "./toolbar/Toolbar";
 import { EditorContent, useEditor } from "@tiptap/react";
 
-export default function DefaultEditor({ exportHtml, setExportHtml }) {
+export default function Editor({
+  fileManagement,
+  exportHtml,
+  onExportPreFilter,
+  onExportAfterFilter,
+}) {
   useEffect(() => {}, []);
 
   useEffect(() => {
     if (exportHtml) {
       exportToHtml();
     }
-
-    setTimeout(() => {
-      setExportHtml(false);
-    }, "500");
   }, [exportHtml]);
 
   const exportToHtml = () => {
-    console.log(fileManagement.blobUrlObject);
-    const test = editor.getHTML();
-    console.log(test);
+    onExportPreFilter(editor);
+    onExportAfterFilter(editor);
   };
 
   const editor = useEditor({
@@ -62,8 +61,6 @@ export default function DefaultEditor({ exportHtml, setExportHtml }) {
   if (!editor) {
     return null;
   }
-
-  const fileManagement = editorFile();
 
   return (
     <div className="rounded-lg control-group bg-canvas px-2 py-2">

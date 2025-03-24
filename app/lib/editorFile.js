@@ -40,8 +40,6 @@ export default function editorFile() {
      object[id] = newVal;
     
      blobUrlObject = {...blobUrlObject, ...object};
-     console.log("====1")
-     console.log(blobUrlObject);
   };
 
   const setReqFiles = (id, newVal) => {

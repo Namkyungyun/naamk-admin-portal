@@ -1,3 +1,4 @@
+import "../styles.scss";
 import { useState, useRef } from "react";
 import { VideoCall, FileUploadOutlined, LinkIcon } from "../ToolbarIcons";
 import { Dropdown } from "./Dropdown";

@@ -1,7 +1,6 @@
 import "./styles.scss";
 import { Bold, Italic, Strike, Underline } from "./items/TextDecoration";
 import { TextAlignDropdown } from "./items/TextAlign";
-import { ImageIcon, CodeIcon } from "./ToolbarIcons";
 import FontSizeDropdown from "./items/FontSize";
 import { RedoAction, UndoAction } from "./items/EditAction";
 import { Link } from "./items/Link";
@@ -11,6 +10,7 @@ import {
   OrderListDropdown,
   TaskListDropdown,
 } from "./items/TextList";
+import { Image } from "./items/Image";
 
 const iconStyle = {
   default: { fontSize: 20, color: "white", margin: 2 },
@@ -54,12 +54,11 @@ export default function Toolbar({ editor, fileManagement }) {
               editor={editor}
               fileManagement={fileManagement}
             />
-            <button>
-              <ImageIcon style={iconStyle} />
-            </button>
-            <button>
-              <CodeIcon style={iconStyle} />
-            </button>
+            <Image
+              style={iconStyle}
+              editor={editor}
+              fileManagement={fileManagement}
+            />
           </div>
         </div>
       </div>

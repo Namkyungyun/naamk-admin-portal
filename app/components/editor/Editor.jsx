@@ -14,10 +14,11 @@ import TextAlign from "@tiptap/extension-text-align";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import { FontSize } from "./toolbar/custom-extension/FontSize";
-import { CustomVideo } from "./toolbar/custom-extension/VideoAttachment";
+import { CustomVideoUpload } from "./toolbar/custom-extension/VideoUpload";
 import { Color } from "@tiptap/extension-color";
 import Toolbar from "./toolbar/Toolbar";
 import { EditorContent, useEditor } from "@tiptap/react";
+import { CustomImageUpload } from "./toolbar/custom-extension/ImageUpload";
 
 export default function Editor({
   fileManagement,
@@ -53,7 +54,8 @@ export default function Editor({
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
       ...listConfig,
       linkConfig,
-      CustomVideo,
+      CustomVideoUpload,
+      CustomImageUpload,
     ],
     content: ``,
   });

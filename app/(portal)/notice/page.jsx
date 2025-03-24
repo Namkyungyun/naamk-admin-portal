@@ -1,12 +1,13 @@
 "use client";
 import editorFile from "@/app/lib/editorFile";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CancelButton, SaveButton } from "../component/Buttons";
 import Editor from "@/app/components/editor/Editor";
 
 export default function EditorPage() {
   const fileManagement = editorFile();
   const [exportHtml, setExportHtml] = useState(false);
+  const [completedResoureUpload, setCompletedResoureceUpload] = useState(false);
 
   const onSave = () => {
     setExportHtml(true);
@@ -20,82 +21,52 @@ export default function EditorPage() {
   const onExportPreFilter = (editor) => {
     const html = editor.getHTML();
     // 리소스 데이터 필터링
-    const blobUrlObject = fileManagement.blobUrlObject;
-
-    for (let key of Object.keys(blobUrlObject)) {
-      let contain = html.includes(key);
-      if (!contain) {
-        delete blobUrlObject[key];
-      }
-    }
+    fileManagement.cleanUpRequestFile(html);
 
     // s3 url 받아오기 (API)
-    // ,,,
+    const reqFiles = fileManagement.reqFiles;
+    console.log(reqFiles);
+    // ,,, ///
     const s3Urls = {
       test: "https://web3-dev.s3.ap-northeast-2.amazonaws.com/poplus/test",
     };
 
     // editor에 새로 반영하기
-    updateMediaSrc(editor, (src, node) => {
-      if (node.attrs?.id !== null || node.attrs?.id !== undefined) {
-        return s3Urls[node.attrs?.id];
+    let isResourceLeak = false;
+    const updatedContent = fileManagement.updateMediaSrc(
+      // response에서 값이 있는 경우는 updateMediaSrc 연결 함수에서 reqFiles내 key값을 삭제함.
+      editor,
+      (src, node) => {
+        if (node.attrs?.id !== null || node.attrs?.id !== undefined) {
+          const s3Url = s3Urls[node.attrs?.id];
+          if (!s3Url) {
+            isResourceLeak = true;
+
+            return null;
+          }
+          return s3Url;
+        }
+        return src;
       }
-      return src;
+    );
+
+    queueMicrotask(() => {
+      editor.commands.setContent(updatedContent);
+      setCompletedResoureceUpload(!isResourceLeak);
     });
   };
-
-  function updateMediaSrc(editor, updateSrcCallback) {
-    const content = editor.getJSON();
-
-    const updated = {
-      ...content,
-      content: content.content.map((node) => {
-        // 블록 레벨 노드 내부까지 내려가기 (예: paragraph 안의 image)
-        if (node.content) {
-          return {
-            ...node,
-            content: node.content.map((child) => {
-              if (
-                (child.type === "image" || child.type === "video") &&
-                child.attrs?.src
-              ) {
-                return {
-                  ...child,
-                  attrs: {
-                    ...child.attrs,
-                    src: updateSrcCallback(child.attrs.src, child), // 콜백으로 변경
-                  },
-                };
-              }
-              return child;
-            }),
-          };
-        }
-
-        // 직접 노드 자체가 image/video인 경우
-        if (
-          (node.type === "image" || node.type === "video") &&
-          node.attrs?.src
-        ) {
-          return {
-            ...node,
-            attrs: {
-              ...node.attrs,
-              src: updateSrcCallback(node.attrs.src, node),
-            },
-          };
-        }
-
-        return node;
-      }),
-    };
-
-    editor.commands.setContent(updated);
-  }
 
   const onExportAfterFilter = (editor) => {
     const html = editor.getHTML();
     console.log(html);
+
+    if (!completedResoureUpload) {
+      alert("일부 리소스가 저장에 실패하였습니다!");
+      return;
+    }
+    /// TODO : form에 담을 thumnail 값 추출
+
+    /// TODO : 본문 저장 API 호출
   };
 
   return (

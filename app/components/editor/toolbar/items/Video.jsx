@@ -82,6 +82,7 @@ export function VideoUpload({ style, editor, fileManagement, onClose }) {
         .setVideo({ id, src: blobUrl, embedType: "video" })
         .run();
     }
+
     // input은 비우기
     fileInputRef.current.value = null;
 

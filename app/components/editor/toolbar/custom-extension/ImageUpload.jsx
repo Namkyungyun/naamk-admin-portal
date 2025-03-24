@@ -1,45 +1,46 @@
 import { Node, mergeAttributes } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import VideoNodeView from "./VideoNodeView.jsx"; // 직접 만든 컴포넌트
+import ImageNodeView from "./ImageNodeView.jsx";
 
-export const CustomVideo = Node.create({
-  name: "video",
+export const CustomImageUpload = Node.create({
+  name: "image",
   group: "block",
-  atom: true,
+  draggable: true,
 
   addAttributes() {
     return {
       id: { default: null },
       src: { default: null },
-      width: { default: 480 },
-      height: { default: 270 },
-      controls: { default: true },
-      embedType: { default: "video" }, // "video" or "iframe"
+      alt: { default: null },
+      title: { default: null },
+      width: { default: 400 },
+      height: { default: "auto" },
+      alignment: { default: "center" },
     };
   },
 
   parseHTML() {
-    return [{ tag: "video" }, { tag: "iframe" }];
+    return [
+      {
+        tag: "img",
+      },
+    ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    const { embedType, ...attrs } = HTMLAttributes;
-    if (embedType === "iframe") {
-      return ["iframe", mergeAttributes(attrs)];
-    }
-    return ["video", mergeAttributes(attrs)];
+    return ["img", mergeAttributes(HTMLAttributes)];
   },
 
   addCommands() {
     return {
-      setVideo:
-        ({ id, src, embedType = "video" }) =>
+      setImage:
+        ({ id, src }) =>
         ({ tr, state, dispatch }) => {
-          const videoNode = this.type.create({ id, src, embedType });
+          const imageNode = this.type.create({ id, src });
           const paragraphNode = state.schema.nodes.paragraph.create();
 
           // 1. 현재 위치에 비디오 삽입
-          tr.replaceSelectionWith(videoNode);
+          tr.replaceSelectionWith(imageNode);
 
           // 2. 비디오 뒤에 문단 삽입
           const insertPos = tr.selection.$to.pos + 1;
@@ -59,6 +60,6 @@ export const CustomVideo = Node.create({
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(VideoNodeView); // 📌 여기서 React 렌더링 사용
+    return ReactNodeViewRenderer(ImageNodeView);
   },
 });

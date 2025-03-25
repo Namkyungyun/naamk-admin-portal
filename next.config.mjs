@@ -1,14 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   webpack(config, { isServer }) {
     if (!isServer) {
-      // Turbopack에서 `@svgr/webpack`을 사용하려면 커스터마이징이 필요할 수 있습니다.
+      // 기존 svg loader 유지
       config.module.rules.push({
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       });
 
-      // config.resolve.alias['yjs'] = path.resolve(__dirname, 'node_modules/yjs')
+      // ✅ .css?inline → 문자열 import 가능하도록 추가
+      config.module.rules.push({
+        test: /\.css$/,
+        resourceQuery: /inline/, // ?inline 쿼리 붙은 파일만
+        use: ['raw-loader'],
+      });
     }
 
     return config;
@@ -17,5 +23,3 @@ const nextConfig = {
 };
 
 export default nextConfig;
-
-

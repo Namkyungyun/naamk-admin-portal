@@ -1,0 +1,132 @@
+.ProseMirror {
+    padding: 12px;
+    min-height: 200px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none; /* 포커스 시 파란 테두리 제거 */
+  }
+  
+  /* 기본적인 텍스트 스타일 */
+  .ProseMirror p {
+    margin: 8px 0;
+  }
+  
+  /* 리스트 스타일 */
+  .ProseMirror ul {
+    list-style-type: disc;
+    padding-left: 20px;
+  }
+  
+  .ProseMirror ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+  }
+  
+  .ProseMirror li {
+    margin-bottom: 5px;
+  }
+  
+  /* 블록 인용 스타일 */
+  .ProseMirror blockquote {
+    border-left: 4px solid #ccc;
+    padding-left: 10px;
+    color: #555;
+    margin: 8px 0;
+  }
+  
+  /* 코드 블록 스타일 */
+  .ProseMirror pre {
+    background: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    overflow-x: auto;
+  }
+  
+  /* 링크 스타일 */
+  .ProseMirror a {
+    color: blue;
+    text-decoration: underline;
+  }
+  
+  /* tiptap 커스텀 영역 */
+  .tiptap :first-child {
+    margin-top: 0;
+  }
+  
+  /* 리스트 스타일 */
+  .tiptap ul,
+  .tiptap ol {
+    padding: 0 1rem;
+    margin: 1.25rem 1rem 1.25rem 0.4rem;
+  }
+  
+  .tiptap ul li p,
+  .tiptap ol li p {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  
+  /* Task list specific styles */
+  .tiptap ul[data-type="taskList"] {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+  }
+  
+  .tiptap ul[data-type="taskList"] li {
+    align-items: flex-start;
+    display: flex;
+  }
+  
+  .tiptap ul[data-type="taskList"] li > label {
+    flex: 0 0 auto;
+    margin-right: 0.5rem;
+    user-select: none;
+  }
+  
+  .tiptap ul[data-type="taskList"] li > div {
+    flex: 1 1 auto;
+  }
+  
+  .tiptap ul[data-type="taskList"] input[type="checkbox"] {
+    cursor: pointer;
+  }
+  
+  .tiptap ul[data-type="taskList"] ul[data-type="taskList"] {
+    margin: 0;
+  }
+  
+  /* 코드 강조 */
+  .tiptap code {
+    background-color: var(--purple-light);
+    border-radius: 0.4rem;
+    color: var(--black);
+    font-size: 0.85rem;
+    padding: 0.25em 0.3em;
+  }
+  
+  /* 링크 스타일 */
+  .tiptap a {
+    color: var(--purple);
+    cursor: pointer;
+  }
+  
+  .tiptap a:hover {
+    color: var(--purple-contrast);
+  }
+
+.align-left {
+    display: block;
+    margin: 0 auto 0 0;
+  }
+  
+  .align-center {
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .align-right {
+    display: block;
+    margin: 0 0 0 auto;
+  }

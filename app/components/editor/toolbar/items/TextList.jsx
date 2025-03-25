@@ -1,4 +1,4 @@
-import "../styles.scss";
+import "@/app/components/editor/styles.scss";
 import {
   FormatListNumberedIcon,
   FormatListBulletedIcon,

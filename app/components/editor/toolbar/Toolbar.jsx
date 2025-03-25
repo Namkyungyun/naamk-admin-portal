@@ -1,4 +1,4 @@
-import "./styles.scss";
+import "@/app/components/editor/styles.scss";
 import { Bold, Italic, Strike, Underline } from "./items/TextDecoration";
 import { TextAlignDropdown } from "./items/TextAlign";
 import FontSizeDropdown from "./items/FontSize";

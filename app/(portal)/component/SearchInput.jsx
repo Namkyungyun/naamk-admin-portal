@@ -9,12 +9,12 @@ export function SearchInput({
   isRequired = false,
   type = Input.Search,
   placeholder = "검색할 문구를 적어주세요.",
+  minLength = 0,
   maxLength = 20,
   hidden = false,
-  handleInput = () => {},
-  handleReset = () => {},
+  onChange,
 }) {
-  const [text, setText] = useState(null);
+  const [text, setText] = useState("");
   const [validation, setValidation] = useState(true);
 
   ///// init
@@ -26,29 +26,39 @@ export function SearchInput({
   useEffect(() => {
     if (isReset) {
       onClear();
-      handleReset(false);
     }
   }, [isReset]);
 
   /////
-  const onChange = (e) => {
+  const onChangeValue = (e) => {
     let text = e.target.value;
-
-    /// TODO validation[정규식] 들어갈 내용
-    let validation = 4 < text.length;
+    let validation = onValidate(text);
 
     setText(text);
     setValidation(validation);
 
-    handleInput({
+    onChange({
       result: validation,
       text: text,
     });
   };
 
   const onClear = () => {
-    setText("");
+    let text = "";
+    let validation = onValidate(text);
+
+    setText(text);
     setValidation(true);
+
+    onChange({
+      result: validation,
+      text: text,
+    });
+  };
+
+  const onValidate = (text) => {
+    const valid = minLength < text.length;
+    return valid;
   };
 
   return (
@@ -61,7 +71,7 @@ export function SearchInput({
         status={isRequired || (text && !validation) ? "error" : ""}
         placeholder={placeholder}
         onClear={onClear}
-        onChange={onChange}
+        onChange={onChangeValue}
         maxLength={maxLength}
       />
     </div>

@@ -40,7 +40,7 @@ export function SmallBorderButton({
 export function SmallIconButton({ className, children, ...rest }) {
   return (
     <SmallButton
-      className={`px-3 py-2 flex gap-1 items-center justify-center self-center rounded-lg ${className}`}
+      className={`w-[80px] px-2 py-2 flex gap-1 items-center justify-center self-center rounded-lg ${className}`}
       {...rest}
     >
       {children}

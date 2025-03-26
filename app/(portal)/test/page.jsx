@@ -19,7 +19,6 @@ import { LimitedLengthTextArea } from "../component/TextArea";
 import { RowFor3Column, RowFor2Column } from "../component/Row";
 import { FullColumn, MDColumn } from "../component/Column";
 
-
 export default function Test() {
   const [reset, setReset] = useState(false);
   const [completedDate, setCompletedDate] = useState();
@@ -58,7 +57,7 @@ export default function Test() {
             <MDColumn title="상태1">
               <SelectBox
                 userAllOption={true}
-                handleChange={(value) => {
+                onChange={(value) => {
                   console.log(value);
                 }}
                 optionData={[{ id: 1, value: "value1", label: "선택1" }]}
@@ -68,7 +67,7 @@ export default function Test() {
             <MDColumn title="상태2">
               <SelectBox
                 userAllOption={true}
-                handleChange={(value) => {
+                onChange={(value) => {
                   console.log(value);
                 }}
                 optionData={[{ id: 1, value: "value1", label: "선택1" }]}
@@ -80,7 +79,7 @@ export default function Test() {
                 isRequired={completedDate}
                 defaultPeriod={6}
                 maxPeriod={13}
-                handleDates={(value) => {
+                onCallback={(value) => {
                   setCompletedDate(!value.result);
                 }}
               />
@@ -98,7 +97,7 @@ export default function Test() {
                 hidden={false}
                 placeholder={"회원 ID를 입력하세요."}
                 value={""}
-                handleInput={(obj) => {}}
+                onChange={(obj) => {}}
                 handleReset={(val) => {
                   setReset(val);
                 }}
@@ -112,7 +111,7 @@ export default function Test() {
                 hidden={false}
                 placeholder={"회원 ID를 입력하세요."}
                 value={""}
-                handleInput={(obj) => {}}
+                onChange={(obj) => {}}
                 handleReset={(val) => {
                   setReset(val);
                 }}
@@ -160,7 +159,7 @@ export default function Test() {
         <p className="text-black">컴포넌트</p>
         <SelectBox
           userAllOption={true}
-          handleChange={(value) => {
+          onChange={(value) => {
             console.log(value);
           }}
           optionData={[{ id: 1, value: "value1", label: "선택1" }]}
@@ -173,7 +172,7 @@ export default function Test() {
           hidden={false}
           placeholder={"회원 ID를 입력하세요."}
           value={""}
-          handleInput={(obj) => {}}
+          onChange={(obj) => {}}
           handleReset={(val) => {
             setReset(val);
           }}
@@ -189,5 +188,4 @@ export default function Test() {
       </section>
     </div>
   );
-};
-
+}

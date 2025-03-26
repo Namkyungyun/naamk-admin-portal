@@ -351,7 +351,7 @@ input[type='number'] {
   /* display: flex; */
   height: 100vh;
   width: 100vw;
-  background-color: #f3f4f6; /* bg-gray-100 */
+  background-color: var(--background);
   overflow: hidden;
 }
 
@@ -385,7 +385,7 @@ input[type='number'] {
   flex-grow: 1;
   overflow-y: auto;
   height: calc(100vh - 4rem);
-  padding: 3rem;
+  padding: 1rem;
 }
 
 
@@ -397,10 +397,11 @@ input[type='number'] {
   transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
   overflow: hidden;
   position: relative;
+  width: 240px; /* w-64 */
 }
 
 .sidebar.open {
-  width: 16rem; /* w-64 */
+  width: 240px; /* w-64 */
   transform: translateX(0);
 }
 
@@ -464,9 +465,10 @@ input[type='number'] {
 
 /* 사이드바 토글 버튼 */
 .sidebar-toggle-button {
-  position: absolute;
-  top: 6rem;
-  left: 16.5rem;
+  position: relative;
+  top: 30px;
+  left: 5px;
+  height: 40px;
   transform: translateY(-50%);
   background-color: #435376; /* bg-gray-200 */
   padding: 0.5rem;
@@ -476,11 +478,11 @@ input[type='number'] {
 }
 
 .toggle-open {
-  left: 16.5rem;
+  left: 5px;
 }
 
 .toggle-closed {
-  left: 0.5rem;
+  left: 5px;
 }
 
 /* 하위 메뉴 스타일 */

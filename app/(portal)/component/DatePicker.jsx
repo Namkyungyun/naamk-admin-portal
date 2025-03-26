@@ -19,19 +19,35 @@ const dayjsToString = (value) => {
 };
 
 export function RangeDatePicker({
+  isReset = false,
   isRequired = false,
+  useDefault = true,
   defaultPeriod = 3,
   maxPeriod = 6, // 1주일
-  handleDates,
+  onCallback,
 }) {
   const [dates, setDates] = useState([null, null]);
   const [validation, setValidation] = useState(true);
 
   //// init
   useEffect(() => {
-    let startDate = dayjs().subtract(defaultPeriod, "day");
-    setDates([startDate, dayjs()]);
+    if (useDefault) {
+      setDates([dayjs().subtract(defaultPeriod, "day"), dayjs()]);
+    }
   }, []);
+
+  useEffect(() => {
+    if (isReset) {
+      if (useDefault) {
+      }
+      const start = useDefault ? dayjs().subtract(defaultPeriod, "day") : null;
+      const end = useDefault ? dayjs() : null;
+      const result = isRequired ? start != null && end != null : true;
+
+      setDates([start, end]);
+      onCallbackDates(result, start, end);
+    }
+  }, [isReset]);
 
   /// period
   const disabledDate = (current, { from, type }) => {
@@ -55,7 +71,7 @@ export function RangeDatePicker({
     return false;
   };
 
-  /// 상태값 넣기 && callback
+  /// 상태값 넣기 && onCallback
   const onCalendarChange = (dates) => {
     if (dates) {
       const start = dates[0];
@@ -63,9 +79,9 @@ export function RangeDatePicker({
 
       setDates([start, end]);
 
-      // callback
+      // onCallback
       const result = start != null && end != null;
-      onCallback(result, start, end);
+      onCallbackDates(result, start, end);
       setValidation(result);
     }
   };
@@ -74,15 +90,15 @@ export function RangeDatePicker({
   const onOpenChange = (open) => {
     if (open) {
       setDates([null, null]);
-      onCallback(isRequired, null, null);
+      onCallbackDates(isRequired, null, null);
     }
   };
 
-  const onCallback = (result, startDate, endDate) => {
-    handleDates({
+  const onCallbackDates = (result, startDate, endDate) => {
+    onCallback({
       result: result,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: startDate ? dayjsToString(startDate) : null,
+      endDate: endDate ? dayjsToString(endDate) : null,
     });
   };
 
@@ -96,7 +112,10 @@ export function RangeDatePicker({
           onOpenChange={onOpenChange}
           value={dates}
           maxDate={dayjs()}
-          style={{ width: "100%" }}
+          style={{
+            width: "100%",
+            fontSize: "9px",
+          }}
         />
       </div>
     </>

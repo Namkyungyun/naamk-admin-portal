@@ -27,17 +27,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         name: "회원 관리",
         url: null,
         submenus: [
-          { id: 3, name: "회원 관리", url: "/test", parentId: 2 },
+          { id: 3, name: "회원 관리", url: "/users", parentId: 2 },
           {
             id: 4,
             name: "회원 신고 관리",
-            url: "/user-management/penalties",
-            parentId: 2,
-          },
-          {
-            id: 5,
-            name: "POP-POINT 관리",
-            url: "/user-management/poppoint",
+            url: "/user-penalty/list",
             parentId: 2,
           },
         ],
@@ -51,7 +45,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           {
             id: 7,
             name: "채널 관리",
-            url: "/channel-management",
+            url: "/test",
             parentId: 6,
           },
           {
@@ -129,7 +123,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
         }
 
         for (const submenu of menu.submenus) {
-          if (submenu.url == currentPath) {
+          if (currentPath.startsWith(submenu.url)) {
             currentWindowMenu = submenu;
             break;
           }

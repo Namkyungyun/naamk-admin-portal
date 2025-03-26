@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export',
   webpack(config, { isServer }) {
     if (!isServer) {
       // 기존 svg loader 유지

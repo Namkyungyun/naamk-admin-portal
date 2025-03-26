@@ -6,29 +6,57 @@ import { useState, useEffect } from "react";
 const optionOfAll = { id: 0, value: "all", label: "전체" };
 
 export function SelectBox({
-  userAllOption = true,
+  isReset = false,
+  isFetched = false,
+  disabled = false,
+  useAllOption = true,
   useDefault = true,
   defaultIndex = 0,
-  disabled = false,
   optionData = [],
-  handleChange = () => {},
+  onChange,
 }) {
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState(null);
   const [selectedValue, setSelectValue] = useState(null);
 
   /// init
   useEffect(() => {
-    const list = userAllOption ? [optionOfAll, ...optionData] : [...optionData];
+    const list = fetchOptionList();
     setOptions(list);
 
     if (useDefault) {
-      setSelectValue(list[defaultIndex].label);
+      setSelectValue(list[defaultIndex]?.label);
+      onChangeOption(list[defaultIndex]?.value);
     }
   }, []);
 
-  const onChange = (val) => {
+  /// rebuild (api fetch된 후)
+  useEffect(() => {
+    if (isFetched) {
+      setOptions([]);
+
+      const list = fetchOptionList();
+      setOptions(list);
+      setSelectValue(list[defaultIndex]?.label);
+      onChangeOption(list[defaultIndex]?.value);
+    }
+  }, [isFetched, optionData.length]);
+
+  useEffect(() => {
+    if (isReset) {
+      let index = useDefault ? defaultIndex : 0;
+
+      setSelectValue(options[index]?.label);
+      onChangeOption(options[index]?.value);
+    }
+  }, [isReset]);
+
+  const fetchOptionList = () => {
+    return useAllOption ? [optionOfAll, ...optionData] : [...optionData];
+  };
+
+  const onChangeOption = (val) => {
     setSelectValue(val);
-    handleChange(val);
+    onChange(val);
   };
 
   // x축 길이 : w-xl w-lg w-md w-sm w-xs w-2xs w-3xs
@@ -36,12 +64,12 @@ export function SelectBox({
     <>
       <div className="flex">
         <Select
-          placeholder="선택"
+          placeholder="..."
           value={selectedValue}
           style={{
             flex: 1,
           }}
-          onChange={onChange}
+          onChange={onChangeOption}
           disabled={disabled}
           options={options}
         />

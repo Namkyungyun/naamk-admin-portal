@@ -6,6 +6,7 @@ const style = {
   tertiary: "text-fg-base bg-brand-10 border border-bd-disabled",
   quarternary: "text-fg-base bg-subtle border border-bd-disabled",
   disabled: "text-fg-disabled bg-disabled border border-bd-disabled",
+  black: "text-fg-static-light bg-black border border-bd-disabled",
 };
 
 export function PrimaryButton({ label, disabled, onClick }) {
@@ -60,6 +61,19 @@ export function QuaternaryButton({ label, disabled, onClick }) {
   );
 }
 
+export function BlackButton({ label, disabled, onClick }) {
+  return (
+    <div className="m-2">
+      <SmallIconButton
+        disabled={disabled}
+        bgClassName={style.black}
+        text={label}
+        onClick={onClick}
+      />
+    </div>
+  );
+}
+
 export function SaveButton({ disabled, onClick }) {
   return <PrimaryButton label={"저장"} disabled={disabled} onClick={onClick} />;
 }
@@ -84,6 +98,14 @@ export function CancelButton({ disabled, onClick }) {
   return (
     <QuaternaryButton label={"취소"} disabled={disabled} onClick={onClick} />
   );
+}
+
+export function SearchButton({ disabled, onClick }) {
+  return <BlackButton label={"검색"} disabled={disabled} onClick={onClick} />;
+}
+
+export function ResetButton({ disabled, onClick }) {
+  return <BlackButton label={"초기화"} disabled={disabled} onClick={onClick} />;
 }
 
 export function DownloadButton({ disabled, prefix = "", onClick }) {

@@ -5,32 +5,45 @@ import { SelectBox } from "./SelectBox";
 const style = {
   container: "bg-canvas",
   table: "bg-canvas border text-black",
-  header: "bg-disabled border text-sm",
-  body: "border text-sm",
+  header: "bg-disabled border text-sm text-center ",
+  body: "border text-sm text-center",
 };
 
-export function ListTable({ headers, body, buttons = [] }) {
+export function ListTable({ headers, body, buttons }) {
+  if (!headers) {
+    return null;
+  }
+
   return (
-    <div className={`overflow-x-auto ${style.container}`}>
-      <table className={`min-w-full table-auto ${style.table}`}>
+    <div className={`overflow-x-auto bg-canvas`}>
+      <table className={`min-w-full table-auto bg-canvas border text-black`}>
         <ListTableHeader headers={headers} />
-        <ListTableBody headers={headers} body={body} buttons={buttons} />
+
+        {body.length !== 0 ? (
+          <ListTableBody headers={headers} body={body} buttons={buttons} />
+        ) : null}
       </table>
+
+      {body.length !== 0 ? null : (
+        <div className="text-gray-500 w-full text-center text-sm items-center mt-30">
+          조회된 데이터가 없습니다.
+        </div>
+      )}
     </div>
   );
 }
 
 export function ListTableHeader({ headers }) {
+  if (!headers) {
+    return null;
+  }
   return (
     <thead>
       <tr>
         {/* 테이블 헤더 생성 */}
         {headers.map((header, index) => (
-          <th
-            key={index}
-            className={`px-2 py-2 border-b text-left ${style.header}`}
-          >
-            {header}
+          <th key={index} className={`px-2 py-2 border-b ${style.header}`}>
+            {header.variableLabel}
           </th>
         ))}
       </tr>
@@ -39,14 +52,6 @@ export function ListTableHeader({ headers }) {
 }
 
 export function ListTableBody({ headers, body, buttons }) {
-  if (body == null || body === undefined) {
-    return (
-      <div className="text-center my-10 bg-disabled">
-        <p>데이터 조회에 실패하였습니다.</p>
-      </div>
-    );
-  }
-
   return (
     <tbody>
       {/* 테이블 바디 생성 */}
@@ -54,20 +59,28 @@ export function ListTableBody({ headers, body, buttons }) {
         <tr key={rowIndex} className={`${style.body}`}>
           {headers.map((header, colIndex) => {
             const buttonKeys = Object.keys(buttons);
-            const isButton = buttonKeys.includes(header);
+            const isButton = buttonKeys.includes(header.variableName);
+            const headerName = header.variableName;
+            let children = null;
 
-            return isButton ? (
-              <td key={colIndex} className={`px-2 py-2 border-b ${style.body}`}>
-                <button
-                  className="underline"
-                  onClick={() => buttons[header](row[headers[0]])}
-                >
-                  {row[header]}
+            if (isButton) {
+              const onClick = () => {
+                const id = row[headers[0].variableName];
+                buttons[headerName](id);
+              };
+
+              children = (
+                <button className="underline" onClick={onClick}>
+                  {row[headerName]}
                 </button>
-              </td>
-            ) : (
+              );
+            } else {
+              children = <span>{row[headerName]}</span>;
+            }
+
+            return (
               <td key={colIndex} className={`px-2 py-1 border-b ${style.body}`}>
-                {row[header]}
+                {children}
               </td>
             );
           })}
@@ -77,7 +90,12 @@ export function ListTableBody({ headers, body, buttons }) {
   );
 }
 
-export function ListCount({ totalItemCount, optionData = [], onChange }) {
+export function ListCount({
+  totalItemCount,
+  defaultIndex,
+  optionData = [],
+  onChange,
+}) {
   return (
     <>
       <div className="flex items-center gap-2">
@@ -86,7 +104,7 @@ export function ListCount({ totalItemCount, optionData = [], onChange }) {
         <SelectBox
           useAllOption={false}
           useDefault={true}
-          defaultIndex={0}
+          defaultIndex={defaultIndex}
           onChange={onChange}
           optionData={optionData}
         />

@@ -28,9 +28,9 @@ export default function UserSearchBox({
     startDate: null,
     endDate: null,
   });
-  const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(null);
+  const [nickname, setNickname] = useState(null);
+  const [email, setEmail] = useState(null);
 
   /// required search data
   const [enabledDates, setEnabledDates] = useState();
@@ -40,10 +40,9 @@ export default function UserSearchBox({
 
   /// rebuild
   useEffect(() => {
-    if (fetched) {
+    if (!reset && fetched) {
       setUserStatusOptions(fetchedSearchData.userStatus);
       setPenaltyStatusOptions(fetchedSearchData.penaltyStatus);
-      console.log(fetchedSearchData);
     }
 
     if (reset) {
@@ -53,11 +52,12 @@ export default function UserSearchBox({
 
   const onClickSearch = () => {
     const searchData = {
-      userStatus: userStatus,
-      penaltyStatus: penaltyStatus,
-      dates: dates,
-      userId: userId,
-      userName: userName,
+      userStatus: userStatus == "all" ? null : userStatus,
+      penaltyStatus: penaltyStatus == "all" ? null : penaltyStatus,
+      startDate: dates.startDate,
+      endDate: dates.endDate,
+      name: name,
+      nickname: nickname,
       email: email,
     };
 
@@ -68,7 +68,6 @@ export default function UserSearchBox({
 
   const onClickReset = (isReset) => {
     setReset(isReset);
-    console.log(email);
   };
 
   const validateSearch = () => {
@@ -129,9 +128,9 @@ export default function UserSearchBox({
               isRequired={false}
               hidden={false}
               placeholder={"회원 ID를 입력하세요."}
-              value={userId}
+              value={name}
               onChange={(obj) => {
-                setUserId(obj.text);
+                setName(obj.text);
               }}
             />
           </MDColumn>
@@ -142,9 +141,9 @@ export default function UserSearchBox({
               isRequired={false}
               hidden={false}
               placeholder={"사용자명을 입력하세요"}
-              value={userName}
+              value={nickname}
               onChange={(obj) => {
-                setUserName(obj.text);
+                setNickname(obj.text);
               }}
             />
           </MDColumn>
@@ -157,7 +156,6 @@ export default function UserSearchBox({
               placeholder={"이메일을 입력하세요"}
               value={email}
               onChange={(obj) => {
-                console.log(obj);
                 setEmail(obj.text);
               }}
             />

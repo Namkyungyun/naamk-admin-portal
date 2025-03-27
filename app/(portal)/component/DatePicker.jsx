@@ -5,17 +5,14 @@ import { useState, useEffect } from "react";
 import { DatePicker } from "antd";
 const { RangePicker } = DatePicker;
 
+dayjs.locale("ko");
+
 const dayjsToString = (value) => {
   if (value) {
-    const date = dayjs(value);
-    const year = date.year();
-    const month = date.month() + 1;
-    const day = date.date();
-
-    return `${year}/${month}/${day}`;
+    const date = dayjs(value).startOf("day").toISOString();
+    return date;
   }
-
-  return "";
+  return null;
 };
 
 export function RangeDatePicker({
@@ -90,15 +87,18 @@ export function RangeDatePicker({
   const onOpenChange = (open) => {
     if (open) {
       setDates([null, null]);
-      onCallbackDates(isRequired, null, null);
+
+      isRequired
+        ? onCallbackDates(isRequired, null, null)
+        : onCallbackDates(!isRequired, null, null);
     }
   };
 
   const onCallbackDates = (result, startDate, endDate) => {
     onCallback({
       result: result,
-      startDate: startDate ? dayjsToString(startDate) : null,
-      endDate: endDate ? dayjsToString(endDate) : null,
+      startDate: dayjsToString(startDate),
+      endDate: dayjsToString(endDate),
     });
   };
 

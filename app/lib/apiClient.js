@@ -1,18 +1,24 @@
 import axios from "axios";
-import { getAccessToken, removeAccessToken } from "./auth";
+import { getAccessToken, removeAccessToken } from "@/app/lib/auth";
 
-const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-});
+const apiClient = () => {
+  const instance = axios.create({
+    baseURL: "http://127.0.0.1:38080/api/v1",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-apiClient.interceptors.request.use((config) => {
-  const token = getAccessToken();
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
+  // 클라이언트 실행 시점에서만 토큰 주입
+  instance.interceptors.request.use((config) => {
+    // const token = getAccessToken();
+    // if (token) {
+    //   config.headers.Authorization = `Bearer ${token}`;
+    // }
+    return config;
+  });
 
-apiClient.interceptors.response.use(
+  instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 || error.response?.status === 403) {
@@ -22,5 +28,8 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+  return instance;
+};
 
 export default apiClient;

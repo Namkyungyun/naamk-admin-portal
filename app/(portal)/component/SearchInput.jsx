@@ -3,7 +3,7 @@ import { Input } from "antd";
 import { useState, useEffect } from "react";
 
 export function SearchInput({
-  value = "",
+  value = null,
   isReset = false,
   isLoading = false,
   isRequired = false,
@@ -14,7 +14,7 @@ export function SearchInput({
   hidden = false,
   onChange,
 }) {
-  const [text, setText] = useState("");
+  const [text, setText] = useState(null);
   const [validation, setValidation] = useState(true);
 
   ///// init
@@ -44,7 +44,7 @@ export function SearchInput({
   };
 
   const onClear = () => {
-    let text = "";
+    let text = null;
     let validation = onValidate(text);
 
     setText(text);
@@ -57,7 +57,7 @@ export function SearchInput({
   };
 
   const onValidate = (text) => {
-    const valid = minLength < text.length;
+    const valid = minLength < (text ? text.length : 0);
     return valid;
   };
 

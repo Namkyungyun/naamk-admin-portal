@@ -55,7 +55,6 @@ export default function EditorPage() {
     queueMicrotask(() => {
       editor.commands.setContent(updatedContent);
       setCompletedResoureceUpload(!isLeakResource);
-      console.log("isLeakResource >>>>> " + isLeakResource);
     });
   };
 

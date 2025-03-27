@@ -76,7 +76,7 @@ export default function UserSearchBox({
 
   return (
     <>
-      <section className="border border-bd-muted text-white p-1 flex-grow w-full my-1">
+      <section className="border border-bd-muted p-1 flex-grow w-full my-1">
         <RowFor3Column>
           <MDColumn title="계정 상태">
             <SelectBox

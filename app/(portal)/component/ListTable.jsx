@@ -15,7 +15,7 @@ export function ListTable({ headers, body, buttons }) {
   }
 
   return (
-    <div className={`overflow-x-auto bg-canvas`}>
+    <div className="overflow-x-auto bg-canvas">
       <table className={`min-w-full table-auto bg-canvas border text-black`}>
         <ListTableHeader headers={headers} />
 

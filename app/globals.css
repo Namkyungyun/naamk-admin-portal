@@ -381,10 +381,11 @@ input[type='number'] {
 
 /* 페이지 컨텐츠 영역 */
 .content-container {
+  min-width: 0;               /* 내부 요소가 넘치더라도 밀리지 않게 */
   background-color: var(--background);
   flex-grow: 1;
   overflow-y: auto;
-  height: calc(100vh - 4rem);
+  /* height: calc(100vh - 4rem); */
   padding: 1rem;
 }
 
@@ -439,6 +440,7 @@ input[type='number'] {
   flex-direction: column;
   height: 100%;
   padding: 0 1rem;
+  width: 240px;
 }
 
 .sidebar-title {

@@ -3,7 +3,7 @@
 import { getSearchDatas, getUsers } from "./actions";
 import { useState, useEffect } from "react";
 import PageTitle from "../../component/PageTitle";
-import UserSearchBox from "./component/searchbox";
+import UserSearchBox from "./component/SearchBox";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import { useRouter } from "next/navigation";
 
@@ -14,9 +14,8 @@ export default function UserListPage() {
   const [loading, setLoading] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
   const [searchData, setSearchData] = useState({});
-  const [resultData, setResultData] = useState([]);
 
-  /// page
+  /// pageable
   const paginationCount = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -27,6 +26,18 @@ export default function UserListPage() {
     { id: 2, value: 50, label: "50개씩" },
     { id: 3, value: 100, label: "100개씩" },
   ];
+
+  /// table
+  const tableHeader = [
+    { variableName: "id", variableLabel: "구분" },
+    { variableName: "name", variableLabel: "회원ID" },
+    { variableName: "nickname", variableLabel: "사용자명" },
+    { variableName: "userStatus", variableLabel: "계정 상태" },
+    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
+    { variableName: "email", variableLabel: "이메일" },
+    { variableName: "createdAt", variableLabel: "가입일시" },
+  ];
+  const [tableBody, setTableBody] = useState([]);
 
   /// init
   useEffect(() => {
@@ -56,7 +67,7 @@ export default function UserListPage() {
 
       setTotalPage(entity.totalPages);
       setTotalItemCount(entity.totalElements);
-      setResultData(entity.content);
+      setTableBody(entity.content);
 
       setFetchedInit(true);
       setLoading(false);
@@ -77,7 +88,7 @@ export default function UserListPage() {
     <>
       <div className="flex flex-col h-full">
         <div>
-          {/* 상단 제목 */}
+          {/* 상단 화면명 */}
           <PageTitle currentPage="회원관리" />
 
           {/* 검색 박스 */}
@@ -104,8 +115,8 @@ export default function UserListPage() {
         {/* 리스트 테이블 - 남은 영역 모두 차지 */}
         <div className="flex-1 overflow-auto mb-2 border border-bd-muted ">
           <ListTable
-            headers={searchData.tableHeaders}
-            body={resultData}
+            headers={tableHeader}
+            body={tableBody}
             buttons={{
               name: (url) => {
                 router.push(`/users/${url}`);
@@ -116,7 +127,7 @@ export default function UserListPage() {
 
         {/* 페이지네이션 영역 */}
         <div className="h-12 flex items-center justify-center text-black gap-2">
-          {resultData.length !== 0 ? (
+          {tableBody.length !== 0 ? (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPage}

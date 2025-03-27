@@ -191,7 +191,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                   )}
 
                   {menu.submenus.length > 0 && (
-                    <span>{isOpen(menu.id) ? "▲" : "▼"}</span>
+                    <span className="w-10">{isOpen(menu.id) ? "▲" : "▼"}</span>
                   )}
                 </button>
 

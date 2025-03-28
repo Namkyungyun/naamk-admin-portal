@@ -56,7 +56,9 @@ export function SelectBox({
 
   const onChangeOption = (val) => {
     setSelectValue(val);
-    onChange(val);
+    if (onChange != null) {
+      onChange(val);
+    }
   };
 
   // x축 길이 : w-xl w-lg w-md w-sm w-xs w-2xs w-3xs
@@ -64,7 +66,7 @@ export function SelectBox({
     <>
       <div className="flex">
         <Select
-          placeholder="..."
+          placeholder="선택"
           value={selectedValue}
           style={{
             flex: 1,

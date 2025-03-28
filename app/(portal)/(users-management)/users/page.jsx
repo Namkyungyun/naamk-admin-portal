@@ -1,11 +1,11 @@
 "use client";
 
-import { getSearchDatas, getUsers } from "./actions";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { getSearchDatas, getUsers } from "./actions";
 import PageTitle from "../../component/PageTitle";
 import UserSearchBox from "./component/SearchBox";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
-import { useRouter } from "next/navigation";
 
 export default function UserListPage() {
   const router = useRouter();

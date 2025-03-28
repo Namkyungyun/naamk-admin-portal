@@ -10,7 +10,7 @@ export function LimitedLengthTextArea({
   minLength = 20,
   maxLength = 100,
   value = "",
-  handleTextArea = () => {},
+  onChange,
 }) {
   const { TextArea } = Input;
   const [text, setText] = useState("");
@@ -23,12 +23,12 @@ export function LimitedLengthTextArea({
   const onInput = (e) => {
     let text = e.target.value ?? "";
 
-    let validation = minLength < text.length;
+    let validation = minLength <= text.length;
 
     setText(text);
     setValidation(validation);
 
-    handleTextArea({
+    onChange({
       result: validation,
       text: text,
     });
@@ -40,9 +40,9 @@ export function LimitedLengthTextArea({
   };
 
   return (
-    <div className={`my-2 flex`}>
+    <div className={`my-1`}>
       <TextArea
-        showCount
+        // showCount
         allowClear
         onClear={onClear}
         autoSize={false}

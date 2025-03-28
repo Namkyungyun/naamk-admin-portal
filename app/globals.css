@@ -31,6 +31,12 @@
   --color-gray-900: #1a1a1e;
   --color-gray-950: #131316;
 
+  --color-btn-primary: #7e7F7F;
+  --color-btn-secondary: #7F7F7F;
+  --color-btn-tertiary: #a3a0a0;
+  --color-btn-quarternary: #c1bfbe;
+
+
   /* color : brand */
   --color-brand-20 : #F0EDFF;
   --color-brand-30 : #DBD4FF;
@@ -112,6 +118,7 @@
     }
   }
 }
+
 .delay7 {
   animation-delay: 0.07s;
 }
@@ -121,6 +128,7 @@
 .delay21 {
   animation-delay: 0.21s;
 }
+
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,

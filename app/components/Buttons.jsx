@@ -13,7 +13,7 @@ export function SmallButton({
 }) {
   return (
     <button
-      className={`rounded-lg text-sm font-semibold px-5 py-2 disabled:bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed ${className} ${bgClassName}`}
+      className={`rounded-lg text-sm font-semibold px-1 py-1 disabled:bg-disabled disabled:text-fg-disabled disabled:cursor-not-allowed ${className} ${bgClassName}`}
       ref={btnRef}
       type={type}
       {...props}
@@ -40,7 +40,7 @@ export function SmallBorderButton({
 export function SmallIconButton({ className, children, ...rest }) {
   return (
     <SmallButton
-      className={`w-[80px] px-2 py-2 flex gap-1 items-center justify-center self-center rounded-lg ${className}`}
+      className={`px-1 py-1 flex gap-1 items-center justify-center self-center rounded-lg ${className}`}
       {...rest}
     >
       {children}

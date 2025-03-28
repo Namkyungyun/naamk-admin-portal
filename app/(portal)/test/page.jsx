@@ -183,7 +183,7 @@ export default function Test() {
           isRequired={false}
           placeholder={"Custom TextArea Placeholder"}
           value={""}
-          handleTextArea={(obj) => {}}
+          onChange={(obj) => {}}
         />
       </section>
     </div>

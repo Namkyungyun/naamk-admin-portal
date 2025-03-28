@@ -1,13 +1,11 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
 import SideBar from "@/app/(portal)/component/SideBar";
 import TopBar from "@/app/(portal)/component/TopBar";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function PortalLayout({ children }) {
-  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const isFirstLoad = useRef(true); // 최초 로딩 여부 추적
 

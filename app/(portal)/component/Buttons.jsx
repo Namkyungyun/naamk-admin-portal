@@ -1,12 +1,20 @@
 import { SmallIconButton } from "@/app/components/Buttons";
 
 const style = {
-  primary: "text-fg-static-light bg-brand-100 border border-bd-disabled",
-  secondary: "text-fg-static-light bg-brand-50 border border-bd-disabled",
-  tertiary: "text-fg-base bg-brand-10 border border-bd-disabled",
-  quarternary: "text-fg-base bg-subtle border border-bd-disabled",
-  disabled: "text-fg-disabled bg-disabled border border-bd-disabled",
-  black: "text-fg-static-light bg-black border border-bd-disabled",
+  primary:
+    "w-[70px] px-2 py-2 text-fg-static-light bg-btn-primary border border-bd-disabled",
+  secondary:
+    "w-[70px] px-2 py-2 text-fg-static-light bg-btn-secondary border border-bd-disabled",
+  tertiary:
+    "w-[70px] px-2 py-2 text-fg-static-light bg-btn-tertiary border border-bd-disabled",
+  quarternary:
+    "w-[70px] px-2 py-2 text-fg-static-light bg-btn-quarternary border border-bd-disabled",
+  disabled:
+    "w-[70px] px-2 py-2 text-fg-disabled bg-disabled border border-bd-disabled",
+  black:
+    "w-[80px] px-2 py-2 text-fg-static-light bg-black border border-bd-disabled",
+  penalty:
+    "w-[55px] px-1 py-1 text-fg-static-light bg-btn-quarternary border border-bd-disabled",
 };
 
 export function PrimaryButton({ label, disabled, onClick }) {
@@ -106,6 +114,17 @@ export function SearchButton({ disabled, onClick }) {
 
 export function ResetButton({ disabled, onClick }) {
   return <BlackButton label={"초기화"} disabled={disabled} onClick={onClick} />;
+}
+
+export function PenaltyUpdateButton({ disabled, onClick }) {
+  return (
+    <SmallIconButton
+      disabled={disabled}
+      bgClassName={style.penalty}
+      text="변경"
+      onClick={onClick}
+    />
+  );
 }
 
 export function DownloadButton({ disabled, prefix = "", onClick }) {

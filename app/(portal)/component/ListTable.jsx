@@ -9,7 +9,7 @@ const style = {
   body: "border text-sm text-center",
 };
 
-export function ListTable({ headers, body, buttons }) {
+export function ListTable({ headers, body }) {
   if (!headers) {
     return null;
   }
@@ -20,7 +20,7 @@ export function ListTable({ headers, body, buttons }) {
         <ListTableHeader headers={headers} />
 
         {body.length !== 0 ? (
-          <ListTableBody headers={headers} body={body} buttons={buttons} />
+          <ListTableBody headers={headers} body={body} />
         ) : null}
       </table>
 
@@ -42,7 +42,10 @@ export function ListTableHeader({ headers }) {
       <tr>
         {/* 테이블 헤더 생성 */}
         {headers.map((header, index) => (
-          <th key={index} className={`px-2 py-2 border-b ${style.header}`}>
+          <th
+            key={index}
+            className={`px-2 py-2 border-b ${style.header} ${header.hidden ? "hidden" : ""}`}
+          >
             {header.variableLabel}
           </th>
         ))}
@@ -51,35 +54,48 @@ export function ListTableHeader({ headers }) {
   );
 }
 
-export function ListTableBody({ headers, body, buttons }) {
+export function ListTableBody({ headers, body }) {
   return (
     <tbody>
       {/* 테이블 바디 생성 */}
       {body.map((row, rowIndex) => (
         <tr key={rowIndex} className={`${style.body}`}>
           {headers.map((header, colIndex) => {
-            const buttonKeys = Object.keys(buttons);
-            const isButton = buttonKeys.includes(header.variableName);
             const headerName = header.variableName;
+            const isButton = header.onButton != null;
+            const urlHeaderName = header.url;
+            const urlValue = row[urlHeaderName];
+
             let children = null;
 
             if (isButton) {
-              const onClick = () => {
-                const id = row[headers[0].variableName];
-                buttons[headerName](id);
-              };
+              const onClick = () => header.onButton(urlValue);
+              const type = `${typeof row[headerName]}`;
 
-              children = (
-                <button className="underline" onClick={onClick}>
-                  {row[headerName]}
-                </button>
-              );
+              if (type === "boolean") {
+                children = row[headerName] ? (
+                  <button className="underline" onClick={onClick}>
+                    보기
+                  </button>
+                ) : (
+                  <span>-</span>
+                );
+              } else {
+                children = (
+                  <button className="underline" onClick={onClick}>
+                    {row[headerName]}
+                  </button>
+                );
+              }
             } else {
               children = <span>{row[headerName]}</span>;
             }
 
             return (
-              <td key={colIndex} className={`px-2 py-1 border-b ${style.body}`}>
+              <td
+                key={colIndex}
+                className={`px-2 py-1 border-b ${style.body} ${header.hidden ? "hidden" : ""}`}
+              >
                 {children}
               </td>
             );

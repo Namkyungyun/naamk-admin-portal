@@ -11,22 +11,24 @@ export default function UserPenaltyPopupGrid({
   penaltyStatusList,
   onValidate,
 }) {
-  const [validReason, setValidReason] = useState(false);
+  const [validDescription, setValidDescription] = useState(false);
   const [validStatus, setValidStatus] = useState(false);
   const [statusIndex, setStatusIndex] = useState(0);
 
   /// init
   useEffect(() => {
-    const index = penaltyStatusList.findIndex(
-      (el) => el.value === initData.isActive
-    );
-    setStatusIndex(index);
+    if (penaltyStatusList) {
+      const index = penaltyStatusList.findIndex(
+        (el) => el.value === initData.isActive
+      );
+      setStatusIndex(index);
+    }
   }, []);
 
   /// rebuild
   useEffect(() => {
-    onValidateForm(validReason && validStatus);
-  }, [validReason, validStatus]);
+    onValidateForm(validDescription && validStatus);
+  }, [validDescription, validStatus]);
 
   const onValidateForm = (isValid) => {
     onValidate({
@@ -35,12 +37,12 @@ export default function UserPenaltyPopupGrid({
     });
   };
 
-  const onValidateReason = (obj) => {
+  const onValidateDescription = (obj) => {
     const valid = obj.result;
     const text = obj.text;
 
-    initData.reason = text;
-    setValidReason(valid);
+    initData.description = text;
+    setValidDescription(valid);
   };
 
   const onValidateStatus = (value) => {
@@ -76,8 +78,8 @@ export default function UserPenaltyPopupGrid({
             isRequired={false}
             minLength={1}
             placeholder={"(필수) 사유를 작성해 주세요."}
-            value={initData.reason}
-            onChange={onValidateReason}
+            value={initData.description}
+            onChange={onValidateDescription}
           />
         </MDColumn>
       </RowFor1Column>

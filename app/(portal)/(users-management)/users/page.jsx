@@ -13,7 +13,7 @@ export default function UserListPage() {
   /// init data
   const [loading, setLoading] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
-  const [searchData, setSearchData] = useState({});
+  const [initSearchData, setInitSearchData] = useState({});
 
   /// pageable
   const paginationCount = 5;
@@ -27,16 +27,24 @@ export default function UserListPage() {
     { id: 3, value: 100, label: "100개씩" },
   ];
 
+  const [reqSearch, setReqSearch] = useState({});
+
   /// table
   const tableHeader = [
     { variableName: "id", variableLabel: "구분" },
-    { variableName: "name", variableLabel: "회원ID" },
+    {
+      variableName: "name",
+      variableLabel: "회원ID",
+      url: "id",
+      onButton: (url) => router.push(`/users/${url}`),
+    },
     { variableName: "nickname", variableLabel: "사용자명" },
     { variableName: "userStatus", variableLabel: "계정 상태" },
     { variableName: "penaltyStatus", variableLabel: "제재 상태" },
     { variableName: "email", variableLabel: "이메일" },
     { variableName: "createdAt", variableLabel: "가입일시" },
   ];
+
   const [tableBody, setTableBody] = useState([]);
 
   /// init
@@ -46,7 +54,7 @@ export default function UserListPage() {
       setLoading(true);
 
       const searchOptions = await Promise.resolve(getSearchDatas());
-      setSearchData(searchOptions);
+      setInitSearchData(searchOptions);
       setItemCount(itemCountOptions[1].value); // 디폴트 item visible value
 
       setFetchedInit(true);
@@ -56,7 +64,14 @@ export default function UserListPage() {
     fetchInitData();
   }, []);
 
+  useEffect(() => {
+    if (fetchedInit) {
+      onSearch(reqSearch);
+    }
+  }, [currentPage, itemCount]);
+
   const onSearch = (searchData) => {
+    setReqSearch(searchData);
     const fetchResultData = async () => {
       setLoading(true);
 
@@ -84,6 +99,10 @@ export default function UserListPage() {
     }
   };
 
+  const onItemCountChange = (count) => {
+    setItemCount(count);
+  };
+
   return (
     <>
       <div className="flex flex-col h-full">
@@ -95,7 +114,7 @@ export default function UserListPage() {
           <UserSearchBox
             loading={loading}
             fetched={fetchedInit}
-            fetchedSearchData={searchData}
+            fetchedSearchData={initSearchData}
             onSearch={onSearch}
           />
         </div>
@@ -106,23 +125,13 @@ export default function UserListPage() {
             totalItemCount={totalItemCount}
             optionData={itemCountOptions}
             defaultIndex={1}
-            onChange={(value) => {
-              setItemCount(value);
-            }}
+            onChange={onItemCountChange}
           />
         </div>
 
         {/* 리스트 테이블 - 남은 영역 모두 차지 */}
         <div className="flex-1 overflow-auto mb-2 border border-bd-muted ">
-          <ListTable
-            headers={tableHeader}
-            body={tableBody}
-            buttons={{
-              name: (url) => {
-                router.push(`/users/${url}`);
-              },
-            }}
-          />
+          <ListTable headers={tableHeader} body={tableBody} />
         </div>
 
         {/* 페이지네이션 영역 */}

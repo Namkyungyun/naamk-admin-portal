@@ -24,13 +24,13 @@ export default function UserSearchBox({
   /// search data list
   const [userStatus, setUserStatus] = useState(null);
   const [penaltyStatus, setPenaltyStatus] = useState(null);
+  const [name, setName] = useState(null);
+  const [nickname, setNickname] = useState(null);
+  const [email, setEmail] = useState(null);
   const [dates, setDates] = useState({
     startDate: null,
     endDate: null,
   });
-  const [name, setName] = useState(null);
-  const [nickname, setNickname] = useState(null);
-  const [email, setEmail] = useState(null);
 
   /// required search data
   const [enabledDates, setEnabledDates] = useState();

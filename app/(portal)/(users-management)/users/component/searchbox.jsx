@@ -46,7 +46,7 @@ export default function UserSearchBox({
     }
 
     if (reset) {
-      console.log("todo reset");
+      console.log("reseted");
     }
   }, [reset, fetched]);
 

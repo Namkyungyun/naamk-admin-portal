@@ -3,10 +3,12 @@
 import { SelectBox } from "./SelectBox";
 
 const style = {
-  container: "bg-canvas",
-  table: "bg-canvas border text-black",
-  header: "bg-disabled border text-sm text-center ",
+  container: "h-full overflow-auto bg-canvas text-black",
+  table: "table-auto w-full border-collapse",
+  header:
+    "p-2 border-b border-l border-r border-bd-disabled bg-disabled  text-sm text-center",
   body: "border text-sm text-center",
+  emptyBody: "text-gray-500 w-full text-center text-sm items-center mt-30",
 };
 
 export function ListTable({ headers, body }) {
@@ -15,8 +17,8 @@ export function ListTable({ headers, body }) {
   }
 
   return (
-    <div className="overflow-x-auto bg-canvas">
-      <table className={`min-w-full table-auto bg-canvas border text-black`}>
+    <div className={`${style.container}`}>
+      <table className={`${style.table}`}>
         <ListTableHeader headers={headers} />
 
         {body.length !== 0 ? (
@@ -25,9 +27,7 @@ export function ListTable({ headers, body }) {
       </table>
 
       {body.length !== 0 ? null : (
-        <div className="text-gray-500 w-full text-center text-sm items-center mt-30">
-          조회된 데이터가 없습니다.
-        </div>
+        <div className={`${style.emptyBody}`}>조회된 데이터가 없습니다.</div>
       )}
     </div>
   );
@@ -38,13 +38,13 @@ export function ListTableHeader({ headers }) {
     return null;
   }
   return (
-    <thead>
+    <thead className="sticky top-0 z-10">
       <tr>
         {/* 테이블 헤더 생성 */}
         {headers.map((header, index) => (
           <th
             key={index}
-            className={`px-2 py-2 border-b ${style.header} ${header.hidden ? "hidden" : ""}`}
+            className={`${style.header} ${header.hidden ? "hidden" : ""}`}
           >
             {header.variableLabel}
           </th>

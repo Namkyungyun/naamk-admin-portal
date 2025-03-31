@@ -8,22 +8,16 @@ import { LimitedLengthTextArea } from "@/app/(portal)/component/TextArea";
 export default function UserPenaltyPopupGrid({
   initData,
   readOnly = false,
+  useDefaultOption = false,
+  defaultIndex = 0,
   penaltyStatusList,
   onValidate,
 }) {
   const [validDescription, setValidDescription] = useState(false);
   const [validStatus, setValidStatus] = useState(false);
-  const [statusIndex, setStatusIndex] = useState(0);
 
   /// init
-  useEffect(() => {
-    if (penaltyStatusList) {
-      const index = penaltyStatusList.findIndex(
-        (el) => el.value === initData.isActive
-      );
-      setStatusIndex(index);
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   /// rebuild
   useEffect(() => {
@@ -50,9 +44,6 @@ export default function UserPenaltyPopupGrid({
     setValidStatus(true);
   };
 
-  /// init
-  useEffect(() => {}, []);
-
   return (
     <section className="border border-bd-muted p-1 flex-grow w-full my-1 text-black">
       <RowFor1Column>
@@ -63,8 +54,8 @@ export default function UserPenaltyPopupGrid({
           <SelectBox
             disabled={readOnly}
             useAllOption={false}
-            useDefault={readOnly}
-            defaultIndex={statusIndex}
+            useDefault={useDefaultOption}
+            defaultIndex={defaultIndex}
             optionData={penaltyStatusList}
             onChange={onValidateStatus}
           />

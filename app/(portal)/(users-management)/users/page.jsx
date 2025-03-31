@@ -130,9 +130,7 @@ export default function UserListPage() {
         </div>
 
         {/* 리스트 테이블 - 남은 영역 모두 차지 */}
-        <div className="flex-1 overflow-auto mb-2 border border-bd-muted ">
-          <ListTable headers={tableHeader} body={tableBody} />
-        </div>
+        <ListTable headers={tableHeader} body={tableBody} />
 
         {/* 페이지네이션 영역 */}
         <div className="h-12 flex items-center justify-center text-black gap-2">

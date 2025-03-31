@@ -78,12 +78,23 @@ export default function UserDetailPage() {
 
     setUserData(userDetailData);
     setPenaltyTableBody(penaltyHistData);
-
-    updatePenaltyForm.name = userDetailData?.name;
-    setUpdatePenaltyData(updatePenaltyForm);
+    onInitUpdatePenaltyData(userDetailData);
 
     setFetchedInit(true);
     setLoading(false);
+  };
+
+  /// penalty
+  const onInitUpdatePenaltyData = (data) => {
+    if (data) {
+      updatePenaltyForm.name = data.name;
+      updatePenaltyForm.label = data.penaltyStatus;
+    } else {
+      updatePenaltyForm.name = userData.name;
+      updatePenaltyForm.label = userData.penaltyStatus;
+    }
+
+    setUpdatePenaltyData({ ...updatePenaltyForm });
   };
 
   const onValidatePenaltyStatus = (obj) => {
@@ -122,8 +133,7 @@ export default function UserDetailPage() {
     setShowPenaltyPopup(false);
     setUptablePenalty(false);
 
-    updatePenaltyForm.name = userData?.name;
-    setUpdatePenaltyData(updatePenaltyForm);
+    onInitUpdatePenaltyData();
   };
 
   const onMessage = (type, message) => {
@@ -172,7 +182,7 @@ export default function UserDetailPage() {
           />
         </div>
 
-        <div className="flex flex-col h-full mt-4">
+        <div className="flex flex-col h-full mt-4 overflow-hidden">
           <TabComponent
             tabs={[
               {
@@ -207,6 +217,10 @@ export default function UserDetailPage() {
           <UserPenaltyPopupGrid
             initData={updatePenaltyData}
             readOnly={false}
+            useDefaultOption={penaltyTableBody.length > 0}
+            defaultIndex={userData?.penaltyStatusList.findIndex(
+              (el) => el.label === updatePenaltyData.label
+            )}
             penaltyStatusList={userData?.penaltyStatusList}
             onValidate={onValidatePenaltyStatus}
           />

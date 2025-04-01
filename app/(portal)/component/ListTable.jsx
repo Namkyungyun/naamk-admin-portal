@@ -107,6 +107,7 @@ export function ListTableBody({ headers, body }) {
 }
 
 export function ListCount({
+  disabled,
   totalItemCount,
   defaultIndex,
   optionData = [],
@@ -118,6 +119,7 @@ export function ListCount({
         <span className="text-sm">총 {totalItemCount}개</span>
         |
         <SelectBox
+          disabled={disabled}
           useAllOption={false}
           useDefault={true}
           defaultIndex={defaultIndex}

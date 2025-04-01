@@ -12,6 +12,6 @@ export default function LoadingDot({ loading }) {
 
 const Dot = ({ className }) => (
   <span
-    className={`rounded-full bg-primary-400 w-4 h-4 m-[2px] animate-loading delay7 ${className}`}
+    className={`rounded-full bg-brand-s80 w-4 h-4 m-[2px] animate-loading delay7 ${className}`}
   ></span>
 );

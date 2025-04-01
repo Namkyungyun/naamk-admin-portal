@@ -16,6 +16,7 @@ import {
   getUserPenaltyHist,
   updateUserPenaltyStatus,
 } from "../actions";
+import Loading from "@/app/(portal)/component/Loading";
 
 export default function UserDetailPage() {
   const { userId } = useParams();
@@ -233,6 +234,9 @@ export default function UserDetailPage() {
           />
         </div>
       </MidPopupModal>
+
+      {/* loading  */}
+      <Loading isLoading={loading} />
 
       <>{contextHolder}</>
     </>

@@ -163,8 +163,8 @@ export default function UserSearchBox({
         </RowFor3Column>
 
         <div className="flex justify-center">
-          <ResetButton disabled={false} onClick={onClickReset} />
-          <SearchButton disabled={false} onClick={onClickSearch} />
+          <ResetButton disabled={loading} onClick={onClickReset} />
+          <SearchButton disabled={loading} onClick={onClickSearch} />
         </div>
       </section>
     </>

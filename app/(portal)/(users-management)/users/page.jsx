@@ -6,6 +6,7 @@ import { getSearchDatas, getUsers } from "./actions";
 import PageTitle from "../../component/PageTitle";
 import UserSearchBox from "./component/SearchBox";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
+import Loading from "../../component/Loading";
 
 export default function UserListPage() {
   const router = useRouter();
@@ -122,6 +123,7 @@ export default function UserListPage() {
         {/* 리스트 테이블 - item count */}
         <div className="h-8 mt-4 mb-1 flex items-center justify-end text-black gap-2">
           <ListCount
+            disabled={loading}
             totalItemCount={totalItemCount}
             optionData={itemCountOptions}
             defaultIndex={1}
@@ -134,7 +136,7 @@ export default function UserListPage() {
 
         {/* 페이지네이션 영역 */}
         <div className="h-12 flex items-center justify-center text-black gap-2">
-          {tableBody.length !== 0 ? (
+          {!loading && tableBody.length !== 0 ? (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPage}
@@ -143,6 +145,9 @@ export default function UserListPage() {
             />
           ) : null}
         </div>
+
+        {/* loading  */}
+        <Loading isLoading={loading} />
       </div>
     </>
   );

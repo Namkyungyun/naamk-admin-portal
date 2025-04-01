@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 
 import { RowFor3Column } from "@/app/(portal)/component/Row";
-import { MDColumn } from "@/app/(portal)/component/Column";
+import { FullColumn, MDColumn } from "@/app/(portal)/component/Column";
 import { SearchInput } from "@/app/(portal)/component/SearchInput";
 import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { RangeDatePicker } from "@/app/(portal)/component/DatePicker";
 import { ResetButton, SearchButton } from "@/app/(portal)/component/Buttons";
 
-export default function UserSearchBox({
+export default function UserPenaltySearchBox({
   loading,
   fetched,
   fetchedSearchData,
@@ -18,30 +18,34 @@ export default function UserSearchBox({
   const [reset, setReset] = useState(false);
 
   /// search option list
-  const [userStatusOptions, setUserStatusOptions] = useState([]);
+  const [reportStatusOptions, setReportStatusOptions] = useState([]);
   const [penaltyStatusOptions, setPenaltyStatusOptions] = useState([]);
 
   /// search data list
-  const [userStatus, setUserStatus] = useState(null);
+  // 신고상태
+  const [reportStatus, setReportStatus] = useState(null);
+  // 처리상태
   const [penaltyStatus, setPenaltyStatus] = useState(null);
+  // 대상자ID
   const [name, setName] = useState(null);
-  const [nickname, setNickname] = useState(null);
-  const [email, setEmail] = useState(null);
+  // 처리자
+  const [createdBy, setCreatedBy] = useState(null); // 처리자
+  // 최근신고기간
   const [dates, setDates] = useState({
     startDate: null,
     endDate: null,
   });
 
-  /// required search data
+  /// required dates
   const [enabledDates, setEnabledDates] = useState();
 
-  /// init
+  /// init render
   useEffect(() => {}, []);
 
-  /// rebuild
+  /// rebuild render
   useEffect(() => {
     if (!reset && fetched) {
-      setUserStatusOptions(fetchedSearchData.userStatus);
+      setReportStatusOptions(fetchedSearchData.reportStatus);
       setPenaltyStatusOptions(fetchedSearchData.penaltyStatus);
     }
 
@@ -52,13 +56,12 @@ export default function UserSearchBox({
 
   const onClickSearch = () => {
     const searchData = {
-      userStatus: userStatus == "all" ? null : userStatus,
+      reportStatus: reportStatus == "all" ? null : reportStatus,
       penaltyStatus: penaltyStatus == "all" ? null : penaltyStatus,
       startDate: dates.startDate,
       endDate: dates.endDate,
       name: name,
-      nickname: nickname,
-      email: email,
+      createdBy: createdBy,
     };
 
     if (validateSearch()) {
@@ -78,18 +81,18 @@ export default function UserSearchBox({
     <>
       <section className="border border-bd-muted p-1 flex-grow w-full my-1">
         <RowFor3Column>
-          <MDColumn title="계정 상태">
+          <MDColumn title="신고 상태">
             <SelectBox
               isReset={reset}
               isFetched={fetched}
               disabled={loading}
               useAllOption={true}
-              onChange={setUserStatus}
-              optionData={userStatusOptions}
+              onChange={setReportStatus}
+              optionData={reportStatusOptions}
             />
           </MDColumn>
 
-          <MDColumn title="제재 상태">
+          <MDColumn title="처리 상태">
             <SelectBox
               isReset={reset}
               isFetched={fetched}
@@ -100,13 +103,13 @@ export default function UserSearchBox({
             />
           </MDColumn>
 
-          <MDColumn title="가입 기간">
+          <MDColumn title="최근 신고 기간">
             <RangeDatePicker
               isReset={reset}
               useDefault={false}
               isRequired={enabledDates}
-              defaultPeriod={365 * 2}
-              maxPeriod={365 * 2}
+              defaultPeriod={365}
+              maxPeriod={365}
               onCallback={(value) => {
                 setEnabledDates(!value.result);
                 setDates({
@@ -116,12 +119,9 @@ export default function UserSearchBox({
               }}
             />
           </MDColumn>
-          {/* {/* </div> */}
         </RowFor3Column>
-
-        {/* 로우 */}
         <RowFor3Column>
-          <MDColumn title="회원ID">
+          <MDColumn title="대상자ID">
             <SearchInput
               isReset={reset}
               isLoading={loading}
@@ -134,32 +134,19 @@ export default function UserSearchBox({
               }}
             />
           </MDColumn>
-          <MDColumn title="사용자명">
+          <FullColumn title="처리자">
             <SearchInput
               isReset={reset}
               isLoading={loading}
               isRequired={false}
               hidden={false}
-              placeholder={"사용자명을 입력하세요"}
-              value={nickname}
+              placeholder={"처리자ID 입력하세요"}
+              value={createdBy}
               onChange={(obj) => {
-                setNickname(obj.text);
+                setCreatedBy(obj.text);
               }}
             />
-          </MDColumn>
-          <MDColumn title="이메일">
-            <SearchInput
-              isReset={reset}
-              isLoading={loading}
-              isRequired={false}
-              hidden={false}
-              placeholder={"이메일을 입력하세요"}
-              value={email}
-              onChange={(obj) => {
-                setEmail(obj.text);
-              }}
-            />
-          </MDColumn>
+          </FullColumn>
         </RowFor3Column>
 
         <div className="flex justify-center">

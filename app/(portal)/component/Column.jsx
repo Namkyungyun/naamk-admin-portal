@@ -1,7 +1,7 @@
 export function FullColumn({ title, isFull = false, children }) {
   return (
     <div className="flex col-span-6 grid grid-cols-6 border border-bd-subtle">
-      <div className="col-span-1 bg-muted text-center content-center">
+      <div className="col-span-1 bg-disabled text-center content-center">
         <label className="text-black text-sm font-semibold leading-9">
           {title}
         </label>

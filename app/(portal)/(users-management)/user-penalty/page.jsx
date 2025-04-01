@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSearchDatas, getUsers } from "./actions";
+import {} from "./actions";
 
 import PageTitle from "../../component/PageTitle";
-import UserSearchBox from "./component/SearchBox";
-import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import Loading from "../../component/Loading";
+import { ListCount, ListTable, Pagination } from "../../component/ListTable";
+import UserPenaltySearchBox from "./component/SearchBox";
 
-export default function UserListPage() {
+export default function UserPenaltyListPage() {
   const router = useRouter();
 
   /// data status
@@ -36,28 +36,28 @@ export default function UserListPage() {
   const tableHeader = [
     { variableName: "id", variableLabel: "구분" },
     {
-      variableName: "name",
-      variableLabel: "회원ID",
+      variableName: "lastestReportedAt",
+      variableLabel: "최근신고일시",
       url: "id",
       onButton: (url) => router.push(`/users/${url}`),
     },
-    { variableName: "nickname", variableLabel: "사용자명" },
-    { variableName: "userStatus", variableLabel: "계정 상태" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
-    { variableName: "email", variableLabel: "이메일" },
-    { variableName: "createdAt", variableLabel: "가입일시" },
+    { variableName: "name", variableLabel: "대상자ID" },
+    { variableName: "totalReportCount", variableLabel: "신고 건수" },
+    { variableName: "reportStatus", variableLabel: "신고 상태" },
+    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
+    { variableName: "createdAt", variableLabel: "처리일시" },
+    { variableName: "createdBy", variableLabel: "처리자" },
   ];
   const [tableBody, setTableBody] = useState([]);
 
-  /// init
+  /// init render
   useEffect(() => {
-    /// Search section API fetch
     const fetchInitData = async () => {
       setLoading(true);
 
-      const searchOptions = await Promise.resolve(getSearchDatas());
-      setInitSearchData(searchOptions);
-      setPageItemCount(pageItemCountOptions[1].value); // 디폴트 item visible value
+      // const searchOptions = await Promise.resolve(getSearchDatas());
+      // setInitSearchData(searchOptions);
+      // setPageItemCount(itemCountOptions[1].value); // 디폴트 item visible value
 
       setFetchedInit(true);
       setLoading(false);
@@ -66,25 +66,27 @@ export default function UserListPage() {
     fetchInitData();
   }, []);
 
+  /// rebuild render
   useEffect(() => {
     if (fetchedInit) {
       onSearch(reqSearchData);
     }
   }, [currentPageNo, pageItemCount]);
 
+  /// search API
   const onSearch = (searchData) => {
     setReqSearchData(searchData);
     const fetchResultData = async () => {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(
-        getUsers(searchData, { page: currentPageNo - 1, size: pageItemCount })
-      );
+      // const entity = await Promise.resolve(
+      //   getUsers(searchData, { page: currentPage - 1, size: pageItemCount })
+      // );
 
-      setTotalPageNo(entity.totalPages);
-      setPageTotalItemCount(entity.totalElements);
-      setTableBody(entity.content);
+      // setTotalPage(entity.totalPages);
+      // setPageTotalItemCount(entity.totalElements);
+      // setTableBody(entity.content);
 
       setLoading(false);
     };
@@ -109,10 +111,10 @@ export default function UserListPage() {
       <div className="flex flex-col h-full">
         <div>
           {/* 상단 화면명 */}
-          <PageTitle currentPage="회원관리" />
+          <PageTitle currentPage="사용자 신고 관리" />
 
           {/* 검색 박스 */}
-          <UserSearchBox
+          <UserPenaltySearchBox
             loading={loading}
             fetched={fetchedInit}
             fetchedSearchData={initSearchData}
@@ -126,7 +128,7 @@ export default function UserListPage() {
             disabled={loading}
             totalItemCount={pageTotalItemCount}
             optionData={pageItemCountOptions}
-            defaultIndex={1}
+            defaultIndex={0}
             onChange={onPageItemCountChange}
           />
         </div>

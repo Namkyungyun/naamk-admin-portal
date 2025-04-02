@@ -18,14 +18,16 @@ export default function UserListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState({});
+  const [reqSearchData, setReqSearchData] = useState({
+    pageNo: 1,
+    pageSize: 50,
+  });
 
   /// pagination data
   const visiblePageCount = 5;
-  const [currentPageNo, setCurrentPageNo] = useState(1);
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [pageTotalItemCount, setPageTotalItemCount] = useState(0);
-  const [pageItemCount, setPageItemCount] = useState(0);
+
   const pageItemCountOptions = [
     { id: 1, value: 20, label: "20개씩" },
     { id: 2, value: 50, label: "50개씩" },
@@ -57,7 +59,6 @@ export default function UserListPage() {
 
       const searchOptions = await Promise.resolve(getSearchDatas());
       setInitSearchData(searchOptions);
-      setPageItemCount(pageItemCountOptions[1].value); // 디폴트 item visible value
 
       setFetchedInit(true);
       setLoading(false);
@@ -66,21 +67,12 @@ export default function UserListPage() {
     fetchInitData();
   }, []);
 
-  useEffect(() => {
-    if (fetchedInit) {
-      onSearch(reqSearchData);
-    }
-  }, [currentPageNo, pageItemCount]);
-
-  const onSearch = (searchData) => {
-    setReqSearchData(searchData);
+  const onSearch = (data) => {
     const fetchResultData = async () => {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(
-        getUsers(searchData, { page: currentPageNo - 1, size: pageItemCount })
-      );
+      const entity = await Promise.resolve(getUsers(data));
 
       setTotalPageNo(entity.totalPages);
       setPageTotalItemCount(entity.totalElements);
@@ -93,15 +85,20 @@ export default function UserListPage() {
   };
 
   const onPageChange = (page) => {
-    if (page >= totalPageNo) {
-      setCurrentPageNo(totalPageNo);
-    } else {
-      setCurrentPageNo(page);
+    reqSearchData.pageNo = page >= totalPageNo ? totalPageNo : page;
+
+    if (fetchedInit) {
+      onSearch(reqSearchData);
     }
   };
 
   const onPageItemCountChange = (count) => {
-    setPageItemCount(count);
+    reqSearchData.pageNo = 1;
+    reqSearchData.pageSize = count;
+
+    if (fetchedInit) {
+      onSearch(reqSearchData);
+    }
   };
 
   return (
@@ -116,7 +113,11 @@ export default function UserListPage() {
             loading={loading}
             fetched={fetchedInit}
             fetchedSearchData={initSearchData}
-            onSearch={onSearch}
+            onSearch={(data) => {
+              reqSearchData.pageNo = 1;
+              setReqSearchData({ ...reqSearchData, ...data });
+              onSearch({ ...reqSearchData, ...data });
+            }}
           />
         </div>
 
@@ -138,7 +139,7 @@ export default function UserListPage() {
         <div className="h-12 flex items-center justify-center text-black gap-2">
           {!loading && tableBody.length !== 0 ? (
             <Pagination
-              currentPage={currentPageNo}
+              currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
               maxVisible={visiblePageCount}

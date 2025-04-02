@@ -17,12 +17,12 @@ export async function getSearchDatas() {
     .catch((e)=> console.log(e));
 }
 
-export async function getUsers(searchData, pageable) {
+export async function getUsers(searchData) {
     console.log("getUsers : searchData >>>>>> " + searchData);
 
   return await api
     .post(`${prefixUrl}/users`, searchData, {
-        params: pageable
+        params: {page: searchData.pageNo-1, size: searchData.pageSize}
     })
     .then((response) => {
       console.log(response);

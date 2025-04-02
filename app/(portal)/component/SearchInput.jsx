@@ -10,7 +10,7 @@ export function SearchInput({
   type = Input.Search,
   placeholder = "검색할 문구를 적어주세요.",
   minLength = 0,
-  maxLength = 20,
+  maxLength = 50,
   hidden = false,
   onChange,
 }) {

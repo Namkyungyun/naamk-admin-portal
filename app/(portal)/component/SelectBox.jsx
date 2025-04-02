@@ -43,10 +43,14 @@ export function SelectBox({
 
   useEffect(() => {
     if (isReset) {
-      let index = useDefault ? defaultIndex : 0;
-
-      setSelectValue(options[index]?.label);
-      onChangeOption(options[index]?.value);
+      if (useDefault && useAllOption) {
+        let index = useDefault ? defaultIndex : 0;
+        setSelectValue(options[index]?.label);
+        onChangeOption(options[index]?.value);
+      } else {
+        setSelectValue(null);
+        onChangeOption(null);
+      }
     }
   }, [isReset]);
 

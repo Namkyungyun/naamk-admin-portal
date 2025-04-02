@@ -6,7 +6,8 @@ import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { LimitedLengthTextArea } from "@/app/(portal)/component/TextArea";
 
 export default function UserPenaltyPopupGrid({
-  initData,
+  penaltyForm,
+  originOption,
   readOnly = false,
   useDefaultOption = false,
   defaultIndex = 0,
@@ -27,7 +28,7 @@ export default function UserPenaltyPopupGrid({
   const onValidateForm = (isValid) => {
     onValidate({
       valid: isValid,
-      data: initData,
+      data: penaltyForm,
     });
   };
 
@@ -35,19 +36,28 @@ export default function UserPenaltyPopupGrid({
     const valid = obj.result;
     const text = obj.text;
 
-    initData.description = text;
+    penaltyForm.description = text;
     setValidDescription(valid);
   };
 
   const onValidateStatus = (value) => {
-    initData.isActive = value;
-    setValidStatus(true);
+    if (originOption == null) {
+      // 최초
+      setValidStatus(value == false);
+    } else if (originOption == false) {
+      // 차단
+      setValidStatus(value == true);
+    } else {
+      // 정상
+      setValidStatus(value == false);
+    }
+    penaltyForm.isActive = value;
   };
 
   return (
     <section className="border border-bd-muted p-1 flex-grow w-full my-1 text-black">
       <RowFor1Column>
-        <MDColumn title="회원ID">{initData.name}</MDColumn>
+        <MDColumn title="회원ID">{penaltyForm.name}</MDColumn>
       </RowFor1Column>
       <RowFor1Column>
         <MDColumn title="제재 상태*" isFull={true}>
@@ -69,7 +79,7 @@ export default function UserPenaltyPopupGrid({
             isRequired={false}
             minLength={1}
             placeholder={"(필수) 사유를 작성해 주세요."}
-            value={initData.description}
+            value={penaltyForm.description}
             onChange={onValidateDescription}
           />
         </MDColumn>

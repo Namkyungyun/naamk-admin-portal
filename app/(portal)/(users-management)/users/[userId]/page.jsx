@@ -11,12 +11,12 @@ import { ListTable } from "@/app/(portal)/component/ListTable";
 import MidPopupModal from "@/app/(portal)/component/MDPopupModal";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import UserPenaltyPopupGrid from "../component/PenaltyPopupGrid";
+import Loading from "@/app/(portal)/component/Loading";
 import {
   getUserById,
   getUserPenaltyHist,
   updateUserPenaltyStatus,
 } from "../actions";
-import Loading from "@/app/(portal)/component/Loading";
 
 export default function UserDetailPage() {
   const { userId } = useParams();
@@ -85,14 +85,34 @@ export default function UserDetailPage() {
     setLoading(false);
   };
 
+  const fetchUpdate = async () => {
+    setLoading(true);
+    const updated = await Promise.resolve(
+      updateUserPenaltyStatus(userId, updatePenaltyData)
+    );
+    setLoading(false);
+
+    const result = updated.id != null;
+    const type = result ? "success" : "error";
+    const message = result ? "저장되었습니다." : "저장되지 않았습니다.";
+    onMessage(type, message);
+
+    if (result) {
+      setShowPenaltyPopup(false);
+      onRefresh();
+    }
+  };
+
   /// penalty
   const onInitUpdatePenaltyData = (data) => {
     if (data) {
       updatePenaltyForm.name = data.name;
       updatePenaltyForm.label = data.penaltyStatus;
+      updatePenaltyForm.isActive = data.penalty;
     } else {
       updatePenaltyForm.name = userData.name;
       updatePenaltyForm.label = userData.penaltyStatus;
+      updatePenaltyForm.isActive = userData.penalty;
     }
 
     setUpdatePenaltyData({ ...updatePenaltyForm });
@@ -109,24 +129,6 @@ export default function UserDetailPage() {
   };
 
   const onUpdatePenaltyStatus = () => {
-    const fetchUpdate = async () => {
-      setLoading(true);
-      const updated = await Promise.resolve(
-        updateUserPenaltyStatus(userId, updatePenaltyData)
-      );
-      setLoading(false);
-
-      const result = updated.id != null;
-      const type = result ? "success" : "error";
-      const message = result ? "저장되었습니다." : "저장되지 않았습니다.";
-      onMessage(type, message);
-
-      if (result) {
-        setShowPenaltyPopup(false);
-        onRefresh();
-      }
-    };
-
     fetchUpdate();
   };
 
@@ -178,7 +180,7 @@ export default function UserDetailPage() {
           <SectionTitle title="기본정보" />
           <UserDetailGrid
             user={userData ?? initUserData}
-            isFetched={fetchedInit}
+            updatable={loading}
             onPenaltyUpdate={() => setShowPenaltyPopup(true)}
           />
         </div>
@@ -216,11 +218,12 @@ export default function UserDetailPage() {
       >
         <div>
           <UserPenaltyPopupGrid
-            initData={updatePenaltyData}
-            readOnly={false}
+            penaltyForm={updatePenaltyData}
+            originOption={userData?.penalty}
+            readOnly={loading}
             useDefaultOption={penaltyTableBody.length > 0}
             defaultIndex={userData?.penaltyStatusList.findIndex(
-              (el) => el.label === updatePenaltyData.label
+              (el) => el.label === userData.penaltyStatus
             )}
             penaltyStatusList={userData?.penaltyStatusList}
             onValidate={onValidatePenaltyStatus}

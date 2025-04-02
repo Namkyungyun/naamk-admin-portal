@@ -3,6 +3,7 @@ import { Input } from "antd";
 import { useState, useEffect } from "react";
 
 export function LimitedLengthTextArea({
+  isReset = false,
   isLoading = false,
   readOnly = false,
   isRequired = false,
@@ -19,6 +20,12 @@ export function LimitedLengthTextArea({
   useEffect(() => {
     setText(value);
   }, []);
+
+  useEffect(() => {
+    if (isReset) {
+      setText(null);
+    }
+  }, [isReset]);
 
   const onInput = (e) => {
     let text = e.target.value ?? "";

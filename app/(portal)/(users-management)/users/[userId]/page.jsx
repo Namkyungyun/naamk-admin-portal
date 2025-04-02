@@ -24,7 +24,6 @@ export default function UserDetailPage() {
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [fetchedInit, setFetchedInit] = useState(false);
 
   /// userdatail data
   const initUserData = {
@@ -79,7 +78,7 @@ export default function UserDetailPage() {
 
     setUserData(userDetailData);
     setPenaltyTableBody(penaltyHistData);
-    onInitUpdatePenaltyData(userDetailData);
+    setPenaltyData(userDetailData);
 
     setFetchedInit(true);
     setLoading(false);
@@ -103,8 +102,8 @@ export default function UserDetailPage() {
     }
   };
 
-  /// penalty
-  const onInitUpdatePenaltyData = (data) => {
+  /// penalty ( 팝업 때메 )
+  const setPenaltyData = (data) => {
     if (data) {
       updatePenaltyForm.name = data.name;
       updatePenaltyForm.label = data.penaltyStatus;
@@ -136,7 +135,7 @@ export default function UserDetailPage() {
     setShowPenaltyPopup(false);
     setUptablePenalty(false);
 
-    onInitUpdatePenaltyData();
+    setPenaltyData();
   };
 
   const onMessage = (type, message) => {

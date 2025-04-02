@@ -27,9 +27,9 @@ export default function UserPenaltySearchBox({
   // 처리상태
   const [penaltyStatus, setPenaltyStatus] = useState(null);
   // 대상자ID
-  const [name, setName] = useState(null);
+  const [reportedName, setReportedName] = useState(null);
   // 처리자
-  const [createdBy, setCreatedBy] = useState(null); // 처리자
+  const [penaltyCreatedBy, setPenaltyCreatedBy] = useState(null); // 처리자
   // 최근신고기간
   const [dates, setDates] = useState({
     startDate: null,
@@ -60,8 +60,8 @@ export default function UserPenaltySearchBox({
       penaltyStatus: penaltyStatus == "all" ? null : penaltyStatus,
       startDate: dates.startDate,
       endDate: dates.endDate,
-      name: name,
-      createdBy: createdBy,
+      reportedName: reportedName,
+      penaltyCreatedBy: penaltyCreatedBy,
     };
 
     if (validateSearch()) {
@@ -128,9 +128,9 @@ export default function UserPenaltySearchBox({
               isRequired={false}
               hidden={false}
               placeholder={"회원 ID를 입력하세요."}
-              value={name}
+              value={reportedName}
               onChange={(obj) => {
-                setName(obj.text);
+                setReportedName(obj.text);
               }}
             />
           </MDColumn>
@@ -141,9 +141,9 @@ export default function UserPenaltySearchBox({
               isRequired={false}
               hidden={false}
               placeholder={"처리자ID 입력하세요"}
-              value={createdBy}
+              value={penaltyCreatedBy}
               onChange={(obj) => {
-                setCreatedBy(obj.text);
+                setPenaltyCreatedBy(obj.text);
               }}
             />
           </FullColumn>

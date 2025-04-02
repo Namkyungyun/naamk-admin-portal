@@ -32,6 +32,8 @@ export function SearchInput({
   /////
   const onChangeValue = (e) => {
     let text = e.target.value;
+    text = text === "" ? null : text;
+
     let validation = onValidate(text);
 
     setText(text);

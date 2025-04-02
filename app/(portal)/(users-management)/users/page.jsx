@@ -26,8 +26,7 @@ export default function UserListPage() {
   /// pagination data
   const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
-  const [pageTotalItemCount, setPageTotalItemCount] = useState(0);
-
+  const [totalItemCount, setTotalItemCount] = useState(0);
   const pageItemCountOptions = [
     { id: 1, value: 20, label: "20개씩" },
     { id: 2, value: 50, label: "50개씩" },
@@ -67,6 +66,7 @@ export default function UserListPage() {
     fetchInitData();
   }, []);
 
+  /// search API
   const onSearch = (data) => {
     const fetchResultData = async () => {
       setLoading(true);
@@ -75,7 +75,7 @@ export default function UserListPage() {
       const entity = await Promise.resolve(getUsers(data));
 
       setTotalPageNo(entity.totalPages);
-      setPageTotalItemCount(entity.totalElements);
+      setTotalItemCount(entity.totalElements);
       setTableBody(entity.content);
 
       setLoading(false);
@@ -125,7 +125,7 @@ export default function UserListPage() {
         <div className="h-8 mt-4 mb-1 flex items-center justify-end text-black gap-2">
           <ListCount
             disabled={loading}
-            totalItemCount={pageTotalItemCount}
+            totalItemCount={totalItemCount}
             optionData={pageItemCountOptions}
             defaultIndex={1}
             onChange={onPageItemCountChange}

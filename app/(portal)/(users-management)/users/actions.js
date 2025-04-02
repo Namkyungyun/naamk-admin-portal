@@ -7,7 +7,7 @@ export async function getSearchDatas() {
   console.log("getSearchDatas");
 
   return await api
-    .get(`${prefixUrl}/users/search`)
+    .get(`${prefixUrl}/search-options`)
     .then((response) => {
       const entity = response.data.body.entity;
       console.log("getSearchDatas success", entity);
@@ -32,7 +32,6 @@ export async function getUsers(searchData) {
       return entity;
     })
     .catch((e)=> console.log(e));
-
 }
 
 export async function getUserById(userId) {

@@ -9,6 +9,7 @@ import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 
 export default function UserPenaltyDetailGrid({
   loading,
+  fetched,
   reportedUser,
   penaltyForm,
   onUpdate,
@@ -42,12 +43,15 @@ export default function UserPenaltyDetailGrid({
       // 정상
       setValidStatus(value == false);
     }
-    setValidStatus(true);
+
     penaltyFormData.isActive = value;
   };
 
   const onUpdatePenaltyStatus = () => {
-    onUpdate(penaltyFormData);
+    const test = penaltyFormData;
+    if (onUpdate) {
+      onUpdate(penaltyFormData);
+    }
   };
 
   const onCancelUpdatePenaltyStatus = () => {
@@ -73,24 +77,27 @@ export default function UserPenaltyDetailGrid({
     <>
       <section className="border border-bd-muted p-1 flex-grow w-full my-1 text-black">
         <RowFor2Column>
-          <MDColumn title="신고일시">{reportedUser.reportCreatedAt}</MDColumn>
-          <MDColumn title="처리일시">{reportedUser.createdAt}</MDColumn>
+          <MDColumn title="신고일시">{reportedUser.latestCreatedAt}</MDColumn>
+          <MDColumn title="처리일시">{reportedUser.penaltyCreatedAt}</MDColumn>
         </RowFor2Column>
 
         <RowFor2Column>
-          <MDColumn title="대상자ID">{reportedUser.name}</MDColumn>
-          <MDColumn title="처리자ID">{reportedUser.createdBy}</MDColumn>
+          <MDColumn title="대상자ID">{reportedUser.reportedUserName}</MDColumn>
+          <MDColumn title="처리자ID">{reportedUser.penaltyCreatedBy}</MDColumn>
         </RowFor2Column>
 
         <RowFor2Column>
-          <MDColumn title="계정 상태">{reportedUser.penaltyStatus}</MDColumn>
+          <MDColumn title="계정 상태">{reportedUser.userStatus}</MDColumn>
           <MDColumn title="처리 상태*">
             <SelectBox
+              isFetched={fetched}
               isReset={penaltyFormReset}
-              disabled={loading}
+              disabled={reportedUser.penalty != null}
               useAllOption={false}
-              useDefault={false}
-              defaultIndex={0}
+              useDefault={reportedUser.penalty != null}
+              defaultIndex={reportedUser?.penaltyStatusList.findIndex(
+                (el) => el.label === reportedUser.penaltyStatus
+              )}
               optionData={reportedUser.penaltyStatusList}
               onChange={onValidateStatus}
             />
@@ -102,11 +109,13 @@ export default function UserPenaltyDetailGrid({
           <MDColumn title="제재 사유*">
             <LimitedLengthTextArea
               isReset={penaltyFormReset}
-              disabled={loading}
+              isLoading={loading}
+              disabled={reportedUser.penaltyDescription != null}
+              readOnly={reportedUser.penaltyDescription != null}
               isRequired={false}
               minLength={1}
               placeholder={"(필수) 사유를 작성해 주세요."}
-              value={penaltyFormData.description}
+              value={reportedUser.penaltyDescription}
               onChange={onValidateDescription}
             />
           </MDColumn>

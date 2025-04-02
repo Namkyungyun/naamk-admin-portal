@@ -22,37 +22,38 @@ export function SelectBox({
   useEffect(() => {
     const list = fetchOptionList();
     setOptions(list);
-
-    if (useDefault) {
-      setSelectValue(list[defaultIndex]?.label);
-      onChangeOption(list[defaultIndex]?.value);
-    }
+    fetchOption(list);
   }, []);
 
   /// rebuild (api fetch된 후)
   useEffect(() => {
-    if (isFetched) {
-      setOptions([]);
-
+    if (isFetched && optionData.length > 0) {
       const list = fetchOptionList();
       setOptions(list);
-      setSelectValue(list[defaultIndex]?.label);
-      onChangeOption(list[defaultIndex]?.value);
+      fetchOption(list);
     }
   }, [isFetched, optionData.length]);
 
   useEffect(() => {
     if (isReset) {
-      if (useDefault && useAllOption) {
-        let index = useDefault ? defaultIndex : 0;
-        setSelectValue(options[index]?.label);
-        onChangeOption(options[index]?.value);
-      } else {
-        setSelectValue(null);
-        onChangeOption(null);
-      }
+      fetchOption();
     }
   }, [isReset]);
+
+  const fetchOption = (list) => {
+    list = list ?? optionData;
+
+    if (useDefault || useAllOption) {
+      const selected = list[useDefault ? defaultIndex : 0];
+      if (selected) {
+        setSelectValue(selected.label); // ✅ 이게 핵심
+        onChangeOption(selected.value);
+      }
+    } else {
+      setSelectValue(null);
+      onChangeOption(null);
+    }
+  };
 
   const fetchOptionList = () => {
     return useAllOption ? [optionOfAll, ...optionData] : [...optionData];

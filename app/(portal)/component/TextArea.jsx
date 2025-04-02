@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 
 export function LimitedLengthTextArea({
   isReset = false,
-  isLoading = false,
+  disabled = false,
   readOnly = false,
   isRequired = false,
   placeholder = "text area...",
   minLength = 20,
   maxLength = 100,
-  value = "",
+  value,
   onChange,
 }) {
   const { TextArea } = Input;
@@ -20,6 +20,10 @@ export function LimitedLengthTextArea({
   useEffect(() => {
     setText(value);
   }, []);
+
+  useEffect(() => {
+    setText(value);
+  }, [value]);
 
   useEffect(() => {
     if (isReset) {
@@ -53,7 +57,7 @@ export function LimitedLengthTextArea({
         allowClear
         onClear={onClear}
         autoSize={false}
-        disabled={isLoading}
+        disabled={disabled}
         readOnly={readOnly}
         status={isRequired || (text && !validation) ? "error" : ""}
         minLength={minLength}

@@ -1,5 +1,6 @@
 "use client";
 
+import { CatchingPokemonSharp } from "@mui/icons-material";
 import { Select } from "antd";
 import { useState, useEffect } from "react";
 
@@ -36,7 +37,8 @@ export function SelectBox({
 
   useEffect(() => {
     if (isReset) {
-      fetchOption();
+      const list = fetchOptionList();
+      fetchOption(list);
     }
   }, [isReset]);
 

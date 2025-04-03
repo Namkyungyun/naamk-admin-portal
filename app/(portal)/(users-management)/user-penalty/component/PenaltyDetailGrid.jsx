@@ -50,9 +50,11 @@ export default function UserPenaltyDetailGrid({
   };
 
   const onUpdatePenaltyStatus = () => {
-    const test = penaltyFormData;
     if (onUpdate) {
-      onUpdate(penaltyFormData);
+      const result = onUpdate(penaltyFormData);
+      if (result) {
+        setUptablePenalty(false);
+      }
     }
   };
 
@@ -108,7 +110,7 @@ export default function UserPenaltyDetailGrid({
                 <button
                   className="text-sm text-gray-600 underline"
                   onClick={() =>
-                    window.open(reportedUser.reportedUserProfileUrl, "_blank")
+                    window.open(reportedUser.reportedUserP, "_blank")
                   }
                 >
                   <span className="mr-1">프로필 보러가기</span>

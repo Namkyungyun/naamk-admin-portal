@@ -111,6 +111,8 @@ export default function UserPenaltyDetailPage() {
     if (result) {
       onRefresh();
     }
+
+    return result;
   };
 
   const onPageChange = (page) => {

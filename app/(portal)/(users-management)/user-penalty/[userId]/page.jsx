@@ -72,21 +72,22 @@ export default function UserPenaltyDetailPage() {
   const fetchInit = async () => {
     setLoading(true);
 
-    const [reportDetailData, reportHistData] = await Promise.all([
-      getUserById(userId),
-      getUserReportHist(userId, reqSearchData),
-    ]);
+    const [reportDetailData, { pagenation, newReportCount }] =
+      await Promise.all([
+        getUserById(userId),
+        getUserReportHist(userId, reqSearchData),
+      ]);
 
     // detail
     setReportedUserData(reportDetailData);
-    penaltyForm.isActive = reportDetailData.penalty;
-    penaltyForm.description = reportDetailData.penaltyDescription;
+    if (reportDetailData) {
+      penaltyForm.isActive = reportDetailData.penalty;
+      penaltyForm.description = reportDetailData.penaltyDescription;
+    }
     // history
-    setReportHistTableBody(reportHistData.content);
-    setTotalPageNo(reportHistData.totalPages);
-    setTotalItemCount(reportHistData.totalElements);
-
-    // setPenaltyData(userDetailData);
+    setReportHistTableBody(pagenation.content);
+    setTotalPageNo(pagenation.totalPages);
+    setTotalItemCount(newReportCount);
 
     setFetchedInit(true);
     setLoading(false);
@@ -104,7 +105,7 @@ export default function UserPenaltyDetailPage() {
 
     const result = updated.id != null;
     const type = result ? "success" : "error";
-    const message = result ? "저장되었습니다." : "저장되지 않았습니다.";
+    const message = result ? "(TP)신고 처리완료" : "(TP)신고 처리실패";
     onMessage(type, message);
 
     if (result) {
@@ -174,12 +175,14 @@ export default function UserPenaltyDetailPage() {
             reportedUser={reportedUserData ?? initReportedUserData}
             penaltyForm={penaltyForm}
             onUpdate={fetchUpdate}
+            onCancel={onMessage}
           />
         </div>
 
         <div className="mt-4 mb-1 mr-1 flex items-center justify-between text-black">
           <SectionTitle title="동일 신고 목록" />
           <ListCount
+            title="신규접수"
             disabled={loading}
             totalItemCount={totalItemCount}
             optionData={pageItemCountOptions}

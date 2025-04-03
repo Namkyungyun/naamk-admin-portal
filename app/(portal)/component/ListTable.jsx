@@ -108,6 +108,7 @@ export function ListTableBody({ headers, body }) {
 
 export function ListCount({
   disabled,
+  title,
   totalItemCount,
   defaultIndex,
   optionData = [],
@@ -116,7 +117,9 @@ export function ListCount({
   return (
     <>
       <div className="flex items-center gap-2">
-        <span className="text-sm">총 {totalItemCount}개</span>
+        <span className="text-sm">
+          {title ?? "총"} {totalItemCount}개
+        </span>
         |
         <SelectBox
           disabled={disabled}

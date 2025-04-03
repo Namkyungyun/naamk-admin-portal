@@ -6,6 +6,7 @@ import { RowFor2Column } from "@/app/(portal)/component/Row";
 import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { LimitedLengthTextArea } from "@/app/(portal)/component/TextArea";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
+import OpenInNew from "@mui/icons-material/OpenInNew";
 
 export default function UserPenaltyDetailGrid({
   loading,
@@ -13,6 +14,7 @@ export default function UserPenaltyDetailGrid({
   reportedUser,
   penaltyForm,
   onUpdate,
+  onCancel,
 }) {
   const [validDescription, setValidDescription] = useState(false);
   const [validStatus, setValidStatus] = useState(false);
@@ -56,11 +58,16 @@ export default function UserPenaltyDetailGrid({
 
   const onCancelUpdatePenaltyStatus = () => {
     setUptablePenalty(false);
+
     // reset
     setPenaltyFormReset(true);
     setTimeout(() => {
       setPenaltyFormReset(false);
     }, "500");
+
+    if (onCancel) {
+      onCancel("success", "(TP)신고 처리취소");
+    }
   };
 
   /// init
@@ -82,7 +89,35 @@ export default function UserPenaltyDetailGrid({
         </RowFor2Column>
 
         <RowFor2Column>
-          <MDColumn title="대상자ID">{reportedUser.reportedUserName}</MDColumn>
+          <MDColumn title="대상자ID">
+            {reportedUser.reportedUserName != null ? (
+              <div className="flex justify-between">
+                <button
+                  onClick={() =>
+                    window.open(
+                      `/users/${reportedUser.reportedUserId}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  <span className="underline">
+                    {reportedUser.reportedUserName}
+                  </span>
+                </button>
+
+                <button
+                  className="text-sm text-gray-600 underline"
+                  onClick={() =>
+                    window.open(reportedUser.reportedUserProfileUrl, "_blank")
+                  }
+                >
+                  <span className="mr-1">프로필 보러가기</span>
+                  <OpenInNew style={{ fontSize: 16 }} />
+                </button>
+              </div>
+            ) : null}
+            {/* {reportedUser.reportedUserName} */}
+          </MDColumn>
           <MDColumn title="처리자ID">{reportedUser.penaltyCreatedBy}</MDColumn>
         </RowFor2Column>
 
@@ -92,9 +127,13 @@ export default function UserPenaltyDetailGrid({
             <SelectBox
               isFetched={fetched}
               isReset={penaltyFormReset}
-              disabled={reportedUser.penalty != null}
+              disabled={
+                reportedUser.penalty != null && reportedUser.report == false
+              }
               useAllOption={false}
-              useDefault={reportedUser.penalty != null}
+              useDefault={
+                reportedUser.penalty != null && reportedUser.report == false
+              }
               defaultIndex={reportedUser?.penaltyStatusList.findIndex(
                 (el) => el.label === reportedUser.penaltyStatus
               )}

@@ -94,13 +94,9 @@ export default function Test() {
                 isReset={reset}
                 isLoading={false}
                 isRequired={false}
-                hidden={false}
                 placeholder={"회원 ID를 입력하세요."}
                 value={""}
-                onChange={(obj) => {}}
-                handleReset={(val) => {
-                  setReset(val);
-                }}
+                onChange={(text) => {}}
               />
             </MDColumn>
             <FullColumn title="검색어2">
@@ -111,10 +107,7 @@ export default function Test() {
                 hidden={false}
                 placeholder={"회원 ID를 입력하세요."}
                 value={""}
-                onChange={(obj) => {}}
-                handleReset={(val) => {
-                  setReset(val);
-                }}
+                onChange={(text) => {}}
               />
             </FullColumn>
           </RowFor3Column>
@@ -172,10 +165,7 @@ export default function Test() {
           hidden={false}
           placeholder={"회원 ID를 입력하세요."}
           value={""}
-          onChange={(obj) => {}}
-          handleReset={(val) => {
-            setReset(val);
-          }}
+          onChange={(text) => {}}
         />
 
         <LimitedLengthTextArea

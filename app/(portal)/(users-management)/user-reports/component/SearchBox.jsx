@@ -122,12 +122,9 @@ export default function UserReportSearchBox({
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              hidden={false}
               placeholder={"회원 ID를 입력하세요."}
               value={reportedName}
-              onChange={(obj) => {
-                setReportedName(obj.text);
-              }}
+              onChange={setReportedName}
             />
           </MDColumn>
           <FullColumn title="처리자">
@@ -135,12 +132,9 @@ export default function UserReportSearchBox({
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              hidden={false}
               placeholder={"처리자ID 입력하세요"}
               value={penaltyCreatedBy}
-              onChange={(obj) => {
-                setPenaltyCreatedBy(obj.text);
-              }}
+              onChange={setPenaltyCreatedBy}
             />
           </FullColumn>
         </RowFor3Column>

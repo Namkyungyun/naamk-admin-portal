@@ -122,12 +122,9 @@ export default function UserSearchBox({
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              hidden={false}
               placeholder={"회원 ID를 입력하세요."}
               value={name}
-              onChange={(obj) => {
-                setName(obj.text);
-              }}
+              onChange={setName}
             />
           </MDColumn>
           <MDColumn title="사용자명">
@@ -135,12 +132,9 @@ export default function UserSearchBox({
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              hidden={false}
               placeholder={"사용자명을 입력하세요"}
               value={nickname}
-              onChange={(obj) => {
-                setNickname(obj.text);
-              }}
+              onChange={setNickname}
             />
           </MDColumn>
           <MDColumn title="이메일">
@@ -148,12 +142,9 @@ export default function UserSearchBox({
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              hidden={false}
               placeholder={"이메일을 입력하세요"}
               value={email}
-              onChange={(obj) => {
-                setEmail(obj.text);
-              }}
+              onChange={setEmail}
             />
           </MDColumn>
         </RowFor3Column>

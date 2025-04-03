@@ -9,13 +9,13 @@ export function SearchInput({
   isRequired = false,
   type = Input.Search,
   placeholder = "검색할 문구를 적어주세요.",
-  minLength = 0,
-  maxLength = 50,
   hidden = false,
+  maxLength = 50,
+  isNotValid,
   onChange,
+  onClear,
 }) {
   const [text, setText] = useState(null);
-  const [validation, setValidation] = useState(true);
 
   ///// init
   useEffect(() => {
@@ -25,7 +25,7 @@ export function SearchInput({
   //// isReset에 읭한 rebuild
   useEffect(() => {
     if (isReset) {
-      onClear();
+      onClearValue();
     }
   }, [isReset]);
 
@@ -34,33 +34,14 @@ export function SearchInput({
     let text = e.target.value;
     text = text === "" ? null : text;
 
-    let validation = onValidate(text);
-
     setText(text);
-    setValidation(validation);
-
-    onChange({
-      result: validation,
-      text: text,
-    });
+    onChange(text);
   };
 
-  const onClear = () => {
-    let text = null;
-    let validation = onValidate(text);
-
-    setText(text);
-    setValidation(true);
-
-    onChange({
-      result: validation,
-      text: text,
-    });
-  };
-
-  const onValidate = (text) => {
-    const valid = minLength < (text ? text.length : 0);
-    return valid;
+  const onClearValue = () => {
+    setText(null);
+    onChange(null);
+    onClear?.();
   };
 
   return (
@@ -70,9 +51,9 @@ export function SearchInput({
         value={text}
         type={type}
         disabled={isLoading}
-        status={isRequired || (text && !validation) ? "error" : ""}
+        status={isRequired && (!text || isNotValid?.(text)) ? "error" : ""}
         placeholder={placeholder}
-        onClear={onClear}
+        onClear={onClearValue}
         onChange={onChangeValue}
         maxLength={maxLength}
       />

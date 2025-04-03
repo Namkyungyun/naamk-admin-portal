@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import PageTitle from "../../component/PageTitle";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
-import UserPenaltySearchBox from "./component/SearchBox";
+import UserReportSearchBox from "./component/SearchBox";
 
 import { getSearchDatas, getUsers } from "./actions";
 
-export default function UserPenaltyListPage() {
+export default function UserReportListPage() {
   const router = useRouter();
 
   /// data status
@@ -43,7 +43,7 @@ export default function UserPenaltyListPage() {
       variableName: "reportedUserName",
       variableLabel: "대상자ID",
       url: "reportedUserId",
-      onButton: (url) => router.push(`/user-penalty/${url}`),
+      onButton: (url) => router.push(`/user-reports/${url}`),
     },
     { variableName: "reportCount", variableLabel: "신고 건수" },
     { variableName: "reportStatus", variableLabel: "신고 상태" },
@@ -113,7 +113,7 @@ export default function UserPenaltyListPage() {
           <PageTitle currentPage="사용자 신고 관리" />
 
           {/* 검색 박스 */}
-          <UserPenaltySearchBox
+          <UserReportSearchBox
             loading={loading}
             fetched={fetchedInit}
             fetchedSearchData={initSearchData}

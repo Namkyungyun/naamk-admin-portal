@@ -1,7 +1,7 @@
 import apiClient from '@/app/lib/apiClient';
 
 const api = apiClient();
-const prefixUrl = "/user-penalty"
+const prefixUrl = "/user-reports"
 
 export async function getSearchDatas() {
   console.log("getSearchDatas");

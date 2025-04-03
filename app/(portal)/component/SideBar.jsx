@@ -31,7 +31,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           {
             id: 4,
             name: "회원 신고 관리",
-            url: "/user-penalty",
+            url: "/user-reports",
             parentId: 2,
           },
         ],

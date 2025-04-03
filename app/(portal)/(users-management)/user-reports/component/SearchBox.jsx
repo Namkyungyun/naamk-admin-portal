@@ -9,7 +9,7 @@ import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { RangeDatePicker } from "@/app/(portal)/component/DatePicker";
 import { ResetButton, SearchButton } from "@/app/(portal)/component/Buttons";
 
-export default function UserPenaltySearchBox({
+export default function UserReportSearchBox({
   loading,
   fetched,
   fetchedSearchData,

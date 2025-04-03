@@ -51,7 +51,7 @@ export default function UserDetailPage() {
       variableName: "isExistReport",
       variableLabel: "신고보기",
       url: "linkedId",
-      onButton: (url) => window.open(`/user-penalty/${url}`, "_blank"), // TODO 사용자 신고관리 상세
+      onButton: (url) => window.open(`/user-reports/${url}`, "_blank"), // TODO 사용자 신고관리 상세
     },
     { variableName: "linkedId", variableLabel: "", hidden: true },
   ];

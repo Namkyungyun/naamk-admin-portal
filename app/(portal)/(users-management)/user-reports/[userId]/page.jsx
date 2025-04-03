@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { message } from "antd";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
-import UserPenaltyDetailGrid from "../component/PenaltyDetailGrid";
+import UserReportDetailGrid from "../component/DetailGrid";
 import { ListCount, ListTable } from "@/app/(portal)/component/ListTable";
 import Loading from "@/app/(portal)/component/Loading";
 
@@ -15,7 +15,7 @@ import {
   updateUserPenaltyStatus,
 } from "../actions";
 
-export default function UserPenaltyDetailPage() {
+export default function UserReportDetailPage() {
   const { userId } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -171,7 +171,7 @@ export default function UserPenaltyDetailPage() {
             currentPage="사용자 신고정보 상세"
           />
           <SectionTitle title="사용자 신고정보" />
-          <UserPenaltyDetailGrid
+          <UserReportDetailGrid
             loading={loading}
             fetched={fetchedInit}
             reportedUser={reportedUserData ?? initReportedUserData}

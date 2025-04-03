@@ -8,7 +8,7 @@ import { LimitedLengthTextArea } from "@/app/(portal)/component/TextArea";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import OpenInNew from "@mui/icons-material/OpenInNew";
 
-export default function UserPenaltyDetailGrid({
+export default function UserReportDetailGrid({
   loading,
   fetched,
   reportedUser,

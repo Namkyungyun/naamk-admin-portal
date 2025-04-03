@@ -77,7 +77,8 @@ export function RangeDatePicker({
       setDates([start, end]);
 
       // onCallback
-      const result = start != null && end != null;
+      const result =
+        (start != null && end != null) || (start == null && end == null);
       onCallbackDates(result, start, end);
       setValidation(result);
     }

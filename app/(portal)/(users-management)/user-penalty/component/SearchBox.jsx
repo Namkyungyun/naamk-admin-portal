@@ -36,9 +36,6 @@ export default function UserPenaltySearchBox({
     endDate: null,
   });
 
-  /// required dates
-  const [enabledDates, setEnabledDates] = useState();
-
   /// init render
   useEffect(() => {}, []);
 
@@ -107,11 +104,10 @@ export default function UserPenaltySearchBox({
             <RangeDatePicker
               isReset={reset}
               useDefault={false}
-              isRequired={enabledDates}
+              isRequired={false}
               defaultPeriod={365}
               maxPeriod={365}
               onCallback={(value) => {
-                setEnabledDates(!value.result);
                 setDates({
                   startDate: value.startDate,
                   endDate: value.endDate,

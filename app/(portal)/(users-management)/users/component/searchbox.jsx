@@ -32,9 +32,6 @@ export default function UserSearchBox({
     endDate: null,
   });
 
-  /// required search data
-  const [enabledDates, setEnabledDates] = useState();
-
   /// init
   useEffect(() => {}, []);
 
@@ -104,11 +101,10 @@ export default function UserSearchBox({
             <RangeDatePicker
               isReset={reset}
               useDefault={false}
-              isRequired={enabledDates}
+              isRequired={false}
               defaultPeriod={365 * 2}
               maxPeriod={365 * 2}
               onCallback={(value) => {
-                setEnabledDates(!value.result);
                 setDates({
                   startDate: value.startDate,
                   endDate: value.endDate,

@@ -39,7 +39,8 @@ export default function UserReportDetailPage() {
 
   /// report history list
   const reportHistTableHeader = [
-    { variableName: "id", variableLabel: "구분" },
+    { variableName: "rowNum", variableLabel: "구분" },
+    { variableName: "id", variableLabel: "", hidden: true },
     { variableName: "reportCreatedAt", variableLabel: "신고일시" },
     { variableName: "reportCreatedBy", variableLabel: "신고자" },
     { variableName: "reportStatus", variableLabel: "신고 상태" },

@@ -45,7 +45,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
           {
             id: 7,
             name: "채널 관리",
-            url: "/test",
+            url: "/posts",
             parentId: 6,
           },
           {

@@ -35,7 +35,8 @@ export default function UserListPage() {
 
   /// table result
   const tableHeader = [
-    { variableName: "id", variableLabel: "구분" },
+    { variableName: "rowNum", variableLabel: "구분" },
+    { variableName: "id", variableLabel: "", hidden: true },
     {
       variableName: "name",
       variableLabel: "회원ID",

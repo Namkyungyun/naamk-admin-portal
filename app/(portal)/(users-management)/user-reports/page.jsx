@@ -36,7 +36,8 @@ export default function UserReportListPage() {
 
   /// table result
   const tableHeader = [
-    { variableName: "id", variableLabel: "구분" },
+    { variableName: "rowNum", variableLabel: "구분" },
+    { variableName: "id", variableLabel: "", hidden: true },
     { variableName: "latestCreatedAt", variableLabel: "최근신고일시" },
     { variableName: "reportedUserId", variableLabel: "", hidden: true },
     {
@@ -51,8 +52,6 @@ export default function UserReportListPage() {
     { variableName: "penaltyCreatedAt", variableLabel: "처리일시" },
     { variableName: "penaltyCreatedBy", variableLabel: "처리자" },
   ];
-
-  ("tester");
   const [tableBody, setTableBody] = useState([]);
 
   /// init render

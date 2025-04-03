@@ -42,7 +42,8 @@ export default function UserDetailPage() {
 
   /// penalty data
   const penaltyTableHeader = [
-    { variableName: "id", variableLabel: "구분" },
+    { variableName: "rowNum", variableLabel: "구분" },
+    { variableName: "id", variableLabel: "", hidden: true },
     { variableName: "createdAt", variableLabel: "처리일시" },
     { variableName: "createdBy", variableLabel: "처리자" },
     { variableName: "penaltyStatus", variableLabel: "제재 상태" },

@@ -34,6 +34,10 @@ export function SearchInput({
     let text = e.target.value;
     text = text === "" ? null : text;
 
+    if (text == null) {
+      onClear?.();
+    }
+
     setText(text);
     onChange(text);
   };

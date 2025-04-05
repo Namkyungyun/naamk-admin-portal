@@ -12,6 +12,7 @@ import MidPopupModal from "@/app/(portal)/component/MDPopupModal";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import UserPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 import Loading from "@/app/(portal)/component/Loading";
+
 import {
   getUserById,
   getUserPenaltyHist,
@@ -26,7 +27,7 @@ export default function UserDetailPage() {
   const [refresh, setRefresh] = useState(false);
 
   /// userdatail data
-  const initUserData = {
+  const initUserDetailData = {
     id: null,
     name: null,
     nickname: null,
@@ -38,10 +39,10 @@ export default function UserDetailPage() {
     penaltyStatus: null,
     penaltyStatusList: null,
   };
-  const [userData, setUserData] = useState(null);
+  const [detailData, setDetailData] = useState(null);
 
   /// penalty data
-  const penaltyTableHeader = [
+  const penaltyHistTableHeader = [
     { variableName: "rowNum", variableLabel: "구분" },
     { variableName: "id", variableLabel: "", hidden: true },
     { variableName: "createdAt", variableLabel: "처리일시" },
@@ -56,10 +57,10 @@ export default function UserDetailPage() {
     },
     { variableName: "linkedId", variableLabel: "", hidden: true },
   ];
-  const [penaltyTableBody, setPenaltyTableBody] = useState([]);
+  const [penaltyHistTableBody, setPenaltyHistTableBody] = useState([]);
 
   /// penalty update popup
-  const updatePenaltyForm = {
+  const penaltyForm = {
     name: null,
     type: "user",
     isActive: null,
@@ -77,8 +78,8 @@ export default function UserDetailPage() {
       getUserPenaltyHist(userId),
     ]);
 
-    setUserData(userDetailData);
-    setPenaltyTableBody(penaltyHistData);
+    setDetailData(userDetailData);
+    setPenaltyHistTableBody(penaltyHistData);
     setPenaltyData(userDetailData);
 
     setLoading(false);
@@ -105,16 +106,16 @@ export default function UserDetailPage() {
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {
     if (data) {
-      updatePenaltyForm.name = data.name;
-      updatePenaltyForm.label = data.penaltyStatus;
-      updatePenaltyForm.isActive = data.penalty;
+      penaltyForm.name = data.name;
+      penaltyForm.label = data.penaltyStatus;
+      penaltyForm.isActive = data.penalty;
     } else {
-      updatePenaltyForm.name = userData.name;
-      updatePenaltyForm.label = userData.penaltyStatus;
-      updatePenaltyForm.isActive = userData.penalty;
+      penaltyForm.name = detailData.name;
+      penaltyForm.label = detailData.penaltyStatus;
+      penaltyForm.isActive = detailData.penalty;
     }
 
-    setUpdatePenaltyData({ ...updatePenaltyForm });
+    setUpdatePenaltyData({ ...penaltyForm });
   };
 
   const onValidatePenaltyStatus = (obj) => {
@@ -178,7 +179,7 @@ export default function UserDetailPage() {
           />
           <SectionTitle title="기본정보" />
           <UserDetailGrid
-            user={userData ?? initUserData}
+            user={detailData ?? initUserDetailData}
             updatable={loading}
             onPenaltyUpdate={() => setShowPenaltyPopup(true)}
           />
@@ -201,8 +202,8 @@ export default function UserDetailPage() {
                 label: "제재이력",
                 content: (
                   <ListTable
-                    headers={penaltyTableHeader}
-                    body={penaltyTableBody}
+                    headers={penaltyHistTableHeader}
+                    body={penaltyHistTableBody}
                   />
                 ),
               },
@@ -218,13 +219,13 @@ export default function UserDetailPage() {
         <div>
           <UserPenaltyPopupGrid
             penaltyForm={updatePenaltyData}
-            originOption={userData?.penalty}
+            originOption={detailData?.penalty}
             readOnly={loading}
-            useDefaultOption={penaltyTableBody.length > 0}
-            defaultIndex={userData?.penaltyStatusList.findIndex(
-              (el) => el.label === userData.penaltyStatus
+            useDefaultOption={penaltyHistTableBody.length > 0}
+            defaultIndex={detailData?.penaltyStatusList.findIndex(
+              (el) => el.label === detailData.penaltyStatus
             )}
-            penaltyStatusList={userData?.penaltyStatusList}
+            penaltyStatusList={detailData?.penaltyStatusList}
             onValidate={onValidatePenaltyStatus}
           />
         </div>

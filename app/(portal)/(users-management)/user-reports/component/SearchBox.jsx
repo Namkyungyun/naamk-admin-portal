@@ -42,8 +42,8 @@ export default function UserReportSearchBox({
   /// rebuild render
   useEffect(() => {
     if (!reset && fetched) {
-      setReportStatusOptions(fetchedSearchData.reportStatus);
-      setPenaltyStatusOptions(fetchedSearchData.penaltyStatus);
+      setReportStatusOptions(fetchedSearchData?.reportStatus);
+      setPenaltyStatusOptions(fetchedSearchData?.penaltyStatus);
     }
 
     if (reset) {

@@ -39,62 +39,62 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
       },
       {
         id: 6,
-        name: "채널 관리",
+        name: "게시글 관리",
         url: null,
         submenus: [
           {
             id: 7,
-            name: "채널 관리",
+            name: "게시글 관리",
             url: "/posts",
             parentId: 6,
           },
           {
             id: 8,
-            name: "추천 채널 관리",
-            url: "/channel-management/rocommends",
+            name: "게시글 신고관리",
+            url: "/post-reports",
             parentId: 6,
           },
         ],
         parentId: null,
       },
-      {
-        id: 9,
-        name: "게시글 관리",
-        url: null,
-        submenus: [
-          { id: 10, name: "게시글 관리", url: "/post-management", parentId: 9 },
-          {
-            id: 11,
-            name: "게시글 신고관리",
-            url: "/post-management/penalties",
-            parentId: 9,
-          },
-        ],
-        parentId: null,
-      },
+      // {
+      //   id: 9,
+      //   name: "채널 관리",
+      //   url: null,
+      //   submenus: [
+      //     { id: 10, name: "채널 관리", url: "/channels", parentId: 9 },
+      //     {
+      //       id: 11,
+      //       name: "추천 채널관리",
+      //       url: "/channel-recommends",
+      //       parentId: 9,
+      //     },
+      //   ],
+      //   parentId: null,
+      // },
       {
         id: 12,
         name: "시스템 관리",
         url: null,
         submenus: [
-          {
-            id: 13,
-            name: "메뉴 관리",
-            url: "/system-management/menus",
-            parentId: 12,
-          },
-          {
-            id: 14,
-            name: "역할 관리",
-            url: "/system-management/roles",
-            parentId: 12,
-          },
-          {
-            id: 15,
-            name: "어드민 관리",
-            url: "/system-management/admins",
-            parentId: 12,
-          },
+          // {
+          //   id: 13,
+          //   name: "메뉴 관리",
+          //   url: "/system-management/menus",
+          //   parentId: 12,
+          // },
+          // {
+          //   id: 14,
+          //   name: "역할 관리",
+          //   url: "/system-management/roles",
+          //   parentId: 12,
+          // },
+          // {
+          //   id: 15,
+          //   name: "어드민 관리",
+          //   url: "/system-management/admins",
+          //   parentId: 12,
+          // },
           {
             id: 16,
             name: "에디터테스트",

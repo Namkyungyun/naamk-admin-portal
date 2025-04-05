@@ -65,8 +65,6 @@ export default function PostsSearchBox({
 
     if (validateSearch()) {
       onSearch(searchData);
-    } else {
-      alert("fail");
     }
   };
 
@@ -105,7 +103,7 @@ export default function PostsSearchBox({
   /// rebuild render
   useEffect(() => {
     if (!reset && fetched) {
-      setPenaltyStatusOptions(fetchedSearchData.penaltyStatus);
+      setPenaltyStatusOptions(fetchedSearchData?.penaltyStatus);
     }
 
     if (reset) {

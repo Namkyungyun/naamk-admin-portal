@@ -38,8 +38,8 @@ export default function UserSearchBox({
   /// rebuild
   useEffect(() => {
     if (!reset && fetched) {
-      setUserStatusOptions(fetchedSearchData.userStatus);
-      setPenaltyStatusOptions(fetchedSearchData.penaltyStatus);
+      setUserStatusOptions(fetchedSearchData?.userStatus);
+      setPenaltyStatusOptions(fetchedSearchData?.penaltyStatus);
     }
 
     if (reset) {

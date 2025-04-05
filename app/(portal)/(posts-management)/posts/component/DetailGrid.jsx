@@ -1,0 +1,62 @@
+"use client";
+
+import { MDColumn, FullColumn } from "@/app/(portal)/component/Column";
+import { RowFor2Column } from "@/app/(portal)/component/Row";
+import { PenaltyUpdateButton } from "@/app/(portal)/component/Buttons";
+
+export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
+  return (
+    <section className="border border-bd-muted p-1 flex-grow w-full my-1 text-black">
+      <RowFor2Column>
+        <MDColumn title="등록 일시">{post.createdAt}</MDColumn>
+        <MDColumn title="게시글 ID">{post.id}</MDColumn>
+      </RowFor2Column>
+
+      <RowFor2Column>
+        <MDColumn title="채널ID">{post.channelName}</MDColumn>
+        <MDColumn title="채널명">{post.channelNickName}</MDColumn>
+      </RowFor2Column>
+
+      <RowFor2Column>
+        <MDColumn title="작성ID">{post.userName}</MDColumn>
+        <MDColumn title="POPSCORE">{post.popScore}</MDColumn>
+      </RowFor2Column>
+
+      <RowFor2Column>
+        <MDColumn title="댓글 수">{post.replyCount}</MDColumn>
+        <MDColumn title="좋아요 수">{post.likeCount}</MDColumn>
+      </RowFor2Column>
+
+      <RowFor2Column>
+        <MDColumn title="글 / 채널\n노출 상태">{post.hidden}</MDColumn>
+        <MDColumn title="제재 상태">
+          {post.penaltyStatus ? (
+            <div className="flex justify-between items-center">
+              <span>{post.penaltyStatus}</span>
+              <PenaltyUpdateButton
+                disabled={updatable}
+                onClick={onPenaltyUpdate}
+              />
+            </div>
+          ) : (
+            post.penaltyStatus
+          )}
+        </MDColumn>
+      </RowFor2Column>
+
+      <RowFor2Column>
+        <FullColumn title="게시글 내용">{post.content}</FullColumn>
+      </RowFor2Column>
+
+      <RowFor2Column>
+        <FullColumn title="첨부 파일">
+          {post.thumbSUrls
+            ? post.thumbSUrls.map((el, index) => (
+                <img className="py-5" src={el.thumbSUrl} />
+              ))
+            : null}
+        </FullColumn>
+      </RowFor2Column>
+    </section>
+  );
+}

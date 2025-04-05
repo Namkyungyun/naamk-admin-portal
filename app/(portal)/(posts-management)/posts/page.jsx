@@ -36,7 +36,7 @@ export default function PostListPage() {
 
   /// table result
   const tableHeader = [
-    { variableName: "no", variableLabel: "구분" },
+    { variableName: "rowNum", variableLabel: "구분" },
     { variableName: "createdAt", variableLabel: "등록 일시" },
     { variableName: "userName", variableLabel: "작성자ID" },
     { variableName: "channelName", variableLabel: "채널ID" },
@@ -44,7 +44,7 @@ export default function PostListPage() {
     {
       variableName: "content",
       variableLabel: "본문 내용",
-      url: "reportedUserId",
+      url: "id",
       onButton: (url) => router.push(`/user-reports/${url}`),
     },
     { variableName: "id", variableLabel: "게시글 ID" },

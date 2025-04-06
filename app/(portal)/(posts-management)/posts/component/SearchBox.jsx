@@ -113,7 +113,7 @@ export default function PostsSearchBox({
 
   return (
     <>
-      <section className="border border-bd-muted p-1 flex-grow w-full my-1">
+      <section className="border border-bd-disabled p-1 flex-grow w-full my-1">
         <RowFor2Column>
           <MDColumn title="제재 상태">
             <SelectBox

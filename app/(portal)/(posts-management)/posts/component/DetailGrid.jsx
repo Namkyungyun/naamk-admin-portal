@@ -6,8 +6,8 @@ import { PenaltyUpdateButton } from "@/app/(portal)/component/Buttons";
 
 export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
   return (
-    <section className="border border-bd-muted p-1 flex-grow w-full my-1 text-black">
-      <RowFor2Column>
+    <section className="p-1 flex-grow w-full my-1 text-black">
+      <RowFor2Column borderTop={true}>
         <MDColumn title="등록 일시">{post.createdAt}</MDColumn>
         <MDColumn title="게시글 ID">{post.id}</MDColumn>
       </RowFor2Column>
@@ -28,7 +28,7 @@ export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
       </RowFor2Column>
 
       <RowFor2Column>
-        <MDColumn title="글 / 채널\n노출 상태">{post.hidden}</MDColumn>
+        <MDColumn title={"글 / 채널\n노출 상태"}>{post.hidden}</MDColumn>
         <MDColumn title="제재 상태">
           {post.penaltyStatus ? (
             <div className="flex justify-between items-center">
@@ -45,11 +45,13 @@ export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
       </RowFor2Column>
 
       <RowFor2Column>
-        <FullColumn title="게시글 내용">{post.content}</FullColumn>
+        <FullColumn height="h-25" title="게시글 내용">
+          {post.content}
+        </FullColumn>
       </RowFor2Column>
 
       <RowFor2Column>
-        <FullColumn title="첨부 파일">
+        <FullColumn height="h-25" title="첨부 파일">
           {post.thumbSUrls
             ? post.thumbSUrls.map((el, index) => (
                 <img className="py-5" src={el.thumbSUrl} />

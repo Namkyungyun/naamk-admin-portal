@@ -7,7 +7,7 @@ const style = {
   table: "table-auto w-full border-collapse",
   header:
     "p-2 border-b border-l border-r border-bd-disabled bg-disabled  text-sm text-center",
-  body: "border text-sm text-center",
+  body: "border border-bd-disabled text-sm text-center",
   emptyBody: "text-gray-500 w-full text-center text-sm items-center mt-30",
 };
 
@@ -94,7 +94,7 @@ export function ListTableBody({ headers, body }) {
             return (
               <td
                 key={colIndex}
-                className={`px-2 py-1 border-b ${style.body} ${header.hidden ? "hidden" : ""}`}
+                className={`px-2 py-1 ${style.body} ${header.hidden ? "hidden" : ""}`}
               >
                 {children}
               </td>

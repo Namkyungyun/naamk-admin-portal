@@ -55,8 +55,8 @@ export default function UserPenaltyPopupGrid({
   };
 
   return (
-    <section className="border border-bd-muted p-1 flex-grow w-full my-1 text-black">
-      <RowFor1Column>
+    <section className="p-1 flex-grow w-full my-1 text-black">
+      <RowFor1Column borderTop={true}>
         <MDColumn title="회원ID">{penaltyForm.name}</MDColumn>
       </RowFor1Column>
       <RowFor1Column>
@@ -72,7 +72,7 @@ export default function UserPenaltyPopupGrid({
         </MDColumn>
       </RowFor1Column>
       <RowFor1Column>
-        <MDColumn title="제재 사유*" isFull={true}>
+        <MDColumn height="h-40" title="제재 사유*" isFull={true}>
           <LimitedLengthTextArea
             readOnly={readOnly}
             disabled={readOnly}

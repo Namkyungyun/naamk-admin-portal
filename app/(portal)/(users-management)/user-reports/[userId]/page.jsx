@@ -12,7 +12,7 @@ import Loading from "@/app/(portal)/component/Loading";
 import {
   getUserById,
   getUserReportHist,
-  updateUserPenaltyStatus,
+  updateUserPenaltyStatus as updatePenaltyStatus,
 } from "../actions";
 
 export default function UserReportDetailPage() {
@@ -24,18 +24,20 @@ export default function UserReportDetailPage() {
   const [fetchedInit, setFetchedInit] = useState(false);
 
   // reported user data
-  const initReportedUserData = {
+  const initReportedDetailData = {
     id: null,
     reportedUserId: null,
     reportedUserName: null,
     latestCreatedAt: null,
     userStatus: null,
+    penalty: null, // 처리상태 value (true, false, null)
     penaltyStatus: null,
+    penaltyDescription: null, // 제재사유
     penaltyCreatedAt: null,
     penaltyCreatedBy: null,
     penaltyStatusList: [],
   };
-  const [reportedUserData, setReportedUserData] = useState(null);
+  const [reportedDetailData, setReportedDetailData] = useState(null);
 
   /// report history list
   const reportHistTableHeader = [
@@ -73,22 +75,25 @@ export default function UserReportDetailPage() {
   const fetchInit = async () => {
     setLoading(true);
 
-    const [reportDetailData, { pagenation, newReportCount }] =
-      await Promise.all([
-        getUserById(userId),
-        getUserReportHist(userId, reqSearchData),
-      ]);
+    const [reportDetailData, reportHisData] = await Promise.all([
+      getUserById(userId),
+      getUserReportHist(userId, reqSearchData),
+    ]);
 
     // detail
-    setReportedUserData(reportDetailData);
+    setReportedDetailData(reportDetailData);
     if (reportDetailData) {
-      penaltyForm.isActive = reportDetailData.penalty;
-      penaltyForm.description = reportDetailData.penaltyDescription;
+      penaltyForm.isActive = reportDetailData?.penalty;
+      penaltyForm.description = reportDetailData?.penaltyDescription;
     }
     // history
-    setReportHistTableBody(pagenation.content);
-    setTotalPageNo(pagenation.totalPages);
-    setTotalItemCount(newReportCount);
+    if (reportHisData) {
+      const pagenation = reportHisData?.pagenation;
+
+      setReportHistTableBody(pagenation?.content);
+      setTotalPageNo(pagenation?.totalPages);
+      setTotalItemCount(reportHisData?.newReportCount);
+    }
 
     setFetchedInit(true);
     setLoading(false);
@@ -99,7 +104,7 @@ export default function UserReportDetailPage() {
     setLoading(true);
 
     const updated = await Promise.resolve(
-      updateUserPenaltyStatus(userId, formData)
+      updatePenaltyStatus(userId, formData)
     );
 
     setLoading(false);
@@ -175,7 +180,7 @@ export default function UserReportDetailPage() {
           <UserReportDetailGrid
             loading={loading}
             fetched={fetchedInit}
-            reportedUser={reportedUserData ?? initReportedUserData}
+            detailData={reportedDetailData ?? initReportedDetailData}
             penaltyForm={penaltyForm}
             onUpdate={fetchUpdate}
             onCancel={onMessage}

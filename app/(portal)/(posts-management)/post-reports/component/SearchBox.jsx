@@ -9,7 +9,7 @@ import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { RangeDatePicker } from "@/app/(portal)/component/DatePicker";
 import { ResetButton, SearchButton } from "@/app/(portal)/component/Buttons";
 
-export default function UserSearchBox({
+export default function PostReportSearchBox({
   loading,
   fetched,
   fetchedSearchData,
@@ -18,27 +18,33 @@ export default function UserSearchBox({
   const [reset, setReset] = useState(false);
 
   /// search option list
-  const [userStatusOptions, setUserStatusOptions] = useState([]);
+  const [reportStatusOptions, setReportStatusOptions] = useState([]);
   const [penaltyStatusOptions, setPenaltyStatusOptions] = useState([]);
 
   /// search data list
-  const [userStatus, setUserStatus] = useState(null);
+  // 신고상태
+  const [reportStatus, setReportStatus] = useState(null);
+  // 처리상태
   const [penaltyStatus, setPenaltyStatus] = useState(null);
-  const [name, setName] = useState(null);
-  const [nickname, setNickname] = useState(null);
-  const [email, setEmail] = useState(null);
+  // 작성자ID
+  const [reportedUserName, setReportedUserName] = useState(null);
+  // 채널ID
+  const [reportedChannelName, setReportedChannelName] = useState(null);
+  // 처리자
+  const [penaltyCreatedBy, setPenaltyCreatedBy] = useState(null); // 처리자
+  // 최근신고기간
   const [dates, setDates] = useState({
     startDate: null,
     endDate: null,
   });
 
-  /// init
+  /// init render
   useEffect(() => {}, []);
 
-  /// rebuild
+  /// rebuild render
   useEffect(() => {
     if (!reset && fetched) {
-      setUserStatusOptions(fetchedSearchData?.userStatus);
+      setReportStatusOptions(fetchedSearchData?.reportStatus);
       setPenaltyStatusOptions(fetchedSearchData?.penaltyStatus);
     }
 
@@ -49,13 +55,12 @@ export default function UserSearchBox({
 
   const onClickSearch = () => {
     const searchData = {
-      userStatus: userStatus == "all" ? null : userStatus,
+      reportStatus: reportStatus == "all" ? null : reportStatus,
       penaltyStatus: penaltyStatus == "all" ? null : penaltyStatus,
       startDate: dates.startDate,
       endDate: dates.endDate,
-      name: name,
-      nickname: nickname,
-      email: email,
+      reportedName: reportedUserName,
+      penaltyCreatedBy: penaltyCreatedBy,
     };
 
     if (validateSearch()) {
@@ -74,19 +79,21 @@ export default function UserSearchBox({
   return (
     <>
       <section className="border border-bd-disabled p-1 flex-grow w-full my-1">
-        <RowFor3Column borderTop={true}>
-          <MDColumn title="계정 상태">
+        <RowFor3Column>
+          <MDColumn title="신고 상태">
             <SelectBox
               isReset={reset}
               isFetched={fetched}
               disabled={loading}
               useAllOption={true}
-              onChange={setUserStatus}
-              optionData={userStatusOptions}
+              useDefault={true}
+              // defaultIndex={}
+              onChange={setReportStatus}
+              optionData={reportStatusOptions}
             />
           </MDColumn>
 
-          <MDColumn title="제재 상태">
+          <MDColumn title="처리 상태">
             <SelectBox
               isReset={reset}
               isFetched={fetched}
@@ -97,13 +104,13 @@ export default function UserSearchBox({
             />
           </MDColumn>
 
-          <MDColumn title="가입 기간">
+          <MDColumn title="최근 신고 기간">
             <RangeDatePicker
               isReset={reset}
               useDefault={false}
               isRequired={false}
-              defaultPeriod={365 * 2}
-              maxPeriod={365 * 2}
+              defaultPeriod={365 * 3}
+              maxPeriod={365 * 3}
               onCallback={(value) => {
                 setDates({
                   startDate: value.startDate,
@@ -112,39 +119,36 @@ export default function UserSearchBox({
               }}
             />
           </MDColumn>
-          {/* {/* </div> */}
         </RowFor3Column>
-
-        {/* 로우 */}
         <RowFor3Column>
-          <MDColumn title="회원ID">
+          <MDColumn title="작성자ID">
             <SearchInput
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              placeholder={"회원 ID를 입력하세요."}
-              value={name}
-              onChange={setName}
+              placeholder={"글을 작성한 회원 ID를 입력하세요."}
+              value={reportedUserName}
+              onChange={setReportedUserName}
             />
           </MDColumn>
-          <MDColumn title="사용자명">
+          <MDColumn title="채널ID">
             <SearchInput
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              placeholder={"사용자명을 입력하세요"}
-              value={nickname}
-              onChange={setNickname}
+              placeholder={"글이 등록된 채널 ID를 입력하세요."}
+              value={reportedChannelName}
+              onChange={setReportedChannelName}
             />
           </MDColumn>
-          <MDColumn title="이메일">
+          <MDColumn title="처리자">
             <SearchInput
               isReset={reset}
               isLoading={loading}
               isRequired={false}
-              placeholder={"이메일을 입력하세요"}
-              value={email}
-              onChange={setEmail}
+              placeholder={"처리자 ID 입력하세요"}
+              value={penaltyCreatedBy}
+              onChange={setPenaltyCreatedBy}
             />
           </MDColumn>
         </RowFor3Column>

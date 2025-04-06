@@ -110,9 +110,9 @@ export default function UserDetailPage() {
       penaltyForm.label = data.penaltyStatus;
       penaltyForm.isActive = data.penalty;
     } else {
-      penaltyForm.name = detailData.name;
-      penaltyForm.label = detailData.penaltyStatus;
-      penaltyForm.isActive = detailData.penalty;
+      penaltyForm.name = detailData?.name;
+      penaltyForm.label = detailData?.penaltyStatus;
+      penaltyForm.isActive = detailData?.penalty;
     }
 
     setUpdatePenaltyData({ ...penaltyForm });
@@ -221,9 +221,9 @@ export default function UserDetailPage() {
             penaltyForm={updatePenaltyData}
             originOption={detailData?.penalty}
             readOnly={loading}
-            useDefaultOption={penaltyHistTableBody.length > 0}
+            useDefaultOption={penaltyHistTableBody?.length > 0}
             defaultIndex={detailData?.penaltyStatusList.findIndex(
-              (el) => el.label === detailData.penaltyStatus
+              (el) => el.label === detailData?.penaltyStatus
             )}
             penaltyStatusList={detailData?.penaltyStatusList}
             onValidate={onValidatePenaltyStatus}

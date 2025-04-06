@@ -6,9 +6,8 @@ import { RowFor2Column } from "@/app/(portal)/component/Row";
 import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { LimitedLengthTextArea } from "@/app/(portal)/component/TextArea";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
-import OpenInNew from "@mui/icons-material/OpenInNew";
 
-export default function UserReportDetailGrid({
+export default function PostReportDetailGrid({
   loading,
   fetched,
   detailData,
@@ -86,47 +85,31 @@ export default function UserReportDetailGrid({
     <>
       <section className="p-1 flex-grow w-full my-1 text-black">
         <RowFor2Column>
-          {/* 신고정보 */}
           <div className="flex col-span-3 grid grid-cols-3">
             <MDColumn borderTop={true} title="신고일시">
               {detailData.latestCreatedAt}
             </MDColumn>
-            <MDColumn borderTop={true} title="대상자ID">
+            <MDColumn borderTop={true} title="작성자ID">
               {detailData.reportedUserName != null ? (
-                <div className="flex justify-between">
-                  <button
-                    onClick={() =>
-                      window.open(
-                        `/users/${detailData.reportedUserId}`,
-                        "_blank"
-                      )
-                    }
-                  >
-                    <span className="underline">
-                      {detailData.reportedUserName}
-                    </span>
-                  </button>
-
-                  <button
-                    className="text-sm text-gray-600 underline"
-                    onClick={() =>
-                      window.open(detailData.reportedUserP, "_blank")
-                    }
-                  >
-                    <span className="mr-1">프로필 보러가기</span>
-                    <OpenInNew style={{ fontSize: 16 }} />
-                  </button>
-                </div>
+                <button
+                  onClick={() =>
+                    window.open(`/users/${detailData.reportedUserId}`, "_blank")
+                  }
+                >
+                  <span className="underline">
+                    {detailData.reportedUserName}
+                  </span>
+                </button>
               ) : null}
             </MDColumn>
-
-            <MDColumn borderTop={true} title="계정 상태">
-              {detailData.userStatus}
+            <MDColumn borderTop={true} title="채널ID">
+              {detailData.reportedChannelName}
             </MDColumn>
-            <MDColumn borderTop={true} height="h-40" />
+            <MDColumn borderTop={true} title="게시글 ID"></MDColumn>
+            <MDColumn borderTop={true} title="게시글 상태"></MDColumn>
+            <MDColumn borderTop={true} height={"h-30"} title="내용"></MDColumn>
           </div>
 
-          {/* 패널티 */}
           <div className="flex col-span-3 grid grid-cols-3">
             <MDColumn borderTop={true} title="처리일시">
               {detailData.penaltyCreatedAt}
@@ -139,11 +122,11 @@ export default function UserReportDetailGrid({
                 isFetched={fetched}
                 isReset={penaltyFormReset}
                 disabled={
-                  detailData.penalty != null && detailData.report == false
+                  detailData.penalty != null && detailData.report == false // 제재있음 && 신고처리완료.
                 }
                 useAllOption={false}
                 useDefault={
-                  detailData.penalty != null && detailData.report == false
+                  detailData.penalty != null && detailData.report == false // 제재있음 && 신고처리완료.
                 }
                 defaultIndex={detailData?.penaltyStatusList.findIndex(
                   (el) => el.label === detailData.penaltyStatus
@@ -152,7 +135,7 @@ export default function UserReportDetailGrid({
                 onChange={onValidateStatus}
               />
             </MDColumn>
-            <MDColumn borderTop={true} height="h-40" title="제재 사유*">
+            <MDColumn borderTop={true} height={"h-50"} title="제재 사유*">
               <LimitedLengthTextArea
                 isReset={penaltyFormReset}
                 isLoading={loading}

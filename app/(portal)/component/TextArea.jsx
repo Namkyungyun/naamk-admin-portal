@@ -51,7 +51,7 @@ export function LimitedLengthTextArea({
   };
 
   return (
-    <div className={`my-1`}>
+    <div className={`py-1 h-full`}>
       <TextArea
         // showCount
         allowClear
@@ -64,7 +64,7 @@ export function LimitedLengthTextArea({
         maxLength={maxLength}
         placeholder={placeholder}
         style={{
-          height: 180,
+          height: "100%",
           resize: "none",
         }}
         value={text}

@@ -240,7 +240,7 @@ export default function PostDetailPage() {
           />
         </div>
 
-        <div className="flex flex-col h-full overflow-hidden border border-bd-muted">
+        <div className="flex flex-col h-full overflow-hidden">
           {/* 테이블 */}
           <div className="px-1">
             <ListTable

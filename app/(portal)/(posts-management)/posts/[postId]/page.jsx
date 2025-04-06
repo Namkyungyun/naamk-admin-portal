@@ -11,9 +11,9 @@ import MidPopupModal from "@/app/(portal)/component/MDPopupModal";
 // 팝업
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import Loading from "@/app/(portal)/component/Loading";
-
-import {} from "../actions";
 import PostPenaltyPopupGrid from "../component/PenaltyPopupGrid";
+
+import { getPostById } from "../actions";
 
 export default function PostDetailPage() {
   const { postId } = useParams();
@@ -25,18 +25,20 @@ export default function PostDetailPage() {
 
   // post detail data
   const initPostDetailData = {
-    id: null,
+    postId: null,
     createdAt: null,
+    content: null,
+    postStatus: null,
+    channelPenaltyStatus: null,
+    penalty: null,
+    penaltyStatus: null,
     channelName: null,
     channelNickName: null,
     userName: null,
     popScore: null,
     replyCount: null,
-    hidden: false,
-    penalty: null,
-    penaltyStatus: null,
-    content: null,
-    thumbSUrls: [],
+    likeCount: null,
+    thumbs: [],
   };
   const [detailData, setDetailData] = useState(null);
 
@@ -87,16 +89,14 @@ export default function PostDetailPage() {
   const fetchInit = async () => {
     setLoading(true);
 
-    // const [postDetailData, penaltyHistData] = await Promise.all([
-
-    // ]);
+    const [postDetailData] = await Promise.all([getPostById(postId)]);
 
     // detail
-    // setDetailData(postDetailData);
-    // setPenaltyData(userDetailData);
-    // if (postDetailData) {
-    //   penaltyForm.isActive = postDetailData.penalty;
-    // }
+    setDetailData(postDetailData);
+    setPenaltyData(postDetailData);
+    if (postDetailData) {
+      penaltyForm.isActive = postDetailData.penalty;
+    }
 
     // // history
     // setPenaltyHistTableBody(penaltyHistData.content);
@@ -240,7 +240,7 @@ export default function PostDetailPage() {
           />
         </div>
 
-        <div className="flex flex-col h-full overflow-hidden">
+        <div className="border border-bd-disabled flex flex-col h-full overflow-hidden">
           {/* 테이블 */}
           <div className="px-1">
             <ListTable

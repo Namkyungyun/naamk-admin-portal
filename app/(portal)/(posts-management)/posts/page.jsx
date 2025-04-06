@@ -7,7 +7,7 @@ import PageTitle from "../../component/PageTitle";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 
-import {} from "./actions";
+import { getSearchDatas, getPosts } from "./actions";
 import PostsSearchBox from "./component/SearchBox";
 
 export default function PostListPage() {
@@ -45,7 +45,7 @@ export default function PostListPage() {
       variableName: "content",
       variableLabel: "본문 내용",
       url: "id",
-      onButton: (url) => router.push(`/user-reports/${url}`),
+      onButton: (url) => router.push(`/posts/${url}`),
     },
     { variableName: "id", variableLabel: "게시글 ID" },
     { variableName: "penaltyStatus", variableLabel: "제재 상태" },
@@ -57,8 +57,8 @@ export default function PostListPage() {
     const fetchInitData = async () => {
       setLoading(true);
 
-      // const searchOptions = await Promise.resolve(getSearchDatas());
-      // setInitSearchData(searchOptions);
+      const searchOptions = await Promise.resolve(getSearchDatas());
+      setInitSearchData(searchOptions);
 
       setFetchedInit(true);
       setLoading(false);
@@ -73,11 +73,11 @@ export default function PostListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      // const entity = await Promise.resolve(getUsers(data));
+      const entity = await Promise.resolve(getPosts(data));
 
-      // setTotalPageNo(entity.totalPages);
-      // setTotalItemCount(entity.totalElements);
-      // setTableBody(entity.content);
+      setTotalPageNo(entity.totalPages);
+      setTotalItemCount(entity.totalElements);
+      setTableBody(entity.content);
 
       setLoading(false);
     };

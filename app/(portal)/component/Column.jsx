@@ -11,7 +11,7 @@ export function FullColumn({ height, title, isFull = false, children }) {
         </label>
       </div>
       <div
-        className={`col-span-5 break-words overflow-y-auto content-center ${isFull ? "mx-1" : "mx-2"}`}
+        className={`col-span-5 break-words overflow-y-auto content-center text-sm ${isFull ? "mx-1" : "mx-2"}`}
       >
         {children}
       </div>
@@ -39,7 +39,7 @@ export function MDColumn({
       </div>
 
       <div
-        className={`col-span-2 break-words overflow-y-auto content-center ${isFull ? "mx-1" : "mx-2"}`}
+        className={`col-span-2 break-words overflow-y-auto content-center text-sm ${isFull ? "mx-1" : "mx-2"}`}
       >
         {children}
       </div>

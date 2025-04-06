@@ -9,7 +9,7 @@ export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
     <section className="p-1 flex-grow w-full my-1 text-black">
       <RowFor2Column borderTop={true}>
         <MDColumn title="등록 일시">{post.createdAt}</MDColumn>
-        <MDColumn title="게시글 ID">{post.id}</MDColumn>
+        <MDColumn title="게시글 ID">{post.postId}</MDColumn>
       </RowFor2Column>
 
       <RowFor2Column>
@@ -28,7 +28,9 @@ export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
       </RowFor2Column>
 
       <RowFor2Column>
-        <MDColumn title={"글 / 채널\n노출 상태"}>{post.hidden}</MDColumn>
+        <MDColumn title={"글 / 채널\n노출 상태"}>
+          {post.postStatus} / {post.channelPenaltyStatus}
+        </MDColumn>
         <MDColumn title="제재 상태">
           {post.penaltyStatus ? (
             <div className="flex justify-between items-center">
@@ -51,12 +53,19 @@ export default function PostDetailGrid({ post, updatable, onPenaltyUpdate }) {
       </RowFor2Column>
 
       <RowFor2Column>
-        <FullColumn height="h-25" title="첨부 파일">
-          {post.thumbSUrls
-            ? post.thumbSUrls.map((el, index) => (
-                <img className="py-5" src={el.thumbSUrl} />
-              ))
-            : null}
+        <FullColumn height="h-40" title="첨부 파일">
+          <div className="flex py-2">
+            {post.thumbs
+              ? post.thumbs.map((el, index) => (
+                  <img
+                    key={index}
+                    className="w-32 h-32 object-contain mr-4"
+                    src={el}
+                    alt={`thumb-${index}`}
+                  />
+                ))
+              : null}
+          </div>
         </FullColumn>
       </RowFor2Column>
     </section>

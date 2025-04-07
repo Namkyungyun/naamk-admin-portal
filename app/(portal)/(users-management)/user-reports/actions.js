@@ -65,7 +65,7 @@ export async function getUserReportHist(userId, data) {
     .catch((e) =>  console.log(e));
 }
 
-export async function updateUserPenaltyStatus(userId, data) {
+export async function updatePenaltyStatus(userId, data) {
   console.log("updateUserPenaltyStatus :", userId, data);
 
   return await api.post(`/penalty-hist/users/${userId}`, data, )

@@ -9,7 +9,11 @@ import PostReportDetailGrid from "../component/DetailGrid";
 import { ListCount, ListTable } from "@/app/(portal)/component/ListTable";
 import Loading from "@/app/(portal)/component/Loading";
 
-import {} from "../actions";
+import {
+  getPostReportById,
+  getPostReportHist,
+  updatePenaltyStatus,
+} from "../actions";
 
 export default function PostReportDetailPage() {
   const { postId } = useParams();
@@ -22,14 +26,16 @@ export default function PostReportDetailPage() {
   // reported post data
   const initReportedDetailData = {
     id: null, // 신고SEQ
-    latestCreatedAt: null, // 최근처리일시
     report: null, // 신고상태 valu (true, false)
+    latestCreatedAt: null, // 최근처리일시
     reportedUserId: null, // (hidden) 작성자SEQ
     reportedUserName: null, // 작성자ID
+    reportedChannelId: null, //채널ID
     reportedChannelName: null, //채널ID
-    portId: null, // 게시글 ID
-    postStatus: null, //게시글 상태
-    postContent: null, // 개시글 내용
+    reportedPostId: null, // 게시글 ID
+    reportedPostContent: null, // 개시글 내용
+    reportedPostActive: null, // 게시글 상태 boolean
+    reportedPostStatus: null, // 게시글 상태 string
     penalty: null, // 처리상태 value (true, false, null)
     penaltyStatus: null, // 처리상태*
     penaltyDescription: null, // 제재사유
@@ -75,22 +81,26 @@ export default function PostReportDetailPage() {
   const fetchInit = async () => {
     setLoading(true);
 
-    // const [reportDetailData, { pagenation, newReportCount }] =
-    //   await Promise.all([]);
+    const [reportDetailData, reportHisData] = await Promise.all([
+      getPostReportById(postId),
+      getPostReportHist(postId, reqSearchData),
+    ]);
 
-    // // detail
-    // setReportedDetailData(reportDetailData);
-    // if (reportDetailData) {
-    //   penaltyForm.isActive = reportDetailData.penalty;
-    //   penaltyForm.description = reportDetailData.penaltyDescription;
-    // }
+    // detail
+    setReportedDetailData(reportDetailData);
+    if (reportDetailData) {
+      penaltyForm.isActive = reportDetailData.penalty;
+      penaltyForm.description = reportDetailData.penaltyDescription;
+    }
 
-    // // history
-    // if (pagenation) {
-    //   setReportHistTableBody(pagenation.content);
-    //   setTotalPageNo(pagenation.totalPages);
-    //   setTotalItemCount(newReportCount);
-    // }
+    // history
+    if (reportHisData) {
+      const pagenation = reportHisData?.pagenation;
+
+      setReportHistTableBody(pagenation.content);
+      setTotalPageNo(pagenation.totalPages);
+      setTotalItemCount(reportHisData?.newReportCount);
+    }
 
     setFetchedInit(true);
     setLoading(false);
@@ -101,12 +111,12 @@ export default function PostReportDetailPage() {
     setLoading(true);
 
     const updated = await Promise.resolve(
-      updatePenaltyStatus(userId, formData)
+      updatePenaltyStatus(postId, formData)
     );
 
     setLoading(false);
 
-    const result = updated.id != null;
+    const result = updated.linkedId != null;
     const type = result ? "success" : "error";
     const message = result ? "(TP)신고 처리완료" : "(TP)신고 처리실패";
     onMessage(type, message);

@@ -30,3 +30,46 @@ export async function getPostReports(searchData) {
     })
     .catch((e)=> console.log(e));
 }
+
+export async function getPostReportById(postId) {
+  console.log("getPostReportById : postId >>>>>> ", postId);
+
+  return await api.get(`${prefixUrl}/posts/${postId}`)
+    .then((response) => {
+      const entity = response.data.body.entity;
+      console.log("getPostReportById success", entity);
+
+      return entity;
+    })
+    .catch((e) =>  console.log(e));
+}
+
+export async function getPostReportHist(postId, data) {
+  console.log("getPostReportHist : postId >>>>>> " + data);
+
+  return await api.get(`${prefixUrl}/posts/${postId}/report-hist`,
+    {
+      params: {page: data.pageNo-1, size: data.pageSize}
+    }
+  )
+    .then((response) => {
+      const entity = response.data.body.entity;
+      console.log("getPostReportHist success", entity);
+
+      return entity;
+    })
+    .catch((e) =>  console.log(e));
+}
+
+export async function updatePenaltyStatus(postId, data) {
+  console.log("updatePenaltyStatus :", postId, data);
+
+  return await api.post(`/penalty-hist/post/${postId}`, data, )
+    .then((response) => {
+      const entity = response.data.body.entity;
+      console.log("updatePenaltyStatus success", entity);
+
+      return entity;
+    })
+    .catch((e) =>  console.log(e));
+}

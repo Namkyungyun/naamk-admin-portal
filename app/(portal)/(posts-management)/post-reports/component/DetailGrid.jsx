@@ -103,11 +103,31 @@ export default function PostReportDetailGrid({
               ) : null}
             </MDColumn>
             <MDColumn borderTop={true} title="채널ID">
-              {detailData.reportedChannelName}
+              {detailData.reportedChannelName != null ? (
+                <button
+                  onClick={() =>
+                    // window.open(
+                    //   `/users/${detailData.reportedChannelId}`,
+                    //   "_blank"
+                    // )
+                    {}
+                  }
+                >
+                  <span className="underline">
+                    {detailData.reportedChannelName}
+                  </span>
+                </button>
+              ) : null}
             </MDColumn>
-            <MDColumn borderTop={true} title="게시글 ID"></MDColumn>
-            <MDColumn borderTop={true} title="게시글 상태"></MDColumn>
-            <MDColumn borderTop={true} height={"h-30"} title="내용"></MDColumn>
+            <MDColumn borderTop={true} title="게시글 ID">
+              {detailData.reportedPostId}
+            </MDColumn>
+            <MDColumn borderTop={true} title="게시글 상태">
+              {detailData.reportedPostStatus}
+            </MDColumn>
+            <MDColumn borderTop={true} height={"h-30"} title="내용">
+              {detailData.reportedPostContent}
+            </MDColumn>
           </div>
 
           <div className="flex col-span-3 grid grid-cols-3">

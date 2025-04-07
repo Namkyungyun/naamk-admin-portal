@@ -12,7 +12,7 @@ import Loading from "@/app/(portal)/component/Loading";
 import {
   getUserById,
   getUserReportHist,
-  updateUserPenaltyStatus as updatePenaltyStatus,
+  updatePenaltyStatus,
 } from "../actions";
 
 export default function UserReportDetailPage() {

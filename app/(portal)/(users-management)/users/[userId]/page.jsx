@@ -7,20 +7,30 @@ import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import UserDetailGrid from "../component/DetailGrid";
 import TabComponent from "@/app/(portal)/component/Tab";
-import { ListTable } from "@/app/(portal)/component/ListTable";
+import {
+  ListCount,
+  ListTable,
+  Pagination,
+} from "@/app/(portal)/component/ListTable";
 import MidPopupModal from "@/app/(portal)/component/MDPopupModal";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import UserPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 import Loading from "@/app/(portal)/component/Loading";
 
 import {
-  getUserById,
-  getUserPenaltyHist,
-  updatePenaltyStatus,
+  fetchUser,
+  fetchPenaltyHist,
+  fetchUserSearch,
+  fetchPenaltyUpdate,
 } from "../actions";
 
 export default function UserDetailPage() {
   const { userId } = useParams();
+  const user = fetchUser();
+  const penaltyHist = fetchPenaltyHist();
+  const searchOptions = fetchUserSearch();
+  const penaltyUpdate = fetchPenaltyUpdate();
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState(false);
@@ -28,57 +38,21 @@ export default function UserDetailPage() {
   const [fetchedInit, setFetchedInit] = useState(false);
 
   /// userdatail data
-  const initUserDetailData = {
-    id: null,
-    name: null,
-    nickname: null,
-    email: null,
-    intro: null,
-    createdAt: null,
-    thumbSUrl: null,
-    userStatus: null,
-    penaltyStatus: null,
-    penaltyStatusList: null,
-  };
+  const initUserDetailData = user.responseData;
   const [detailData, setDetailData] = useState(null);
 
   /// penalty data
-  const penaltyHistTableHeader = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "createdAt", variableLabel: "처리일시" },
-    { variableName: "createdBy", variableLabel: "처리자" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
-    { variableName: "description", variableLabel: "제재사유" },
-    {
-      variableName: "isExistReport",
-      variableLabel: "신고보기",
-      url: "linkedId",
-      onButton: (url) => window.open(`/user-reports/${url}`, "_blank"), // TODO 사용자 신고관리 상세
-    },
-    { variableName: "linkedId", variableLabel: "", hidden: true },
-  ];
+  const penaltyHistTableHeader = penaltyHist.responseData;
   const [penaltyHistTableBody, setPenaltyHistTableBody] = useState([]);
 
   /// pagination data
-  const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState({
-    pageNo: 1,
-    pageSize: 50,
-  });
-  const pageItemCountOptions = [
-    { id: 1, value: 10, label: "10개씩" },
-    { id: 2, value: 25, label: "25개씩" },
-    { id: 3, value: 50, label: "50개씩" },
-  ];
+  const [reqSearchData, setReqSearchData] = useState(
+    searchOptions.defaultPageParam
+  );
 
-  /// penalty update popup
-  const penaltyForm = {
-    isActive: null,
-    description: null,
-  };
+  /// penalty update pop
   const [showPenaltyPopup, setShowPenaltyPopup] = useState(false);
   const [updatablePenalty, setUptablePenalty] = useState(false);
   const [updatePenaltyData, setUpdatePenaltyData] = useState({});
@@ -87,8 +61,8 @@ export default function UserDetailPage() {
     setLoading(true);
 
     const [userDetailData, penaltyHistData] = await Promise.all([
-      getUserById(userId),
-      getUserPenaltyHist(userId),
+      user.fetchAPI(userId),
+      penaltyHist.fetchAPI(userId, reqSearchData),
     ]);
 
     // detail
@@ -100,6 +74,8 @@ export default function UserDetailPage() {
     // history
     if (penaltyHistData) {
       setPenaltyHistTableBody(penaltyHistData.content);
+      setTotalPageNo(penaltyHistData?.totalPages);
+      setTotalItemCount(penaltyHistData?.totalElements);
     }
 
     setFetchedInit(true);
@@ -110,7 +86,7 @@ export default function UserDetailPage() {
     setLoading(true);
 
     const updated = await Promise.resolve(
-      updatePenaltyStatus(userId, updatePenaltyData)
+      penaltyUpdate.fetchAPI(userId, updatePenaltyData)
     );
     setLoading(false);
 
@@ -128,14 +104,14 @@ export default function UserDetailPage() {
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {
     if (data) {
-      penaltyForm.label = data.penaltyStatus;
-      penaltyForm.isActive = data.penalty;
+      penaltyUpdate.requestData.label = data.penaltyStatus;
+      penaltyUpdate.requestData.isActive = data.penalty;
     } else {
-      penaltyForm.label = detailData?.penaltyStatus;
-      penaltyForm.isActive = detailData?.penalty;
+      penaltyUpdate.requestData.label = detailData?.penaltyStatus;
+      penaltyUpdate.requestData.isActive = detailData?.penalty;
     }
 
-    setUpdatePenaltyData({ ...penaltyForm });
+    setUpdatePenaltyData({ ...penaltyUpdate.requestData });
   };
 
   const onValidatePenaltyStatus = (obj) => {
@@ -202,6 +178,7 @@ export default function UserDetailPage() {
   useEffect(() => {
     if (refresh) {
       fetchInit();
+      setRefresh(false);
     }
   }, [refresh, reqSearchData]);
 
@@ -238,10 +215,35 @@ export default function UserDetailPage() {
                 id: 2,
                 label: "제재이력",
                 content: (
-                  <ListTable
-                    headers={penaltyHistTableHeader}
-                    body={penaltyHistTableBody}
-                  />
+                  <>
+                    <div className="mt-4 mb-1 mr-1 flex items-center justify-end text-black">
+                      <ListCount
+                        title="신규접수"
+                        disabled={loading}
+                        totalItemCount={totalItemCount}
+                        optionData={searchOptions.pageOptions}
+                        defaultIndex={searchOptions.defaultPageOptionIndex}
+                        onChange={onPageItemCountChange}
+                      />
+                    </div>
+                    {/* 테이블 */}
+                    <div className="px-1 h-70">
+                      <ListTable
+                        headers={penaltyHistTableHeader}
+                        body={penaltyHistTableBody}
+                      />
+                    </div>
+                    <div className="h-12 flex items-center justify-center text-black gap-2">
+                      {!loading && penaltyHistTableBody.length !== 0 ? (
+                        <Pagination
+                          currentPage={reqSearchData.pageNo}
+                          totalPages={totalPageNo}
+                          onPageChange={onPageChange}
+                          maxVisible={searchOptions.visiblePageNo}
+                        />
+                      ) : null}
+                    </div>
+                  </>
                 ),
               },
             ]}

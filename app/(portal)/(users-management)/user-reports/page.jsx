@@ -8,10 +8,12 @@ import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import UserReportSearchBox from "./component/SearchBox";
 
-import { getSearchDatas, getUsers } from "./actions";
+import { fetchUserReportsSearch, fetchUserReports } from "./actions";
 
 export default function UserReportListPage() {
   const router = useRouter();
+  const userReports = fetchUserReports();
+  const searchOptions = fetchUserReportsSearch();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -20,40 +22,32 @@ export default function UserReportListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState({
-    pageNo: 1,
-    pageSize: 20,
-  });
+  const [reqSearchData, setReqSearchData] = useState(
+    searchOptions.defaultPageParam
+  );
 
   /// pagination data
-  const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const pageItemCountOptions = [
-    { id: 1, value: 20, label: "20개씩" },
-    { id: 2, value: 50, label: "50개씩" },
-    { id: 3, value: 100, label: "100개씩" },
-  ];
 
   /// table result
-  const tableHeader = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "latestCreatedAt", variableLabel: "최근신고일시" },
-    { variableName: "reportedUserId", variableLabel: "", hidden: true },
-    {
-      variableName: "reportedUserName",
-      variableLabel: "대상자ID",
-      url: "reportedUserId",
-      onButton: (url) => router.push(`/user-reports/${url}`),
-    },
-    { variableName: "reportCount", variableLabel: "신고 건수" },
-    { variableName: "reportStatus", variableLabel: "신고 상태" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
-    { variableName: "penaltyCreatedAt", variableLabel: "처리일시" },
-    { variableName: "penaltyCreatedBy", variableLabel: "처리자" },
-  ];
+  const tableHeader = userReports.responseData(router);
   const [tableBody, setTableBody] = useState([]);
+
+  /// searchOptions API
+  const onInit = () => {
+    const fetchInitData = async () => {
+      setLoading(true);
+
+      const data = await Promise.resolve(searchOptions.fetchAPI());
+      setInitSearchData(data);
+
+      setFetchedInit(true);
+      setLoading(false);
+    };
+
+    fetchInitData();
+  };
 
   /// search API
   const onSearch = (data) => {
@@ -61,7 +55,7 @@ export default function UserReportListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(getUsers(data));
+      const entity = await Promise.resolve(userReports.fetchAPI(data));
 
       setTotalPageNo(entity.totalPages);
       setTotalItemCount(entity.totalElements);
@@ -98,17 +92,7 @@ export default function UserReportListPage() {
 
   /// init render
   useEffect(() => {
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const searchOptions = await Promise.resolve(getSearchDatas());
-      setInitSearchData(searchOptions);
-
-      setFetchedInit(true);
-      setLoading(false);
-    };
-
-    fetchInitData();
+    onInit();
   }, []);
 
   /// rebuild render
@@ -144,8 +128,8 @@ export default function UserReportListPage() {
           <ListCount
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={pageItemCountOptions}
-            defaultIndex={0}
+            optionData={searchOptions.pageOptions}
+            defaultIndex={searchOptions.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -160,7 +144,7 @@ export default function UserReportListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={visiblePageCount}
+              maxVisible={searchOptions.visiblePageNo}
             />
           ) : null}
         </div>

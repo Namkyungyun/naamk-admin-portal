@@ -6,17 +6,27 @@ import { message } from "antd";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import UserReportDetailGrid from "../component/DetailGrid";
-import { ListCount, ListTable } from "@/app/(portal)/component/ListTable";
+import {
+  ListCount,
+  ListTable,
+  Pagination,
+} from "@/app/(portal)/component/ListTable";
 import Loading from "@/app/(portal)/component/Loading";
 
 import {
-  getUserById,
-  getUserReportHist,
-  updatePenaltyStatus,
+  fetchPenaltyUpdate,
+  fetchUserReportDetailSearch,
+  fetchUserReport,
+  fetchUserReportHist,
 } from "../actions";
 
 export default function UserReportDetailPage() {
   const { userId } = useParams();
+  const userReport = fetchUserReport();
+  const searchOptions = fetchUserReportDetailSearch();
+  const userReportHist = fetchUserReportHist();
+  const penaltyUpdate = fetchPenaltyUpdate();
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState(false);
@@ -24,71 +34,40 @@ export default function UserReportDetailPage() {
   const [fetchedInit, setFetchedInit] = useState(false);
 
   // reported user data
-  const initReportedDetailData = {
-    id: null,
-    reportedUserId: null,
-    reportedUserName: null,
-    latestCreatedAt: null,
-    userStatus: null,
-    penalty: null, // 처리상태 value (true, false, null)
-    penaltyStatus: null,
-    penaltyDescription: null, // 제재사유
-    penaltyCreatedAt: null,
-    penaltyCreatedBy: null,
-    penaltyStatusList: [],
-  };
+  const initReportedDetailData = userReport.responseData;
   const [reportedDetailData, setReportedDetailData] = useState(null);
 
   /// report history list
-  const reportHistTableHeader = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "reportCreatedAt", variableLabel: "신고일시" },
-    { variableName: "reportCreatedBy", variableLabel: "신고자" },
-    { variableName: "reportStatus", variableLabel: "신고 상태" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
-  ];
+  const reportHistTableHeader = userReportHist.responseData;
   const [reportHistTableBody, setReportHistTableBody] = useState([]);
 
   /// pagination data
-  const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState({
-    pageNo: 1,
-    pageSize: 25,
-  });
-  const pageItemCountOptions = [
-    { id: 1, value: 10, label: "10개씩" },
-    { id: 2, value: 25, label: "25개씩" },
-    { id: 3, value: 50, label: "50개씩" },
-  ];
-
-  /// penalty data
-  const penaltyForm = {
-    isActive: null,
-    description: null,
-  };
+  const [reqSearchData, setReqSearchData] = useState(
+    searchOptions.defaultPageParam
+  );
 
   /// API [ reportDetailData, reportHistData ]
   const fetchInit = async () => {
     setLoading(true);
 
     const [reportDetailData, reportHisData] = await Promise.all([
-      getUserById(userId),
-      getUserReportHist(userId, reqSearchData),
+      userReport.fetchAPI(userId),
+      userReportHist.fetchAPI(userId, reqSearchData),
     ]);
 
     // detail
-    setReportedDetailData(reportDetailData);
     if (reportDetailData) {
-      penaltyForm.isActive = reportDetailData?.penalty;
-      penaltyForm.description = reportDetailData?.penaltyDescription;
+      setReportedDetailData(reportDetailData);
+      penaltyUpdate.requestData.isActive = reportDetailData?.penalty;
+      penaltyUpdate.requestData.description =
+        reportDetailData?.penaltyDescription;
     }
+
     // history
     if (reportHisData) {
       const pagenation = reportHisData?.pagenation;
-
       setReportHistTableBody(pagenation?.content);
       setTotalPageNo(pagenation?.totalPages);
       setTotalItemCount(reportHisData?.newReportCount);
@@ -103,12 +82,12 @@ export default function UserReportDetailPage() {
     setLoading(true);
 
     const updated = await Promise.resolve(
-      updatePenaltyStatus(userId, formData)
+      penaltyUpdate.fetchAPI(userId, formData)
     );
 
     setLoading(false);
 
-    const result = updated.id != null;
+    const result = updated.linkedId != null;
     const type = result ? "success" : "error";
     const message = result ? "(TP)신고 처리완료" : "(TP)신고 처리실패";
     onMessage(type, message);
@@ -180,7 +159,7 @@ export default function UserReportDetailPage() {
             loading={loading}
             fetched={fetchedInit}
             detailData={reportedDetailData ?? initReportedDetailData}
-            penaltyForm={penaltyForm}
+            penaltyForm={penaltyUpdate.requestData}
             onUpdate={fetchUpdate}
             onCancel={onMessage}
           />
@@ -192,18 +171,28 @@ export default function UserReportDetailPage() {
             title="신규접수"
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={pageItemCountOptions}
-            defaultIndex={1}
+            optionData={searchOptions.pageOptions}
+            defaultIndex={searchOptions.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
-        <div className="flex flex-col h-full overflow-hidden border border-bd-muted">
+        <div className="flex flex-col h-full">
           {/* 테이블 */}
-          <div className="px-1">
+          <div className="px-1 mb-4 h-full">
             <ListTable
               headers={reportHistTableHeader}
               body={reportHistTableBody}
             />
+          </div>
+          <div className="h-12 flex items-center justify-center text-black gap-2 mb-4">
+            {!loading && reportHistTableBody.length !== 0 ? (
+              <Pagination
+                currentPage={reqSearchData.pageNo}
+                totalPages={totalPageNo}
+                onPageChange={onPageChange}
+                maxVisible={searchOptions.visiblePageNo}
+              />
+            ) : null}
           </div>
         </div>
       </div>

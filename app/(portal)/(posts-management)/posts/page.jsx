@@ -7,11 +7,13 @@ import PageTitle from "../../component/PageTitle";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 
-import { getSearchDatas, getPosts } from "./actions";
+import { fetchPostsSearch, fetchPosts } from "./actions";
 import PostsSearchBox from "./component/SearchBox";
 
 export default function PostListPage() {
   const router = useRouter();
+  const searchOptions = fetchPostsSearch();
+  const posts = fetchPosts();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -20,38 +22,32 @@ export default function PostListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState({
-    pageNo: 1,
-    pageSize: 20,
-  });
+  const [reqSearchData, setReqSearchData] = useState(
+    searchOptions.defaultPageParam
+  );
 
   /// pagination data
-  const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const pageItemCountOptions = [
-    { id: 1, value: 20, label: "20개씩" },
-    { id: 2, value: 50, label: "50개씩" },
-    { id: 3, value: 100, label: "100개씩" },
-  ];
 
   /// table result
-  const tableHeader = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "createdAt", variableLabel: "등록 일시" },
-    { variableName: "userName", variableLabel: "작성자ID" },
-    { variableName: "channelName", variableLabel: "채널ID" },
-    { variableName: "type", variableLabel: "글 타입" },
-    {
-      variableName: "content",
-      variableLabel: "본문 내용",
-      url: "id",
-      onButton: (url) => router.push(`/posts/${url}`),
-    },
-    { variableName: "id", variableLabel: "게시글 ID" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
-  ];
+  const tableHeader = posts.responseData(router);
   const [tableBody, setTableBody] = useState([]);
+
+  /// init API
+  const onInit = () => {
+    const fetchInitData = async () => {
+      setLoading(true);
+
+      const data = await Promise.resolve(searchOptions.fetchAPI());
+      setInitSearchData(data);
+
+      setFetchedInit(true);
+      setLoading(false);
+    };
+
+    fetchInitData();
+  };
 
   /// search API
   const onSearch = (data) => {
@@ -59,7 +55,7 @@ export default function PostListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(getPosts(data));
+      const entity = await Promise.resolve(posts.fetchAPI(data));
 
       setTotalPageNo(entity.totalPages);
       setTotalItemCount(entity.totalElements);
@@ -96,17 +92,7 @@ export default function PostListPage() {
 
   /// init render
   useEffect(() => {
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const searchOptions = await Promise.resolve(getSearchDatas());
-      setInitSearchData(searchOptions);
-
-      setFetchedInit(true);
-      setLoading(false);
-    };
-
-    fetchInitData();
+    onInit();
   }, []);
 
   /// rebuild render
@@ -141,8 +127,8 @@ export default function PostListPage() {
           <ListCount
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={pageItemCountOptions}
-            defaultIndex={0}
+            optionData={searchOptions.pageOptions}
+            defaultIndex={searchOptions.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -157,7 +143,7 @@ export default function PostListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={visiblePageCount}
+              maxVisible={searchOptions.visiblePageNo}
             />
           ) : null}
         </div>

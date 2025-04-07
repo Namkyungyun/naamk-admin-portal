@@ -2,15 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getSearchDatas, getUsers } from "./actions";
 
 import PageTitle from "../../component/PageTitle";
 import UserSearchBox from "./component/SearchBox";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import Loading from "../../component/Loading";
 
+import { fetchUsersSearch, fetchUsers } from "./actions";
+
 export default function UserListPage() {
   const router = useRouter();
+  const searchOptions = fetchUsersSearch();
+  const users = fetchUsers();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -19,38 +22,33 @@ export default function UserListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState({
-    pageNo: 1,
-    pageSize: 50,
-  });
+  const [reqSearchData, setReqSearchData] = useState(
+    searchOptions.defaultPageParam
+  );
 
   /// pagination data
-  const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const pageItemCountOptions = [
-    { id: 1, value: 20, label: "20개씩" },
-    { id: 2, value: 50, label: "50개씩" },
-    { id: 3, value: 100, label: "100개씩" },
-  ];
+  const pageItemCountOptions = searchOptions.pageOptions;
 
   /// table result
-  const tableHeader = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    {
-      variableName: "name",
-      variableLabel: "회원ID",
-      url: "id",
-      onButton: (url) => router.push(`/users/${url}`),
-    },
-    { variableName: "nickname", variableLabel: "사용자명" },
-    { variableName: "userStatus", variableLabel: "계정 상태" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
-    { variableName: "email", variableLabel: "이메일" },
-    { variableName: "createdAt", variableLabel: "가입일시" },
-  ];
+  const tableHeader = users.responseData(router);
   const [tableBody, setTableBody] = useState([]);
+
+  /// init API
+  const onInit = () => {
+    const fetchInitData = async () => {
+      setLoading(true);
+
+      const data = await Promise.resolve(searchOptions.fetchAPI());
+      setInitSearchData(data);
+
+      setFetchedInit(true);
+      setLoading(false);
+    };
+
+    fetchInitData();
+  };
 
   /// search API
   const onSearch = (data) => {
@@ -58,7 +56,7 @@ export default function UserListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(getUsers(data));
+      const entity = await Promise.resolve(users.fetchAPI(data));
 
       setTotalPageNo(entity.totalPages);
       setTotalItemCount(entity.totalElements);
@@ -96,17 +94,7 @@ export default function UserListPage() {
   /// init
   useEffect(() => {
     /// Search section API fetch
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const searchOptions = await Promise.resolve(getSearchDatas());
-      setInitSearchData(searchOptions);
-
-      setFetchedInit(true);
-      setLoading(false);
-    };
-
-    fetchInitData();
+    onInit();
   }, []);
 
   /// rebuild render
@@ -143,7 +131,7 @@ export default function UserListPage() {
             disabled={loading}
             totalItemCount={totalItemCount}
             optionData={pageItemCountOptions}
-            defaultIndex={1}
+            defaultIndex={searchOptions.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -158,7 +146,7 @@ export default function UserListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={visiblePageCount}
+              maxVisible={searchOptions.visiblePageNo}
             />
           ) : null}
         </div>

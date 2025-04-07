@@ -3,42 +3,116 @@ import apiClient from '@/app/lib/apiClient';
 const api = apiClient();
 const prefixUrl = "/user-reports"
 
-export async function getSearchDatas() {
-  console.log("getSearchDatas");
+/// list page
+export function fetchUserReportsSearch() {
+  const visiblePageNo =  5;
+  const defaultPageOptionIndex = 1;
 
-  return await api
-    .get(`${prefixUrl}/search-options`)
-    .then((response) => {
-      const entity = response.data.body.entity;
-      console.log("getSearchDatas success", entity);
-      
-      return entity;
-    })
-    .catch((e)=> console.log(e));
+  const pageOptions = [
+    { id: 1, value: 20, label: "20개씩" },
+    { id: 2, value: 50, label: "50개씩" },
+    { id: 3, value: 100, label: "100개씩" },
+  ];
+
+  const defaultPageParam = {
+    pageNo: 1,
+    pageSize: pageOptions[defaultPageOptionIndex].value,
+  };
+
+
+  const fetchAPI = async () => {
+    return await api
+      .get(`${prefixUrl}/search-options`)
+      .then((response) => {
+        const entity = response.data.body.entity;
+        console.log("getSearchDatas success", entity);
+        
+        return entity;
+      })
+      .catch((e)=> console.log(e));
+  };
+
+  return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions, fetchAPI };
 }
 
-export async function getUsers(searchData) {
-    console.log("getUsers : searchData >>>>>> " + searchData);
+export function fetchUserReports() {
+  const responseData = (router) => [
+    { variableName: "rowNum", variableLabel: "구분" },
+    { variableName: "id", variableLabel: "", hidden: true },
+    { variableName: "latestCreatedAt", variableLabel: "최근신고일시" },
+    { variableName: "reportedUserId", variableLabel: "", hidden: true },
+    {
+      variableName: "reportedUserName",
+      variableLabel: "대상자ID",
+      url: "reportedUserId",
+      onButton: (url) => router.push(`/user-reports/${url}`),
+    },
+    { variableName: "reportCount", variableLabel: "신고 건수" },
+    { variableName: "reportStatus", variableLabel: "신고 상태" },
+    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
+    { variableName: "penaltyCreatedAt", variableLabel: "처리일시" },
+    { variableName: "penaltyCreatedBy", variableLabel: "처리자" },
+  ];
 
-  return await api
-    .post(`${prefixUrl}/users`, searchData, {
-        params: {page: searchData.pageNo-1, size: searchData.pageSize}
-    })
-    .then((response) => {
-      console.log(response);
-      const entity = response.data.body.entity;
-      console.log("getUsers success", entity);
+  const fetchAPI = async (data) => {
+    return await api
+      .post(`${prefixUrl}/users`, data, {
+          params: {page: data.pageNo-1, size: data.pageSize}
+      })
+      .then((response) => {
+        const entity = response.data.body.entity;
+        console.log("getUsers success", entity);
 
-      return entity;
-    })
-    .catch((e)=> console.log(e));
+        return entity;
+      })
+      .catch((e)=> console.log(e));
+  };
+
+  return { responseData, fetchAPI};
 }
 
 
-export async function getUserById(userId) {
-  console.log("getUserById : userId >>>>>> " + userId);
+/// detail page
+export function fetchUserReportDetailSearch() {
+  const visiblePageNo =  5;
+  const defaultPageOptionIndex = 1;
 
-  return await api.get(`${prefixUrl}/users/${userId}`)
+  const pageOptions = [
+    { id: 1, value: 10, label: "10개씩" },
+    { id: 2, value: 25, label: "25개씩" },
+    { id: 3, value: 50, label: "50개씩" },
+  ];
+
+  const defaultPageParam = {
+    pageNo: 1,
+    pageSize: pageOptions[defaultPageOptionIndex].value,
+  };
+
+  const penaltyForm = {
+    isActive: null,
+    description: null,
+  };
+
+  return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions };
+}
+
+export function fetchUserReport () {
+  const responseData = {
+    id: null,
+    reportedUserId: null,
+    reportedUserName: null,
+    latestCreatedAt: null,
+    userStatus: null,
+    penalty: null, // 처리상태 value (true, false, null)
+    penaltyStatus: null,
+    penaltyDescription: null, // 제재사유
+    penaltyCreatedAt: null,
+    penaltyCreatedBy: null,
+    penaltyStatusList: [],
+  };
+
+  const fetchAPI = async (userId) => {
+    return await api.get(`${prefixUrl}/users/${userId}`)
     .then((response) => {
       const entity = response.data.body.entity;
       console.log("getUserById success", entity);
@@ -46,32 +120,55 @@ export async function getUserById(userId) {
       return entity;
     })
     .catch((e) =>  console.log(e));
+  }
+
+  return {responseData, fetchAPI};
 }
 
-export async function getUserReportHist(userId, data) {
-  console.log("getUserReportHist : userId >>>>>> " + data);
+export function fetchUserReportHist() {
+  const responseData = [
+    { variableName: "rowNum", variableLabel: "구분" },
+    { variableName: "id", variableLabel: "", hidden: true },
+    { variableName: "reportCreatedAt", variableLabel: "신고일시" },
+    { variableName: "reportCreatedBy", variableLabel: "신고자" },
+    { variableName: "reportStatus", variableLabel: "신고 상태" },
+    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
+  ];
 
-  return await api.get(`${prefixUrl}/users/${userId}/report-hist`,
-    {
-      params: {page: data.pageNo-1, size: data.pageSize}
-    }
-  )
-    .then((response) => {
-      const entity = response.data.body.entity;
-      console.log("getUserReportHist success", entity);
+  const fetchAPI = async (userId, data) => {
+    return await api.get(`${prefixUrl}/users/${userId}/report-hist`,
+      {
+        params: {page: data.pageNo-1, size: data.pageSize}
+      }
+    )
+      .then((response) => {
+        const entity = response.data.body.entity;
+        console.log("getUserReportHist success", entity);
+  
+        return entity;
+      })
+      .catch((e) =>  console.log(e));
+  };
 
-      return entity;
-    })
-    .catch((e) =>  console.log(e));
+  return {responseData, fetchAPI};
+
 }
 
-export async function updatePenaltyStatus(userId, data) {
-  return await api.post(`/penalty-hist/user/${userId}`, data, )
-    .then((response) => {
-      const entity = response.data.body.entity;
-      console.log("getUserPenaltyHist success", entity);
+export function fetchPenaltyUpdate() {
+  const requestData = { isActive: null, description: null, };
 
-      return entity;
-    })
-    .catch((e) =>  console.log(e));
+  const fetchAPI = async (userId, data) => {
+    const penaltyType = 'user';
+
+    return await api.post(`/penalty-hist/${penaltyType}/${userId}`, data, )
+      .then((response) => {
+        const entity = response.data.body.entity;
+        console.log("getUserPenaltyHist success", entity);
+
+        return entity;
+      })
+      .catch((e) =>  console.log(e));
+  };
+
+  return {requestData, fetchAPI };
 }

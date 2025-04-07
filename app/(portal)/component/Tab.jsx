@@ -31,7 +31,7 @@ export default function TabComponent({ tabs }) {
       </div>
 
       {/* 탭 내용 (스크롤 대상) */}
-      <div className="flex-1 overflow-hidden p-2 bg-white text-black">
+      <div className="flex-1 h-full overflow-auto p-2 bg-white text-black">
         {activeContent}
       </div>
     </>

@@ -12,19 +12,24 @@ import {
   Pagination,
 } from "@/app/(portal)/component/ListTable";
 import MidPopupModal from "@/app/(portal)/component/MDPopupModal";
-// 팝업
+import PostPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import Loading from "@/app/(portal)/component/Loading";
-import PostPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 
 import {
-  getPostById,
-  getPostPenaltyHist,
-  updatePenaltyStatus,
+  fetchPostSearch,
+  fetchPost,
+  fetchPenaltyHist,
+  fetchPenaltyUpdate,
 } from "../actions";
 
 export default function PostDetailPage() {
   const { postId } = useParams();
+  const searchOptions = fetchPostSearch();
+  const post = fetchPost();
+  const penaltyHist = fetchPenaltyHist();
+  const penaltyUpdate = fetchPenaltyUpdate();
+
   const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState(false);
@@ -32,62 +37,21 @@ export default function PostDetailPage() {
   const [fetchedInit, setFetchedInit] = useState(false);
 
   // post detail data
-  const initPostDetailData = {
-    postId: null,
-    createdAt: null,
-    content: null,
-    postStatus: null,
-    channelPenaltyStatus: null,
-    penalty: null,
-    penaltyStatus: null,
-    channelName: null,
-    channelNickName: null,
-    userId: null,
-    userName: null,
-    popScore: null,
-    replyCount: null,
-    likeCount: null,
-    thumbs: [],
-  };
+  const initPostDetailData = post.responseData;
   const [detailData, setDetailData] = useState(null);
 
   /// penalty history list
-  const penaltyHistTableHeader = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "createdAt", variableLabel: "처리 일시" },
-    { variableName: "createdBy", variableLabel: "처리자" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
-    { variableName: "description", variableLabel: "제재사유" },
-    {
-      variableName: "isExistReport",
-      variableLabel: "신고보기",
-      url: "linkedId",
-      onButton: (url) => window.open(`/post-reports/${url}`, "_blank"), // TODO 사용자 신고관리 상세
-    },
-    { variableName: "linkedId", variableLabel: "", hidden: true },
-  ];
+  const penaltyHistTableHeader = penaltyHist.responseData;
   const [penaltyHistTableBody, setPenaltyHistTableBody] = useState([]);
 
   /// pagination data
-  const visiblePageCount = 5;
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState({
-    pageNo: 1,
-    pageSize: 10,
-  });
-  const pageItemCountOptions = [
-    { id: 1, value: 10, label: "10개씩" },
-    { id: 2, value: 25, label: "25개씩" },
-    { id: 3, value: 50, label: "50개씩" },
-  ];
+  const [reqSearchData, setReqSearchData] = useState(
+    searchOptions.defaultPageParam
+  );
 
   /// penalty update popup
-  const penaltyForm = {
-    isActive: null,
-    description: null,
-  };
   const [showPenaltyPopup, setShowPenaltyPopup] = useState(false);
   const [updatablePenalty, setUptablePenalty] = useState(false);
   const [updatePenaltyData, setUpdatePenaltyData] = useState({});
@@ -97,8 +61,8 @@ export default function PostDetailPage() {
     setLoading(true);
 
     const [postDetailData, penaltyHistData] = await Promise.all([
-      getPostById(postId),
-      getPostPenaltyHist(postId, reqSearchData),
+      post.fetchAPI(postId),
+      penaltyHist.fetchAPI(postId, reqSearchData),
     ]);
 
     // detail
@@ -123,7 +87,7 @@ export default function PostDetailPage() {
     setLoading(true);
 
     const updated = await Promise.resolve(
-      updatePenaltyStatus(postId, updatePenaltyData)
+      penaltyUpdate.fetchAPI(postId, updatePenaltyData)
     );
 
     setLoading(false);
@@ -142,14 +106,14 @@ export default function PostDetailPage() {
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {
     if (data) {
-      penaltyForm.label = data.penaltyStatus;
-      penaltyForm.isActive = data.penalty;
+      penaltyUpdate.requestData.label = data.penaltyStatus;
+      penaltyUpdate.requestData.isActive = data.penalty;
     } else {
-      penaltyForm.label = detailData.penaltyStatus;
-      penaltyForm.isActive = detailData.penalty;
+      penaltyUpdate.requestData.label = detailData.penaltyStatus;
+      penaltyUpdate.requestData.isActive = detailData.penalty;
     }
 
-    setUpdatePenaltyData({ ...penaltyForm });
+    setUpdatePenaltyData({ ...penaltyUpdate.requestData });
   };
 
   const onValidatePenaltyStatus = (obj) => {
@@ -243,13 +207,12 @@ export default function PostDetailPage() {
             title="총"
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={pageItemCountOptions}
-            defaultIndex={0}
+            optionData={searchOptions.pageOptions}
+            defaultIndex={searchOptions.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
 
-        {/* 아래 div태그에 마진 bottom 을 주고 싶어  */}
         <div className="flex flex-col h-full">
           {/* 테이블 */}
           <div className="px-1 mb-4 h-full">
@@ -264,7 +227,7 @@ export default function PostDetailPage() {
                 currentPage={reqSearchData.pageNo}
                 totalPages={totalPageNo}
                 onPageChange={onPageChange}
-                maxVisible={visiblePageCount}
+                maxVisible={searchOptions.visiblePageNo}
               />
             ) : null}
           </div>

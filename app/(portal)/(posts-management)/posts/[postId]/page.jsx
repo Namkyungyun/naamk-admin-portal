@@ -1,8 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useToastMessage } from "@/app/(portal)/component/Message";
 
-import { message } from "antd";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import PostDetailGrid from "../component/DetailGrid";
@@ -25,12 +25,12 @@ import {
 
 export default function PostDetailPage() {
   const { postId } = useParams();
+  const { showPenaltyMessage, showMessage } = useToastMessage();
+
   const searchOptions = fetchPostSearch();
   const post = fetchPost();
   const penaltyHist = fetchPenaltyHist();
   const penaltyUpdate = fetchPenaltyUpdate();
-
-  const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -89,13 +89,10 @@ export default function PostDetailPage() {
     const updated = await Promise.resolve(
       penaltyUpdate.fetchAPI(postId, updatePenaltyData)
     );
+    const result = updated.linkedId != null;
 
     setLoading(false);
-
-    const result = updated?.linkedId != null;
-    const type = result ? "success" : "error";
-    const message = result ? "(TP)신고 처리완료" : "(TP)신고 처리실패";
-    onMessage(type, message);
+    showPenaltyMessage(result);
 
     if (result) {
       setShowPenaltyPopup(false);
@@ -159,16 +156,6 @@ export default function PostDetailPage() {
     if (fetchedInit) {
       setRefresh(true);
     }
-  };
-
-  ////
-  const onMessage = (type, message) => {
-    // type : error , success
-    messageApi.open({
-      type: type,
-      content: message,
-      duration: 5,
-    });
   };
 
   /// init render
@@ -264,8 +251,6 @@ export default function PostDetailPage() {
 
       {/* loading  */}
       <Loading isLoading={loading} />
-
-      <>{contextHolder}</>
     </>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useToastMessage } from "@/app/(portal)/component/Message";
 
-import { message } from "antd";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import UserReportDetailGrid from "../component/DetailGrid";
@@ -22,12 +22,12 @@ import {
 
 export default function UserReportDetailPage() {
   const { userId } = useParams();
+  const { showPenaltyMessage, showMessage } = useToastMessage();
+
   const userReport = fetchUserReport();
   const searchOptions = fetchUserReportDetailSearch();
   const userReportHist = fetchUserReportHist();
   const penaltyUpdate = fetchPenaltyUpdate();
-
-  const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -84,13 +84,10 @@ export default function UserReportDetailPage() {
     const updated = await Promise.resolve(
       penaltyUpdate.fetchAPI(userId, formData)
     );
+    const result = updated.linkedId != null;
 
     setLoading(false);
-
-    const result = updated.linkedId != null;
-    const type = result ? "success" : "error";
-    const message = result ? "(TP)신고 처리완료" : "(TP)신고 처리실패";
-    onMessage(type, message);
+    showPenaltyMessage(result);
 
     if (result) {
       setRefresh(true);
@@ -122,16 +119,6 @@ export default function UserReportDetailPage() {
     }
   };
 
-  ////
-  const onMessage = (type, message) => {
-    // type : error , success
-    messageApi.open({
-      type: type,
-      content: message,
-      duration: 5,
-    });
-  };
-
   /// init render
   useEffect(() => {
     fetchInit();
@@ -161,7 +148,7 @@ export default function UserReportDetailPage() {
             detailData={reportedDetailData ?? initReportedDetailData}
             penaltyForm={penaltyUpdate.requestData}
             onUpdate={fetchUpdate}
-            onCancel={onMessage}
+            onCancel={() => showPenaltyMessage(null)}
           />
         </div>
 
@@ -199,8 +186,6 @@ export default function UserReportDetailPage() {
 
       {/* loading  */}
       <Loading isLoading={loading} />
-
-      <>{contextHolder}</>
     </>
   );
 }

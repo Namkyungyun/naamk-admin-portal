@@ -56,11 +56,12 @@ export default function UserListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(users.fetchAPI(data));
-
-      setTotalPageNo(entity.totalPages);
-      setTotalItemCount(entity.totalElements);
-      setTableBody(entity.content);
+      const result = await Promise.resolve(users.fetchAPI(data));
+      if (result) {
+        setTotalPageNo(result.totalPages);
+        setTotalItemCount(result.totalElements);
+        setTableBody(result.content);
+      }
 
       setLoading(false);
     };

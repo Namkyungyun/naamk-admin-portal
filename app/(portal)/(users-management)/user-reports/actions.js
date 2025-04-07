@@ -88,10 +88,6 @@ export function fetchUserReportDetailSearch() {
     pageSize: pageOptions[defaultPageOptionIndex].value,
   };
 
-  const penaltyForm = {
-    isActive: null,
-    description: null,
-  };
 
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions };
 }

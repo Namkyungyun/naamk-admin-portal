@@ -1,8 +1,8 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useToastMessage } from "@/app/(portal)/component/Message";
 
-import { message } from "antd";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import UserDetailGrid from "../component/DetailGrid";
@@ -26,12 +26,12 @@ import {
 
 export default function UserDetailPage() {
   const { userId } = useParams();
+  const { showPenaltyMessage, showMessage } = useToastMessage();
+
   const user = fetchUser();
   const penaltyHist = fetchPenaltyHist();
   const searchOptions = fetchUserSearch();
   const penaltyUpdate = fetchPenaltyUpdate();
-
-  const [messageApi, contextHolder] = message.useMessage();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -88,12 +88,9 @@ export default function UserDetailPage() {
     const updated = await Promise.resolve(
       penaltyUpdate.fetchAPI(userId, updatePenaltyData)
     );
-    setLoading(false);
-
     const result = updated.linkedId != null;
-    const type = result ? "success" : "error";
-    const message = result ? "저장되었습니다." : "저장되지 않았습니다.";
-    onMessage(type, message);
+    setLoading(false);
+    showPenaltyMessage(result);
 
     if (result) {
       setShowPenaltyPopup(false);
@@ -157,15 +154,6 @@ export default function UserDetailPage() {
     if (fetchedInit) {
       setRefresh(true);
     }
-  };
-
-  const onMessage = (type, message) => {
-    // type : error , success
-    messageApi.open({
-      type: type,
-      content: message,
-      duration: 5,
-    });
   };
 
   /// init
@@ -280,8 +268,6 @@ export default function UserDetailPage() {
 
       {/* loading  */}
       <Loading isLoading={loading} />
-
-      <>{contextHolder}</>
     </>
   );
 }

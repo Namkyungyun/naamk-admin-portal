@@ -48,8 +48,6 @@ export async function getUserById(userId) {
 }
 
 export async function getUserPenaltyHist(userId) {
-  console.log("getUserPenaltyHist : userId >>>>>> " + userId);
-
   return await api.get(`/penalty-hist/user/${userId}`)
     .then((response) => {
       const entity = response.data.body.entity;
@@ -61,8 +59,6 @@ export async function getUserPenaltyHist(userId) {
 }
 
 export async function updatePenaltyStatus(userId, data) {
-  console.log("updatePenaltyStatus :", userId, data);
-
   return await api.post(`/penalty-hist/user/${userId}`, data, )
     .then((response) => {
       const entity = response.data.body.entity;

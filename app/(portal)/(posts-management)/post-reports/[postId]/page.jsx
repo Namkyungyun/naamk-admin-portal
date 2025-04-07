@@ -72,7 +72,6 @@ export default function PostReportDetailPage() {
 
   /// penalty data
   const penaltyForm = {
-    type: "post",
     isActive: null,
     description: null,
   };
@@ -122,26 +121,32 @@ export default function PostReportDetailPage() {
     onMessage(type, message);
 
     if (result) {
-      onRefresh();
+      setRefresh(true);
     }
 
     return result;
   };
 
   const onPageChange = (page) => {
-    reqSearchData.pageNo = page >= totalPageNo ? totalPageNo : page;
+    setReqSearchData((prev) => ({
+      ...prev,
+      pageNo: page >= totalPageNo ? totalPageNo : page,
+    }));
 
     if (fetchedInit) {
-      fetchInit();
+      setRefresh(true);
     }
   };
 
   const onPageItemCountChange = (count) => {
-    reqSearchData.pageNo = 1;
-    reqSearchData.pageSize = count;
+    setReqSearchData((prev) => ({
+      ...prev,
+      pageNo: 1,
+      pageSize: count,
+    }));
 
     if (fetchedInit) {
-      fetchInit();
+      setRefresh(true);
     }
   };
 
@@ -155,13 +160,6 @@ export default function PostReportDetailPage() {
     });
   };
 
-  const onRefresh = () => {
-    setRefresh(true);
-    setTimeout(() => {
-      setRefresh(false);
-    }, "500");
-  };
-
   /// init render
   useEffect(() => {
     fetchInit();
@@ -171,8 +169,9 @@ export default function PostReportDetailPage() {
   useEffect(() => {
     if (refresh) {
       fetchInit();
+      setRefresh(false);
     }
-  }, [refresh]);
+  }, [refresh, reqSearchData]);
 
   return (
     <>

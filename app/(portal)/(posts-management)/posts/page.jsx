@@ -15,6 +15,7 @@ export default function PostListPage() {
 
   /// data status
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
 
   /// search data
@@ -52,21 +53,6 @@ export default function PostListPage() {
   ];
   const [tableBody, setTableBody] = useState([]);
 
-  /// init render
-  useEffect(() => {
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const searchOptions = await Promise.resolve(getSearchDatas());
-      setInitSearchData(searchOptions);
-
-      setFetchedInit(true);
-      setLoading(false);
-    };
-
-    fetchInitData();
-  }, []);
-
   /// search API
   const onSearch = (data) => {
     const fetchResultData = async () => {
@@ -86,21 +72,50 @@ export default function PostListPage() {
   };
 
   const onPageChange = (page) => {
-    reqSearchData.pageNo = page >= totalPageNo ? totalPageNo : page;
+    setReqSearchData((prev) => ({
+      ...prev,
+      pageNo: page >= totalPageNo ? totalPageNo : page,
+    }));
 
     if (fetchedInit) {
-      onSearch(reqSearchData);
+      setRefresh(true);
     }
   };
 
   const onPageItemCountChange = (count) => {
-    reqSearchData.pageNo = 1;
-    reqSearchData.pageSize = count;
+    setReqSearchData((prev) => ({
+      ...prev,
+      pageNo: 1,
+      pageSize: count,
+    }));
 
     if (fetchedInit) {
-      onSearch(reqSearchData);
+      setRefresh(true);
     }
   };
+
+  /// init render
+  useEffect(() => {
+    const fetchInitData = async () => {
+      setLoading(true);
+
+      const searchOptions = await Promise.resolve(getSearchDatas());
+      setInitSearchData(searchOptions);
+
+      setFetchedInit(true);
+      setLoading(false);
+    };
+
+    fetchInitData();
+  }, []);
+
+  /// rebuild render
+  useEffect(() => {
+    if (refresh) {
+      onSearch(reqSearchData);
+      setRefresh(false);
+    }
+  }, [refresh, reqSearchData]);
 
   return (
     <>

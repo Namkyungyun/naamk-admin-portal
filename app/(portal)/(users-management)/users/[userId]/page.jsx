@@ -25,6 +25,7 @@ export default function UserDetailPage() {
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [fetchedInit, setFetchedInit] = useState(false);
 
   /// userdatail data
   const initUserDetailData = {
@@ -59,10 +60,22 @@ export default function UserDetailPage() {
   ];
   const [penaltyHistTableBody, setPenaltyHistTableBody] = useState([]);
 
+  /// pagination data
+  const visiblePageCount = 5;
+  const [totalPageNo, setTotalPageNo] = useState(0);
+  const [totalItemCount, setTotalItemCount] = useState(0);
+  const [reqSearchData, setReqSearchData] = useState({
+    pageNo: 1,
+    pageSize: 50,
+  });
+  const pageItemCountOptions = [
+    { id: 1, value: 10, label: "10개씩" },
+    { id: 2, value: 25, label: "25개씩" },
+    { id: 3, value: 50, label: "50개씩" },
+  ];
+
   /// penalty update popup
   const penaltyForm = {
-    name: null,
-    type: "user",
     isActive: null,
     description: null,
   };
@@ -78,15 +91,18 @@ export default function UserDetailPage() {
       getUserPenaltyHist(userId),
     ]);
 
+    // detail
     if (userDetailData) {
       setDetailData(userDetailData);
       setPenaltyData(userDetailData);
     }
 
+    // history
     if (penaltyHistData) {
       setPenaltyHistTableBody(penaltyHistData.content);
     }
 
+    setFetchedInit(true);
     setLoading(false);
   };
 
@@ -105,7 +121,7 @@ export default function UserDetailPage() {
 
     if (result) {
       setShowPenaltyPopup(false);
-      onRefresh();
+      setRefresh(true);
     }
   };
 
@@ -143,6 +159,30 @@ export default function UserDetailPage() {
     setPenaltyData();
   };
 
+  /// page
+  const onPageChange = (page) => {
+    setReqSearchData((prev) => ({
+      ...prev,
+      pageNo: page >= totalPageNo ? totalPageNo : page,
+    }));
+
+    if (fetchedInit) {
+      setRefresh(true);
+    }
+  };
+
+  const onPageItemCountChange = (count) => {
+    setReqSearchData((prev) => ({
+      ...prev,
+      pageNo: 1,
+      pageSize: count,
+    }));
+
+    if (fetchedInit) {
+      setRefresh(true);
+    }
+  };
+
   const onMessage = (type, message) => {
     // type : error , success
     messageApi.open({
@@ -150,13 +190,6 @@ export default function UserDetailPage() {
       content: message,
       duration: 5,
     });
-  };
-
-  const onRefresh = () => {
-    setRefresh(true);
-    setTimeout(() => {
-      setRefresh(false);
-    }, "500");
   };
 
   /// init
@@ -170,7 +203,7 @@ export default function UserDetailPage() {
     if (refresh) {
       fetchInit();
     }
-  }, [refresh]);
+  }, [refresh, reqSearchData]);
 
   return (
     <>

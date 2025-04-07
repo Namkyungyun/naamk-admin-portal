@@ -16,8 +16,6 @@ export async function getSearchDatas() {
 }
 
 export async function getPostReports(searchData) {
-    console.log("getPostReports : searchData >>>>>> ", searchData);
-
   return await api
     .post(`${prefixUrl}/posts`, searchData, {
         params: {page: searchData.pageNo-1, size: searchData.pageSize}
@@ -45,8 +43,6 @@ export async function getPostReportById(postId) {
 }
 
 export async function getPostReportHist(postId, data) {
-  console.log("getPostReportHist : postId >>>>>> " + data);
-
   return await api.get(`${prefixUrl}/posts/${postId}/report-hist`,
     {
       params: {page: data.pageNo-1, size: data.pageSize}
@@ -62,8 +58,6 @@ export async function getPostReportHist(postId, data) {
 }
 
 export async function updatePenaltyStatus(postId, data) {
-  console.log("updatePenaltyStatus :", postId, data);
-
   return await api.post(`/penalty-hist/post/${postId}`, data, )
     .then((response) => {
       const entity = response.data.body.entity;

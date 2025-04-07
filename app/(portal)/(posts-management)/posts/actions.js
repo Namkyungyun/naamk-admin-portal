@@ -49,8 +49,6 @@ export async function getPostById(postId) {
 
 
 export async function getPostPenaltyHist(postId, searchData) {
-  console.log("getPostPenaltyHist : postId >>>>>> " + postId);
-
   return await api.get(`/penalty-hist/post/${postId}`,{
     params: {page: searchData.pageNo-1, size: searchData.pageSize}
   })
@@ -64,8 +62,6 @@ export async function getPostPenaltyHist(postId, searchData) {
 }
 
 export async function updatePenaltyStatus(postId, data) {
-  console.log("updatePenaltyStatus :", postId, data);
-
   return await api.post(`/penalty-hist/post/${postId}`, data, )
     .then((response) => {
       const entity = response.data.body.entity;

@@ -85,7 +85,6 @@ export default function PostDetailPage() {
 
   /// penalty update popup
   const penaltyForm = {
-    type: "post",
     isActive: null,
     description: null,
   };
@@ -136,7 +135,7 @@ export default function PostDetailPage() {
 
     if (result) {
       setShowPenaltyPopup(false);
-      onRefresh();
+      setRefresh(true);
     }
   };
 
@@ -182,7 +181,7 @@ export default function PostDetailPage() {
     }));
 
     if (fetchedInit) {
-      onRefresh();
+      setRefresh(true);
     }
   };
 
@@ -194,7 +193,7 @@ export default function PostDetailPage() {
     }));
 
     if (fetchedInit) {
-      onRefresh();
+      setRefresh(true);
     }
   };
 
@@ -208,13 +207,6 @@ export default function PostDetailPage() {
     });
   };
 
-  const onRefresh = () => {
-    setRefresh(true);
-    setTimeout(() => {
-      setRefresh(false);
-    }, "500");
-  };
-
   /// init render
   useEffect(() => {
     fetchInit();
@@ -224,6 +216,7 @@ export default function PostDetailPage() {
   useEffect(() => {
     if (refresh) {
       fetchInit();
+      setRefresh(false);
     }
   }, [refresh, reqSearchData]);
 

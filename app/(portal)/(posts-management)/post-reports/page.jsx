@@ -8,7 +8,7 @@ import PostReportSearchBox from "./component/SearchBox";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 
-import {} from "./actions";
+import { getSearchDatas, getPostReports } from "./actions";
 
 export default function PostReportListPage() {
   const router = useRouter();
@@ -40,9 +40,9 @@ export default function PostReportListPage() {
     { variableName: "id", variableLabel: "신고SEQ", hidden: true },
     { variableName: "latestCreatedAt", variableLabel: "최근 신고 일시" },
     {
-      variableName: "postId",
+      variableName: "reportedPostId",
       variableLabel: "게시글ID",
-      url: "postId",
+      url: "reportedPostId",
       onButton: (url) => router.push(`/post-reports/${url}`),
     },
     { variableName: "reportedUserName", variableLabel: "작성자ID" },
@@ -60,8 +60,8 @@ export default function PostReportListPage() {
     const fetchInitData = async () => {
       setLoading(true);
 
-      // const searchOptions = await Promise.resolve(getSearchDatas());
-      // setInitSearchData(searchOptions);
+      const searchOptions = await Promise.resolve(getSearchDatas());
+      setInitSearchData(searchOptions);
 
       setFetchedInit(true);
       setLoading(false);
@@ -76,11 +76,11 @@ export default function PostReportListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      // const entity = await Promise.resolve(getUsers(data));
+      const entity = await Promise.resolve(getPostReports(data));
 
-      // setTotalPageNo(entity.totalPages);
-      // setTotalItemCount(entity.totalElements);
-      // setTableBody(entity.content);
+      setTotalPageNo(entity.totalPages);
+      setTotalItemCount(entity.totalElements);
+      setTableBody(entity.content);
 
       setLoading(false);
     };

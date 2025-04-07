@@ -59,7 +59,8 @@ export default function PostReportSearchBox({
       penaltyStatus: penaltyStatus == "all" ? null : penaltyStatus,
       startDate: dates.startDate,
       endDate: dates.endDate,
-      reportedName: reportedUserName,
+      reportedUserName: reportedUserName,
+      reportedChannelName: reportedChannelName,
       penaltyCreatedBy: penaltyCreatedBy,
     };
 

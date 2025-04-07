@@ -46,3 +46,32 @@ export async function getPostById(postId) {
     })
     .catch((e) =>  console.log(e));
 }
+
+
+export async function getPostPenaltyHist(postId, searchData) {
+  console.log("getPostPenaltyHist : postId >>>>>> " + postId);
+
+  return await api.get(`/penalty-hist/post/${postId}`,{
+    params: {page: searchData.pageNo-1, size: searchData.pageSize}
+  })
+    .then((response) => {
+      const entity = response.data.body.entity;
+      console.log("getPostPenaltyHist success", entity);
+
+      return entity;
+    })
+    .catch((e) =>  console.log(e));
+}
+
+export async function updatePenaltyStatus(postId, data) {
+  console.log("updatePenaltyStatus :", postId, data);
+
+  return await api.post(`/penalty-hist/post/${postId}`, data, )
+    .then((response) => {
+      const entity = response.data.body.entity;
+      console.log("updatePenaltyStatus success", entity);
+
+      return entity;
+    })
+    .catch((e) =>  console.log(e));
+}

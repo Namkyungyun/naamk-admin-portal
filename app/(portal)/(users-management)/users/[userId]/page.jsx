@@ -16,7 +16,7 @@ import Loading from "@/app/(portal)/component/Loading";
 import {
   getUserById,
   getUserPenaltyHist,
-  updateUserPenaltyStatus,
+  updatePenaltyStatus,
 } from "../actions";
 
 export default function UserDetailPage() {
@@ -78,21 +78,27 @@ export default function UserDetailPage() {
       getUserPenaltyHist(userId),
     ]);
 
-    setDetailData(userDetailData);
-    setPenaltyHistTableBody(penaltyHistData);
-    setPenaltyData(userDetailData);
+    if (userDetailData) {
+      setDetailData(userDetailData);
+      setPenaltyData(userDetailData);
+    }
+
+    if (penaltyHistData) {
+      setPenaltyHistTableBody(penaltyHistData.content);
+    }
 
     setLoading(false);
   };
 
   const fetchUpdate = async () => {
     setLoading(true);
+
     const updated = await Promise.resolve(
-      updateUserPenaltyStatus(userId, updatePenaltyData)
+      updatePenaltyStatus(userId, updatePenaltyData)
     );
     setLoading(false);
 
-    const result = updated.id != null;
+    const result = updated.linkedId != null;
     const type = result ? "success" : "error";
     const message = result ? "저장되었습니다." : "저장되지 않았습니다.";
     onMessage(type, message);
@@ -106,11 +112,9 @@ export default function UserDetailPage() {
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {
     if (data) {
-      penaltyForm.name = data.name;
       penaltyForm.label = data.penaltyStatus;
       penaltyForm.isActive = data.penalty;
     } else {
-      penaltyForm.name = detailData?.name;
       penaltyForm.label = detailData?.penaltyStatus;
       penaltyForm.isActive = detailData?.penalty;
     }
@@ -218,6 +222,7 @@ export default function UserDetailPage() {
       >
         <div>
           <UserPenaltyPopupGrid
+            name={detailData?.name}
             penaltyForm={updatePenaltyData}
             originOption={detailData?.penalty}
             readOnly={loading}

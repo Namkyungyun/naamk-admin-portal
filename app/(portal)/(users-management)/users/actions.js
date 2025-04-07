@@ -50,7 +50,7 @@ export async function getUserById(userId) {
 export async function getUserPenaltyHist(userId) {
   console.log("getUserPenaltyHist : userId >>>>>> " + userId);
 
-  return await api.get(`/penalty-hist/users/${userId}`)
+  return await api.get(`/penalty-hist/user/${userId}`)
     .then((response) => {
       const entity = response.data.body.entity;
       console.log("getUserPenaltyHist success", entity);
@@ -60,13 +60,13 @@ export async function getUserPenaltyHist(userId) {
     .catch((e) =>  console.log(e));
 }
 
-export async function updateUserPenaltyStatus(userId, data) {
-  console.log("updateUserPenaltyStatus :", userId, data);
+export async function updatePenaltyStatus(userId, data) {
+  console.log("updatePenaltyStatus :", userId, data);
 
-  return await api.post(`/penalty-hist/users/${userId}`, data, )
+  return await api.post(`/penalty-hist/user/${userId}`, data, )
     .then((response) => {
       const entity = response.data.body.entity;
-      console.log("getUserPenaltyHist success", entity);
+      console.log("updatePenaltyStatus success", entity);
 
       return entity;
     })

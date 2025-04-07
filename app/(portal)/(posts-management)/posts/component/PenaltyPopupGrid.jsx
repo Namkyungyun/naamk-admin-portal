@@ -6,6 +6,7 @@ import { SelectBox } from "@/app/(portal)/component/SelectBox";
 import { LimitedLengthTextArea } from "@/app/(portal)/component/TextArea";
 
 export default function PostPenaltyPopupGrid({
+  name,
   penaltyForm,
   originOption,
   readOnly = false,
@@ -57,7 +58,7 @@ export default function PostPenaltyPopupGrid({
   return (
     <section className="p-1 flex-grow w-full my-1 text-black">
       <RowFor1Column borderTop={true}>
-        <MDColumn title="게시글 ID">{penaltyForm.name}</MDColumn>
+        <MDColumn title="게시글 ID">{name}</MDColumn>
       </RowFor1Column>
       <RowFor1Column>
         <MDColumn title="제재 상태*" isFull={true}>

@@ -6,7 +6,7 @@ const style = {
   container: "h-full overflow-auto bg-canvas text-black",
   table: "table-auto w-full border-collapse",
   header:
-    "p-2 border-b border-l border-r border-bd-disabled bg-disabled  text-sm text-center",
+    "p-2 border-b border-l border-r border-bd-disabled bg-disabled text-sm text-center",
   body: "border border-bd-disabled text-sm text-center",
   emptyBody: "text-gray-500 w-full text-center text-sm items-center mt-30",
 };

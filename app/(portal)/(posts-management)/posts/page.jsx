@@ -7,13 +7,13 @@ import PageTitle from "../../component/PageTitle";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 
-import { fetchPostsSearch, fetchPosts } from "./actions";
+import { postListSearchAPI, postListAPI } from "./actions";
 import PostsSearchBox from "./component/SearchBox";
 
 export default function PostListPage() {
   const router = useRouter();
-  const searchOptions = fetchPostsSearch();
-  const posts = fetchPosts();
+  const searchOptions = postListSearchAPI();
+  const posts = postListAPI();
 
   /// data status
   const [loading, setLoading] = useState(false);

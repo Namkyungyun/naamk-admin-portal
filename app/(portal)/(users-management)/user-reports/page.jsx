@@ -8,12 +8,12 @@ import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import UserReportSearchBox from "./component/SearchBox";
 
-import { fetchUserReportsSearch, fetchUserReports } from "./actions";
+import { userReportListSearchAPI, userReportListAPI } from "./actions";
 
 export default function UserReportListPage() {
   const router = useRouter();
-  const userReports = fetchUserReports();
-  const searchOptions = fetchUserReportsSearch();
+  const userReports = userReportListAPI();
+  const searchOptions = userReportListSearchAPI();
 
   /// data status
   const [loading, setLoading] = useState(false);

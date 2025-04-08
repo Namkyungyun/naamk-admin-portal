@@ -14,20 +14,20 @@ import {
 import Loading from "@/app/(portal)/component/Loading";
 
 import {
-  fetchPenaltyUpdate,
-  fetchUserReportDetailSearch,
-  fetchUserReport,
-  fetchUserReportHist,
+  userPenaltyUpdateAPI,
+  userReportDetailSearchAPI,
+  userReportDetailAPI,
+  userReportHistAPI,
 } from "../actions";
 
 export default function UserReportDetailPage() {
   const { userId } = useParams();
   const { showPenaltyMessage, showMessage } = useToastMessage();
 
-  const userReport = fetchUserReport();
-  const searchOptions = fetchUserReportDetailSearch();
-  const userReportHist = fetchUserReportHist();
-  const penaltyUpdate = fetchPenaltyUpdate();
+  const userReport = userReportDetailAPI();
+  const searchOptions = userReportDetailSearchAPI();
+  const userReportHist = userReportHistAPI();
+  const penaltyUpdate = userPenaltyUpdateAPI();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);

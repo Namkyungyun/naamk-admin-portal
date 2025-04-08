@@ -11,10 +11,10 @@ const apiClient = () => {
 
   // 클라이언트 실행 시점에서만 토큰 주입
   instance.interceptors.request.use((config) => {
-    // const token = getAccessToken();
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    const token = getAccessToken();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   });
 

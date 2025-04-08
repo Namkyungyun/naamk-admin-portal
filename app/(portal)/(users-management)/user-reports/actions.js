@@ -4,7 +4,7 @@ const api = apiClient();
 const prefixUrl = "/user-reports"
 
 /// list page
-export function fetchUserReportsSearch() {
+export function userReportListSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -21,12 +21,11 @@ export function fetchUserReportsSearch() {
 
 
   const fetchAPI = async () => {
-    return await api
-      .get(`${prefixUrl}/search-options`)
+    const url = `${prefixUrl}/search-options`;
+
+    return await api.get(url)
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getSearchDatas success", entity);
-        
         return entity;
       })
       .catch((e)=> console.log(e));
@@ -35,7 +34,7 @@ export function fetchUserReportsSearch() {
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions, fetchAPI };
 }
 
-export function fetchUserReports() {
+export function userReportListAPI() {
   const responseData = (router) => [
     { name: "rowNum", label: "구분" },
     { name: "id", label: "", hidden: true },
@@ -55,14 +54,13 @@ export function fetchUserReports() {
   ];
 
   const fetchAPI = async (data) => {
-    return await api
-      .post(`${prefixUrl}/users`, data, {
+    const url = `${prefixUrl}/list`;
+    
+    return await api.post(url, data, {
           params: {page: data.pageNo-1, size: data.pageSize}
       })
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getUsers success", entity);
-
         return entity;
       })
       .catch((e)=> console.log(e));
@@ -73,7 +71,7 @@ export function fetchUserReports() {
 
 
 /// detail page
-export function fetchUserReportDetailSearch() {
+export function userReportDetailSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -92,7 +90,7 @@ export function fetchUserReportDetailSearch() {
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions };
 }
 
-export function fetchUserReport () {
+export function userReportDetailAPI () {
   const responseData = {
     id: null,
     reportedUserId: null,
@@ -108,11 +106,11 @@ export function fetchUserReport () {
   };
 
   const fetchAPI = async (userId) => {
-    return await api.get(`${prefixUrl}/users/${userId}`)
+    const url = `${prefixUrl}/users/${userId}`;
+
+    return await api.get(url)
     .then((response) => {
       const entity = response.data.body.entity;
-      console.log("getUserById success", entity);
-
       return entity;
     })
     .catch((e) =>  console.log(e));
@@ -121,7 +119,7 @@ export function fetchUserReport () {
   return {responseData, fetchAPI};
 }
 
-export function fetchUserReportHist() {
+export function userReportHistAPI() {
   const responseData = [
     { name: "rowNum", label: "구분" },
     { name: "id", label: "", hidden: true },
@@ -132,15 +130,15 @@ export function fetchUserReportHist() {
   ];
 
   const fetchAPI = async (userId, data) => {
-    return await api.get(`${prefixUrl}/users/${userId}/report-hist`,
+    const url =`${prefixUrl}/${userId}/report-hist`;
+
+    return await api.get(url,
       {
         params: {page: data.pageNo-1, size: data.pageSize}
       }
     )
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getUserReportHist success", entity);
-  
         return entity;
       })
       .catch((e) =>  console.log(e));
@@ -150,17 +148,16 @@ export function fetchUserReportHist() {
 
 }
 
-export function fetchPenaltyUpdate() {
+export function userPenaltyUpdateAPI() {
   const requestData = { isActive: null, description: null, };
 
   const fetchAPI = async (userId, data) => {
     const penaltyType = 'user';
+    const url = `/penalty-hist/${penaltyType}/${userId}`;
 
-    return await api.post(`/penalty-hist/${penaltyType}/${userId}`, data, )
+    return await api.post(url, data, )
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getUserPenaltyHist success", entity);
-
         return entity;
       })
       .catch((e) =>  console.log(e));

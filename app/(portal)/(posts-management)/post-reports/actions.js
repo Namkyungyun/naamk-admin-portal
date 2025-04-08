@@ -4,7 +4,7 @@ const api = apiClient();
 const prefixUrl = "/post-reports"
 
 /// list page
-export function fetchPostReportsSearch() {
+export function postReportListSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -22,9 +22,10 @@ export function fetchPostReportsSearch() {
 
   const fetchAPI = async () => {
     try {
-      const response =  await api.get(`${prefixUrl}/search-options`);
-      
+      const url = `${prefixUrl}/search-options`;
+      const response =  await api.get(url);
       const entity = response.data.body.entity;
+
       if (!entity) {
         throw new Error("No Entity data");
       }
@@ -40,7 +41,7 @@ export function fetchPostReportsSearch() {
     defaultPageOptionIndex, pageOptions, fetchAPI };
 }
 
-export function fetchPostReports() {
+export function postReportListAPI() {
   const responseData = (router) =>[
     { name: "rowNum", label: "구분", widthKey: 'w-[10px]' },
     { name: "id", label: "신고SEQ", hidden: true},
@@ -63,7 +64,8 @@ export function fetchPostReports() {
 
   const fetchAPI = async(data) => {
     try {
-      const response = await api.post(`${prefixUrl}/posts`, data, {
+      const url = `${prefixUrl}/list`;
+      const response = await api.post(url, data, {
             params: {page: data.pageNo-1, size: data.pageSize}
         });
 
@@ -82,7 +84,7 @@ export function fetchPostReports() {
 }
 
 /// detail page
-export function fetchPostReportSearch() {
+export function postReportDetailSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -101,7 +103,7 @@ export function fetchPostReportSearch() {
 }
 
 
-export function fetchPostReport() {
+export function postReportDetailAPI() {
   const responseData = {
     id: null, // 신고SEQ
     report: null, // 신고상태 valu (true, false)
@@ -126,8 +128,6 @@ export function fetchPostReport() {
     return await api.get(`${prefixUrl}/posts/${postId}`)
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getPostReportById success", entity);
-
         return entity;
       })
       .catch((e) =>  console.log(e));
@@ -136,7 +136,7 @@ export function fetchPostReport() {
   return {responseData, fetchAPI };
 }
 
-export function fetchPostReportHist() {
+export function postReportHistAPI() {
   const responseData = [
   { name: "rowNum", label: "구분" },
   { name: "id", label: "", hidden: true },
@@ -147,15 +147,11 @@ export function fetchPostReportHist() {
 ];
 
   const fetchAPI = async(postId, data) => {
-    return await api.get(`${prefixUrl}/posts/${postId}/report-hist`,
-      {
-        params: {page: data.pageNo-1, size: data.pageSize}
-      }
-    )
+    const url = `${prefixUrl}/${postId}/report-hist`;
+
+    return await api.get(url,{ params: {page: data.pageNo-1, size: data.pageSize} })
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getPostReportHist success", entity);
-  
         return entity;
       })
       .catch((e) =>  console.log(e));
@@ -164,16 +160,16 @@ export function fetchPostReportHist() {
   return {responseData, fetchAPI};
 }
 
-export function fetchPenaltyUpdate() {
+export function postPenaltyUpdateAPI() {
   const requestData = {};
 
   const fetchAPI = async(postId, data) => {
     const penaltyType = 'post';
-    return await api.post(`/penalty-hist/${penaltyType}/${postId}`, data, )
+    const url = `/penalty-hist/${penaltyType}/${postId}`;
+
+    return await api.post(url, data, )
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("updatePenaltyStatus success", entity);
-
         return entity;
       })
       .catch((e) =>  console.log(e));

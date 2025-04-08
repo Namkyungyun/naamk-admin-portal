@@ -17,20 +17,20 @@ import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import Loading from "@/app/(portal)/component/Loading";
 
 import {
-  fetchPostSearch,
-  fetchPost,
-  fetchPenaltyHist,
-  fetchPenaltyUpdate,
+  postDetailSearchAPI,
+  postDetailAPI,
+  postPenaltyHistAPI,
+  postPenaltyUpdateAPI,
 } from "../actions";
 
 export default function PostDetailPage() {
   const { postId } = useParams();
   const { showPenaltyMessage, showMessage } = useToastMessage();
 
-  const searchOptions = fetchPostSearch();
-  const post = fetchPost();
-  const penaltyHist = fetchPenaltyHist();
-  const penaltyUpdate = fetchPenaltyUpdate();
+  const searchOptions = postDetailSearchAPI();
+  const post = postDetailAPI();
+  const penaltyHist = postPenaltyHistAPI();
+  const penaltyUpdate = postPenaltyUpdateAPI();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);

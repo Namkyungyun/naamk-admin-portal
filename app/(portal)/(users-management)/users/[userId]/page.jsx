@@ -18,20 +18,20 @@ import UserPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 import Loading from "@/app/(portal)/component/Loading";
 
 import {
-  fetchUser,
-  fetchPenaltyHist,
-  fetchUserSearch,
-  fetchPenaltyUpdate,
+  userDetailAPI,
+  userPenaltyHistAPI,
+  userDetailSearchAPI,
+  userPenaltyUpdateAPI,
 } from "../actions";
 
 export default function UserDetailPage() {
   const { userId } = useParams();
   const { showPenaltyMessage, showMessage } = useToastMessage();
 
-  const user = fetchUser();
-  const penaltyHist = fetchPenaltyHist();
-  const searchOptions = fetchUserSearch();
-  const penaltyUpdate = fetchPenaltyUpdate();
+  const user = userDetailAPI();
+  const penaltyHist = userPenaltyHistAPI();
+  const searchOptions = userDetailSearchAPI();
+  const penaltyUpdate = userPenaltyUpdateAPI();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);

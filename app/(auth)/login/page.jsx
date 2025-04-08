@@ -6,7 +6,8 @@ import useAuth from "@/app/hooks/checkAuth";
 
 export default function LoginPage() {
   const auth = useAuth();
-  const [email, setEmail] = useState("");
+  const api = apiClient();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -15,12 +16,26 @@ export default function LoginPage() {
     setError("");
 
     try {
-      // const response = await apiClient.post("/login", { email, password });
-      // auth.login(response.data.accessToken);
-      auth.login("accesstoken");
+      const result = await fetchAPI();
+      auth.login(result.accessToken);
     } catch (err) {
       setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
     }
+  };
+
+  const fetchAPI = async () => {
+    return await api
+      .post("/login", {
+        username: username,
+        password: password,
+      })
+      .then((response) => {
+        const entity = response.data.body.entity;
+        return entity;
+      })
+      .catch((e) => {
+        setError("로그인 실패. 이메일 또는 비밀번호를 확인하세요.");
+      });
   };
 
   return (
@@ -33,8 +48,8 @@ export default function LoginPage() {
           <input
             type="string"
             placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <input
             type="password"

@@ -14,20 +14,20 @@ import {
 import Loading from "@/app/(portal)/component/Loading";
 
 import {
-  fetchPostReportSearch,
-  fetchPostReport,
-  fetchPostReportHist,
-  fetchPenaltyUpdate,
+  postReportDetailSearchAPI,
+  postReportDetailAPI,
+  postReportHistAPI,
+  postPenaltyUpdateAPI,
 } from "../actions";
 
 export default function PostReportDetailPage() {
   const { postId } = useParams();
   const { showPenaltyMessage, showMessage } = useToastMessage();
 
-  const searchOptions = fetchPostReportSearch();
-  const postReport = fetchPostReport();
-  const postReportHist = fetchPostReportHist();
-  const penaltyUpdate = fetchPenaltyUpdate();
+  const searchOptions = postReportDetailSearchAPI();
+  const postReport = postReportDetailAPI();
+  const postReportHist = postReportHistAPI();
+  const penaltyUpdate = postPenaltyUpdateAPI();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);

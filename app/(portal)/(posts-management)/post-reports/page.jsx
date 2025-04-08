@@ -10,13 +10,13 @@ import PostReportSearchBox from "./component/SearchBox";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 
-import { fetchPostReportsSearch, fetchPostReports } from "./actions";
+import { postReportListSearchAPI, postReportListAPI } from "./actions";
 
 export default function PostReportListPage() {
   const router = useRouter();
 
-  const postReports = fetchPostReports();
-  const searchOptions = fetchPostReportsSearch();
+  const postReports = postReportListAPI();
+  const searchOptions = postReportListSearchAPI();
 
   /// data status
   const { showMessage } = useToastMessage();

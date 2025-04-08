@@ -1,11 +1,11 @@
 import apiClient from '@/app/lib/apiClient';
 
 const api = apiClient();
-const prefixUrl = "/user-management"
+const prefixUrl = "/users"
 
 
 /// list page
-export function fetchUsersSearch() {
+export function userListSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -22,12 +22,11 @@ export function fetchUsersSearch() {
 
 
   const fetchAPI = async () => {
-    return await api
-      .get(`${prefixUrl}/search-options`)
+    const url = `${prefixUrl}/search-options`;
+
+    return await api.get(url)
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getSearchDatas success", entity);
-        
         return entity;
       })
       .catch((e)=> console.log(e));
@@ -36,7 +35,7 @@ export function fetchUsersSearch() {
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions, fetchAPI };
 }
 
-export function fetchUsers() {
+export function UserListAPI() {
   const responseData = (router) => [
     { name: "rowNum", label: "구분" },
     { name: "id", label: "", hidden: true },
@@ -54,14 +53,13 @@ export function fetchUsers() {
   ];
 
   const fetchAPI = async (data) => {
-    return await api
-        .post(`${prefixUrl}/users`, data, {
+    const url = `${prefixUrl}/list`;
+
+    return await api.post(url, data, {
           params: {page: data.pageNo-1, size: data.pageSize}
         })
         .then((response) => {
           const entity = response.data.body.entity;
-          console.log("getUsers success", entity);
-
           return entity;
         })
         .catch((e)=> console.log(e));
@@ -72,7 +70,7 @@ export function fetchUsers() {
 
 
 
-export function fetchUserSearch() {
+export function userDetailSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -90,7 +88,7 @@ export function fetchUserSearch() {
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions };
 }
 
-export function fetchUser() {
+export function userDetailAPI() {
   const responseData =  {
     id: null,
     name: null,
@@ -105,11 +103,11 @@ export function fetchUser() {
   };
 
   const fetchAPI = async (userId) => {
-    return await api.get(`${prefixUrl}/users/${userId}`)
+    const url = `${prefixUrl}/${userId}`;
+
+    return await api.get(url)
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getUserById success", entity);
-
         return entity;
       })
       .catch((e) =>  console.log(e));
@@ -120,7 +118,7 @@ export function fetchUser() {
 }
 
 
-export function fetchPenaltyHist() {
+export function userPenaltyHistAPI() {
   const responseData =[
     { name: "rowNum", label: "구분" },
     { name: "id", label: "", hidden: true },
@@ -138,11 +136,9 @@ export function fetchPenaltyHist() {
   ];
 
   const fetchAPI = async (userId, data) => {
-    return await api.get(`/penalty-hist/user/${userId}`,
-      {
-        params: {page: data.pageNo-1, size: data.pageSize}
-      }
-    )
+    const url = `/penalty-hist/user/${userId}`;
+
+    return await api.get(url, { params: {page: data.pageNo-1, size: data.pageSize} })
     .then((response) => {
       const entity = response.data.body.entity;
       console.log("getUserPenaltyHist success", entity);
@@ -155,13 +151,14 @@ export function fetchPenaltyHist() {
   return {responseData, fetchAPI }
 }
 
-export function fetchPenaltyUpdate() {
+export function userPenaltyUpdateAPI() {
   const requestData = { isActive: null, description: null, };
 
   const fetchAPI = async (userId, data) => {
     const penaltyType = 'user';
+    const url = `/penalty-hist/${penaltyType}/${userId}`;
 
-    return await api.post(`/penalty-hist/${penaltyType}/${userId}`, data, )
+    return await api.post(url, data, )
       .then((response) => {
         const entity = response.data.body.entity;
         console.log("updatePenaltyStatus success", entity);

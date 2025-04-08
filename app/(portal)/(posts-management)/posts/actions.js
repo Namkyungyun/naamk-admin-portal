@@ -1,10 +1,10 @@
 import apiClient from '@/app/lib/apiClient';
 
 const api = apiClient();
-const prefixUrl = "/post-management"
+const prefixUrl = "/posts"
 
 /// list page
-export function fetchPostsSearch() {
+export function postListSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -21,12 +21,11 @@ export function fetchPostsSearch() {
 
 
   const fetchAPI = async () => {
-    return await api
-      .get(`${prefixUrl}/search-options`)
+    const url = `${prefixUrl}/search-options`;
+
+    return await api.get(url)
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getSearchDatas success", entity);
-        
         return entity;
       })
       .catch((e)=> console.log(e));
@@ -35,7 +34,9 @@ export function fetchPostsSearch() {
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions, fetchAPI };
 }
 
-export function fetchPosts() {
+
+
+export function postListAPI() {
   const responseData = (router) => [
     { name: "rowNum", label: "구분" },
     { name: "createdAt", label: "등록 일시" },
@@ -52,15 +53,12 @@ export function fetchPosts() {
     { name: "penaltyStatus", label: "제재 상태" },
   ];
 
-  const fetchAPI = async (data) => { 
-    return await api
-      .post(`${prefixUrl}/posts`, data, {
-          params: {page: data.pageNo-1, size: data.pageSize}
-      })
+  const fetchAPI = async (data) => {
+    const url = `${prefixUrl}/list`;
+
+    return await api.post(url, data, { params: {page: data.pageNo-1, size: data.pageSize}})
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getPosts success", entity);
-
         return entity;
       })
       .catch((e)=> console.log(e));
@@ -69,7 +67,9 @@ export function fetchPosts() {
     return {responseData, fetchAPI};
 }
 
-export function fetchPostSearch() {
+
+
+export function postDetailSearchAPI() {
   const visiblePageNo =  5;
   const defaultPageOptionIndex = 1;
 
@@ -87,7 +87,9 @@ export function fetchPostSearch() {
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions };
 }
 
-export function fetchPost() {
+
+
+export function postDetailAPI() {
   const responseData = {
     postId: null,
     createdAt: null,
@@ -107,11 +109,11 @@ export function fetchPost() {
   };
 
   const fetchAPI = async(postId) => {
-    return await api.get(`${prefixUrl}/posts/${postId}`)
+    const url = `${prefixUrl}/${postId}`;
+
+    return await api.get(url)
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getPostById success", entity);
-
         return entity;
       })
       .catch((e) =>  console.log(e));
@@ -120,7 +122,10 @@ export function fetchPost() {
   return {responseData, fetchAPI};
 }
 
-export function fetchPenaltyHist() {
+
+
+
+export function postPenaltyHistAPI() {
   const responseData = [
     { name: "rowNum", label: "구분" },
     { name: "id", label: "", hidden: true },
@@ -139,13 +144,11 @@ export function fetchPenaltyHist() {
   
   const fetchAPI = async(postId, data) => {
     const penaltyType = 'post';
-    return await api.get(`/penalty-hist/${penaltyType}/${postId}`,{
-      params: {page: data.pageNo-1, size: data.pageSize}
-    })
+    const url = `/penalty-hist/${penaltyType}/${postId}`;
+
+    return await api.get(url,{ params: {page: data.pageNo-1, size: data.pageSize} })
       .then((response) => {
         const entity = response.data.body.entity;
-        console.log("getPostPenaltyHist success", entity);
-  
         return entity;
       })
       .catch((e) =>  console.log(e));
@@ -154,21 +157,22 @@ export function fetchPenaltyHist() {
   return {responseData, fetchAPI};
 }
 
-export function fetchPenaltyUpdate() {
+export function postPenaltyUpdateAPI() {
   const requestData = {
     isActive: null,
     description: null,
   };
 
   const fetchAPI = async(postId, data) => {
-    return await api.post(`/penalty-hist/post/${postId}`, data, )
-    .then((response) => {
-      const entity = response.data.body.entity;
-      console.log("updatePenaltyStatus success", entity);
+    const penaltyType = 'post';
+    const url = `/penalty-hist/${penaltyType}/${postId}`;
 
-      return entity;
-    })
-    .catch((e) =>  console.log(e));
+    return await api.post(url, data)
+      .then((response) => {
+        const entity = response.data.body.entity;
+        return entity;
+      })
+      .catch((e) =>  console.log(e));
   }
 
   return {requestData, fetchAPI};

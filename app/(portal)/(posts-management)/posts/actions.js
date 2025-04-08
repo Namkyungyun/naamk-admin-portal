@@ -37,19 +37,19 @@ export function fetchPostsSearch() {
 
 export function fetchPosts() {
   const responseData = (router) => [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "createdAt", variableLabel: "등록 일시" },
-    { variableName: "userName", variableLabel: "작성자ID" },
-    { variableName: "channelName", variableLabel: "채널ID" },
-    { variableName: "type", variableLabel: "글 타입" },
+    { name: "rowNum", label: "구분" },
+    { name: "createdAt", label: "등록 일시" },
+    { name: "userName", label: "작성자ID" },
+    { name: "channelName", label: "채널ID" },
+    { name: "type", label: "글 타입" },
     {
-      variableName: "content",
-      variableLabel: "본문 내용",
+      name: "content",
+      label: "본문 내용",
       url: "id",
       onButton: (url) => router.push(`/posts/${url}`),
     },
-    { variableName: "id", variableLabel: "게시글 ID" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
+    { name: "id", label: "게시글 ID" },
+    { name: "penaltyStatus", label: "제재 상태" },
   ];
 
   const fetchAPI = async (data) => { 
@@ -122,19 +122,19 @@ export function fetchPost() {
 
 export function fetchPenaltyHist() {
   const responseData = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "createdAt", variableLabel: "처리 일시" },
-    { variableName: "createdBy", variableLabel: "처리자" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
-    { variableName: "description", variableLabel: "제재사유" },
+    { name: "rowNum", label: "구분" },
+    { name: "id", label: "", hidden: true },
+    { name: "createdAt", label: "처리 일시" },
+    { name: "createdBy", label: "처리자" },
+    { name: "penaltyStatus", label: "처리 상태" },
+    { name: "description", label: "제재사유" },
     {
-      variableName: "isExistReport",
-      variableLabel: "신고보기",
+      name: "isExistReport",
+      label: "신고보기",
       url: "linkedId",
       onButton: (url) => window.open(`/post-reports/${url}`, "_blank"), // TODO 사용자 신고관리 상세
     },
-    { variableName: "linkedId", variableLabel: "", hidden: true },
+    { name: "linkedId", label: "", hidden: true },
   ];
   
   const fetchAPI = async(postId, data) => {

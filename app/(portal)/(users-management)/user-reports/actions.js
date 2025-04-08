@@ -37,21 +37,21 @@ export function fetchUserReportsSearch() {
 
 export function fetchUserReports() {
   const responseData = (router) => [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "latestCreatedAt", variableLabel: "최근신고일시" },
-    { variableName: "reportedUserId", variableLabel: "", hidden: true },
+    { name: "rowNum", label: "구분" },
+    { name: "id", label: "", hidden: true },
+    { name: "latestCreatedAt", label: "최근신고일시" },
+    { name: "reportedUserId", label: "", hidden: true },
     {
-      variableName: "reportedUserName",
-      variableLabel: "대상자ID",
+      name: "reportedUserName",
+      label: "대상자ID",
       url: "reportedUserId",
       onButton: (url) => router.push(`/user-reports/${url}`),
     },
-    { variableName: "reportCount", variableLabel: "신고 건수" },
-    { variableName: "reportStatus", variableLabel: "신고 상태" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
-    { variableName: "penaltyCreatedAt", variableLabel: "처리일시" },
-    { variableName: "penaltyCreatedBy", variableLabel: "처리자" },
+    { name: "reportCount", label: "신고 건수" },
+    { name: "reportStatus", label: "신고 상태" },
+    { name: "penaltyStatus", label: "처리 상태" },
+    { name: "penaltyCreatedAt", label: "처리일시" },
+    { name: "penaltyCreatedBy", label: "처리자" },
   ];
 
   const fetchAPI = async (data) => {
@@ -123,12 +123,12 @@ export function fetchUserReport () {
 
 export function fetchUserReportHist() {
   const responseData = [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "reportCreatedAt", variableLabel: "신고일시" },
-    { variableName: "reportCreatedBy", variableLabel: "신고자" },
-    { variableName: "reportStatus", variableLabel: "신고 상태" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
+    { name: "rowNum", label: "구분" },
+    { name: "id", label: "", hidden: true },
+    { name: "reportCreatedAt", label: "신고일시" },
+    { name: "reportCreatedBy", label: "신고자" },
+    { name: "reportStatus", label: "신고 상태" },
+    { name: "penaltyStatus", label: "처리 상태" },
   ];
 
   const fetchAPI = async (userId, data) => {

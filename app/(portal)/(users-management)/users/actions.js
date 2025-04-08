@@ -38,19 +38,19 @@ export function fetchUsersSearch() {
 
 export function fetchUsers() {
   const responseData = (router) => [
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
+    { name: "rowNum", label: "구분" },
+    { name: "id", label: "", hidden: true },
     {
-      variableName: "name",
-      variableLabel: "회원ID",
+      name: "name",
+      label: "회원ID",
       url: "id",
       onButton: (url) => router.push(`/users/${url}`),
     },
-    { variableName: "nickname", variableLabel: "사용자명" },
-    { variableName: "userStatus", variableLabel: "계정 상태" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
-    { variableName: "email", variableLabel: "이메일" },
-    { variableName: "createdAt", variableLabel: "가입일시" },
+    { name: "nickname", label: "사용자명" },
+    { name: "userStatus", label: "계정 상태" },
+    { name: "penaltyStatus", label: "제재 상태" },
+    { name: "email", label: "이메일" },
+    { name: "createdAt", label: "가입일시" },
   ];
 
   const fetchAPI = async (data) => {
@@ -122,19 +122,19 @@ export function fetchUser() {
 
 export function fetchPenaltyHist() {
   const responseData =[
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "", hidden: true },
-    { variableName: "createdAt", variableLabel: "처리일시" },
-    { variableName: "createdBy", variableLabel: "처리자" },
-    { variableName: "penaltyStatus", variableLabel: "제재 상태" },
-    { variableName: "description", variableLabel: "제재사유" },
+    { name: "rowNum", label: "구분" },
+    { name: "id", label: "", hidden: true },
+    { name: "createdAt", label: "처리일시" },
+    { name: "createdBy", label: "처리자" },
+    { name: "penaltyStatus", label: "제재 상태" },
+    { name: "description", label: "제재사유" },
     {
-      variableName: "isExistReport",
-      variableLabel: "신고보기",
+      name: "isExistReport",
+      label: "신고보기",
       url: "linkedId",
       onButton: (url) => window.open(`/user-reports/${url}`, "_blank"), // TODO 사용자 신고관리 상세
     },
-    { variableName: "linkedId", variableLabel: "", hidden: true },
+    { name: "linkedId", label: "", hidden: true },
   ];
 
   const fetchAPI = async (userId, data) => {

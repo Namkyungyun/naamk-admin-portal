@@ -21,52 +21,61 @@ export function fetchPostReportsSearch() {
 
 
   const fetchAPI = async () => {
-    return await api
-      .get(`${prefixUrl}/search-options`)
-      .then((response) => {
-        const entity = response.data.body.entity;
-        console.log("getSearchDatas success", entity);
-        
-        return entity;
-      })
-      .catch((e)=> console.log(e));
+    try {
+      const response =  await api.get(`${prefixUrl}/search-options`);
+      
+      const entity = response.data.body.entity;
+      if (!entity) {
+        throw new Error("No Entity data");
+      }
+  
+      return entity;
+
+    } catch(e) {
+      throw e;
+    }
   };
 
-  return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions, fetchAPI };
+  return { visiblePageNo, defaultPageParam, 
+    defaultPageOptionIndex, pageOptions, fetchAPI };
 }
 
 export function fetchPostReports() {
   const responseData = (router) =>[
-    { variableName: "rowNum", variableLabel: "구분" },
-    { variableName: "id", variableLabel: "신고SEQ", hidden: true },
-    { variableName: "latestCreatedAt", variableLabel: "최근 신고 일시" },
+    { name: "rowNum", label: "구분", widthKey: 'w-[10px]' },
+    { name: "id", label: "신고SEQ", hidden: true},
+    { name: "latestCreatedAt", label: "최근 신고 일시", widthKey: 'w-[30px]' },
     {
-      variableName: "reportedPostId",
-      variableLabel: "게시글ID",
+      name: "reportedPostId",
+      label: "게시글ID",
+      widthKey: 'w-[10px]',
       url: "reportedPostId",
       onButton: (url) => router.push(`/post-reports/${url}`),
     },
-    { variableName: "reportedUserName", variableLabel: "작성자ID" },
-    { variableName: "reportedChannelName", variableLabel: "채널ID" },
-    { variableName: "reportCount", variableLabel: "신고 건수" },
-    { variableName: "reportStatus", variableLabel: "신고 상태" },
-    { variableName: "penaltyStatus", variableLabel: "처리 상태" },
-    { variableName: "penaltyCreatedAt", variableLabel: "처리일시" },
-    { variableName: "penaltyCreatedBy", variableLabel: "처리자" },
+    { name: "reportedUserName", label: "작성자ID", widthKey: 'w-[10px]'  },
+    { name: "reportedChannelName", label: "채널ID", widthKey: 'w-[10px]' },
+    { name: "reportCount", label: "신고 건수",widthKey: 'w-[10px]'  },
+    { name: "reportStatus", label: "신고 상태",widthKey: 'w-[20px]'  },
+    { name: "penaltyStatus", label: "처리 상태",widthKey: 'w-[10px]'  },
+    { name: "penaltyCreatedAt", label: "처리일시",widthKey: 'w-[30px]' },
+    { name: "penaltyCreatedBy", label: "처리자",widthKey: 'w-[20px]' },
   ];
 
   const fetchAPI = async(data) => {
-    return await api
-    .post(`${prefixUrl}/posts`, data, {
-        params: {page: data.pageNo-1, size: data.pageSize}
-    })
-    .then((response) => {
-      const entity = response.data.body.entity;
-      console.log("getPosts success", entity);
+    try {
+      const response = await api.post(`${prefixUrl}/posts`, data, {
+            params: {page: data.pageNo-1, size: data.pageSize}
+        });
 
-      return entity;
-    })
-    .catch((e)=> console.log(e));
+      const entity = response.data.body.entity;
+      if (!entity) {
+        throw new Error("No Entity data");
+      }
+
+      return response.data.body.entity
+    } catch(e) {
+      throw e;
+    }
   }
 
   return {responseData, fetchAPI }
@@ -88,9 +97,9 @@ export function fetchPostReportSearch() {
     pageSize: pageOptions[defaultPageOptionIndex].value,
   };
 
-
   return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions };
 }
+
 
 export function fetchPostReport() {
   const responseData = {
@@ -129,12 +138,12 @@ export function fetchPostReport() {
 
 export function fetchPostReportHist() {
   const responseData = [
-  { variableName: "rowNum", variableLabel: "구분" },
-  { variableName: "id", variableLabel: "", hidden: true },
-  { variableName: "reportCreatedAt", variableLabel: "신고일시" },
-  { variableName: "reportCreatedBy", variableLabel: "신고자" },
-  { variableName: "reportStatus", variableLabel: "신고 상태" },
-  { variableName: "penaltyStatus", variableLabel: "처리 상태" },
+  { name: "rowNum", label: "구분" },
+  { name: "id", label: "", hidden: true },
+  { name: "reportCreatedAt", label: "신고일시" },
+  { name: "reportCreatedBy", label: "신고자" },
+  { name: "reportStatus", label: "신고 상태" },
+  { name: "penaltyStatus", label: "처리 상태" },
 ];
 
   const fetchAPI = async(postId, data) => {

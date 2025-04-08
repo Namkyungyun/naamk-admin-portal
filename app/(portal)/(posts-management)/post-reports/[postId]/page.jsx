@@ -2,7 +2,7 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-import { useToastMessage } from "@/app/(portal)/component/Message";
+import { useToastMessage } from "@/app/provider/MessageProvider";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import PostReportDetailGrid from "../component/DetailGrid";

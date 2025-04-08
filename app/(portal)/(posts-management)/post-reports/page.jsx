@@ -1,7 +1,9 @@
 "use client";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useToastMessage } from "@/app/provider/MessageProvider";
 
 import PageTitle from "../../component/PageTitle";
 import PostReportSearchBox from "./component/SearchBox";
@@ -12,77 +14,104 @@ import { fetchPostReportsSearch, fetchPostReports } from "./actions";
 
 export default function PostReportListPage() {
   const router = useRouter();
-  const searchOptions = fetchPostReportsSearch();
+
   const postReports = fetchPostReports();
+  const searchOptions = fetchPostReportsSearch();
 
   /// data status
-  const [loading, setLoading] = useState(false);
+  const { showMessage } = useToastMessage();
   const [refresh, setRefresh] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  /// search data
-  const [initSearchData, setInitSearchData] = useState({});
+  const queryClient = useQueryClient();
+  const commonQueryConfig = {
+    enabled: false, // 초기 자동 호출
+    retry: false,
+    cacheTime: 0, // 캐시가 메모리에 유지되는 시간
+    staleTime: 0, // 데이터가 신선한 상태로 유지되는 시간
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  };
+
+  /////// search option
+  const { data: searchOptionsData, refetch: refetchSearchOptions } = useQuery({
+    queryKey: ["postReportSearchOptions"],
+    queryFn: searchOptions.fetchAPI,
+    ...commonQueryConfig,
+  });
+  /// search option result
+  const initSearchData = searchOptionsData || {};
   const [reqSearchData, setReqSearchData] = useState(
     searchOptions.defaultPageParam
   );
 
-  /// pagination data
-  const [totalPageNo, setTotalPageNo] = useState(0);
-  const [totalItemCount, setTotalItemCount] = useState(0);
-
-  /// table result
+  /////// search
+  const { data: postReportsData, refetch: refetchPostReports } = useQuery({
+    queryKey: ["postReports", reqSearchData],
+    queryFn: () => postReports.fetchAPI(reqSearchData),
+    ...commonQueryConfig,
+  });
+  /// search result
   const tableHeader = postReports.responseData(router);
-  const [tableBody, setTableBody] = useState([]);
+  const tableBody = refresh ? [] : postReportsData?.content || [];
+  const totalPageNo = refresh ? 0 : postReportsData?.totalPages || 0;
+  const totalItemCount = refresh ? 0 : postReportsData?.totalElements || 0;
 
   /// init API
-  const onInit = () => {
-    const fetchInitData = async () => {
-      setLoading(true);
+  const onFetchInit = async () => {
+    setLoading(true);
 
-      const data = await Promise.resolve(searchOptions.fetchAPI());
-      setInitSearchData(data);
+    try {
+      const result = await refetchSearchOptions();
+      if (result.error) throw result.error; // ✅ 수동 처리
+    } catch (e) {
+      onError();
+    }
 
-      setFetchedInit(true);
-      setLoading(false);
-    };
-
-    fetchInitData();
+    setFetchedInit(true);
+    setLoading(false);
   };
 
   /// search API
-  const onSearch = (data) => {
-    const fetchResultData = async () => {
-      setLoading(true);
+  const onFetchSearch = async () => {
+    setLoading(true);
 
-      /// Search Result API fetch
-      const entity = await Promise.resolve(postReports.fetchAPI(data));
-
-      setTotalPageNo(entity.totalPages);
-      setTotalItemCount(entity.totalElements);
-      setTableBody(entity.content);
-
-      setLoading(false);
-    };
-
-    fetchResultData();
-  };
-
-  const onPageChange = (page) => {
-    setReqSearchData((prev) => ({
-      ...prev,
-      pageNo: page >= totalPageNo ? totalPageNo : page,
-    }));
-
-    if (fetchedInit) {
-      setRefresh(true);
+    try {
+      const result = await refetchPostReports();
+      if (result.error) throw result.error; // ✅ 수동 처리
+    } catch (err) {
+      queryClient.setQueryData(["postReports", reqSearchData], null); // 또는 []
+      onError();
     }
+
+    setRefresh(false);
+    setLoading(false);
   };
 
-  const onPageItemCountChange = (count) => {
+  /// API error message
+  const onError = () => {
+    showMessage({ type: "error", content: "데이터 조회에 실패하였습니다." });
+  };
+
+  const onSearch = ({ reqData, pageNo, pageSize }) => {
+    let obj = {};
+
+    if (reqData) {
+      obj = { ...reqData };
+    }
+
+    if (pageNo) {
+      obj.pageNo = pageNo;
+    }
+
+    if (pageSize) {
+      obj.pageSize = pageSize;
+    }
+
     setReqSearchData((prev) => ({
       ...prev,
-      pageNo: 1,
-      pageSize: count,
+      ...obj,
     }));
 
     if (fetchedInit) {
@@ -92,15 +121,15 @@ export default function PostReportListPage() {
 
   /// init render
   useEffect(() => {
-    onInit();
+    onFetchInit();
   }, []);
 
+  // rebuild render
   useEffect(() => {
     if (refresh) {
-      onSearch(reqSearchData);
-      setRefresh(false);
+      onFetchSearch();
     }
-  }, [refresh, reqSearchData]);
+  }, [reqSearchData, refresh]);
 
   return (
     <>
@@ -114,9 +143,7 @@ export default function PostReportListPage() {
             fetched={fetchedInit}
             fetchedSearchData={initSearchData}
             onSearch={(data) => {
-              reqSearchData.pageNo = 1;
-              setReqSearchData({ ...reqSearchData, ...data });
-              onSearch({ ...reqSearchData, ...data });
+              onSearch({ reqData: data, pageNo: 1 });
             }}
           />
         </div>
@@ -128,7 +155,7 @@ export default function PostReportListPage() {
             totalItemCount={totalItemCount}
             optionData={searchOptions.pageOptions}
             defaultIndex={searchOptions.defaultPageOptionIndex}
-            onChange={onPageItemCountChange}
+            onChange={(count) => onSearch({ pageNo: 1, pageSize: count })}
           />
         </div>
 
@@ -141,7 +168,9 @@ export default function PostReportListPage() {
             <Pagination
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
-              onPageChange={onPageChange}
+              onPageChange={(page) =>
+                onSearch({ pageNo: page >= totalPageNo ? totalPageNo : page })
+              }
               maxVisible={searchOptions.visiblePageNo}
             />
           ) : null}

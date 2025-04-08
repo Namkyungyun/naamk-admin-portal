@@ -25,8 +25,6 @@ const apiClient = () => {
       removeAccessToken();
       window.location.href = "/login";
     }
-    
-    console.log(error);
     return Promise.reject(error);
   }
 );

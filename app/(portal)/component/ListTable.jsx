@@ -4,7 +4,7 @@ import { SelectBox } from "./SelectBox";
 
 const style = {
   container: "h-full overflow-auto bg-canvas text-black",
-  table: "table-auto w-full border-collapse",
+  table: "table-fixed w-full border-collapse",
   header:
     "p-2 border-b border-l border-r border-bd-disabled bg-disabled text-sm text-center",
   body: "border border-bd-disabled text-sm text-center",
@@ -21,12 +21,12 @@ export function ListTable({ headers, body }) {
       <table className={`${style.table}`}>
         <ListTableHeader headers={headers} />
 
-        {body.length !== 0 ? (
+        {body && body?.length !== 0 ? (
           <ListTableBody headers={headers} body={body} />
         ) : null}
       </table>
 
-      {body.length !== 0 ? null : (
+      {body?.length !== 0 ? null : (
         <div className={`${style.emptyBody}`}>조회된 데이터가 없습니다.</div>
       )}
     </div>
@@ -44,9 +44,9 @@ export function ListTableHeader({ headers }) {
         {headers.map((header, index) => (
           <th
             key={index}
-            className={`${style.header} ${header.hidden ? "hidden" : ""}`}
+            className={`${header.widthKey ?? ""} ${style.header} ${header.hidden ? "hidden" : ""}`}
           >
-            {header.variableLabel}
+            {header.label}
           </th>
         ))}
       </tr>
@@ -61,7 +61,7 @@ export function ListTableBody({ headers, body }) {
       {body.map((row, rowIndex) => (
         <tr key={rowIndex} className={`${style.body}`}>
           {headers.map((header, colIndex) => {
-            const headerName = header.variableName;
+            const headerName = header.name;
             const isButton = header.onButton != null;
             const urlHeaderName = header.url;
             const urlValue = row[urlHeaderName];

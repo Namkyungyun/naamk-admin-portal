@@ -1,8 +1,8 @@
 import "@/app/globals.css";
 import localFont from "next/font/local";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
 import Head from "next/head";
+import QueryProvider from "./provider/QueryClientProvider";
+import ToastMessageProvider from "./provider/MessageProvider";
 
 const pretendard = localFont({
   src: [
@@ -37,7 +37,9 @@ export default function RootLayout({ children }) {
         />
       </Head>
       <body className={`${pretendard.variable} antialiased mb-12`}>
-        {children}
+        <QueryProvider>
+          <ToastMessageProvider>{children}</ToastMessageProvider>
+        </QueryProvider>
       </body>
     </html>
   );

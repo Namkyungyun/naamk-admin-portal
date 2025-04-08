@@ -4,7 +4,6 @@ import { useEffect, useState, useRef } from "react";
 import SideBar from "@/app/(portal)/component/SideBar";
 import TopBar from "@/app/(portal)/component/TopBar";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { ToastMessageProvider } from "./component/Message";
 
 export default function PortalLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -29,30 +28,28 @@ export default function PortalLayout({ children }) {
 
   return (
     <ProtectedRoute>
-      <ToastMessageProvider>
-        <div className="flex flex-col h-screen overflow-hidden">
-          {/* ✅ TopBar: 상단 고정 */}
-          <div className="h-[64px] shrink-0 z-10">
-            <TopBar />
-          </div>
-
-          {/* ✅ 사이드바 + 콘텐츠 영역 */}
-          <div className="flex flex-1 overflow-hidden">
-            {/* 사이드바 */}
-            <aside className={`flex shrink-0 transition-all duration-300`}>
-              <SideBar
-                isSidebarOpen={isSidebarOpen}
-                toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-              />
-            </aside>
-
-            {/* 메인 콘텐츠 */}
-            <main className="flex-1 min-w-0 overflow-auto bg-white p-4">
-              {children}
-            </main>
-          </div>
+      <div className="flex flex-col h-screen overflow-hidden">
+        {/* ✅ TopBar: 상단 고정 */}
+        <div className="h-[64px] shrink-0 z-10">
+          <TopBar />
         </div>
-      </ToastMessageProvider>
+
+        {/* ✅ 사이드바 + 콘텐츠 영역 */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* 사이드바 */}
+          <aside className={`flex shrink-0 transition-all duration-300`}>
+            <SideBar
+              isSidebarOpen={isSidebarOpen}
+              toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            />
+          </aside>
+
+          {/* 메인 콘텐츠 */}
+          <main className="flex-1 min-w-0 overflow-auto bg-white p-4">
+            {children}
+          </main>
+        </div>
+      </div>
     </ProtectedRoute>
   );
 }

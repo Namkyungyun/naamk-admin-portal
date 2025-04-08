@@ -4,7 +4,7 @@ import { createContext, useContext, useMemo } from "react";
 
 const ToastMessageContext = createContext();
 
-export function ToastMessageProvider({ children }) {
+export default function ToastMessageProvider({ children }) {
   const [messageApi, contextHolder] = message.useMessage();
 
   const showMessage = ({ type = "info", content = "", duration = 5 }) => {

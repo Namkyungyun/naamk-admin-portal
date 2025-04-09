@@ -1,6 +1,6 @@
-import apiClient from '@/app/lib/apiClient';
+import globalAxios from '@/app/lib/api';
 
-const api = apiClient();
+const api = globalAxios();
 const prefixUrl = "/users"
 
 

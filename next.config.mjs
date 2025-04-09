@@ -4,22 +4,19 @@ const nextConfig = {
   webpack(config, { isServer }) {
     if (!isServer) {
       // 기존 svg loader 유지
-      config.module.rules.push({
-        test: /\.svg$/,
-        use: ['@svgr/webpack'],
-      });
-
-      // ✅ .css?inline → 문자열 import 가능하도록 추가
-      config.module.rules.push({
-        test: /\.css$/,
-        resourceQuery: /inline/, // ?inline 쿼리 붙은 파일만
-        use: ['raw-loader'],
-      });
     }
-
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+  
     return config;
   },
   reactStrictMode: false,
+  images: {
+    loader: "akamai",
+    path: "/",
+  },
 };
 
 export default nextConfig;

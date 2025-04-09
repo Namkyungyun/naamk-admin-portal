@@ -546,14 +546,16 @@ input[type='number'] {
 }
 
 .center-box {
-  padding: 10px;
+  /* padding: 10px; */
   border-radius: 12px;
-  width: 350px;
+  width: 600px;
+  margin: 0 auto;
   text-align: center;
 }
 
 .center-box input {
-  width: 100%;
+  /* width: 80%; */
+  width: 300px;
   padding: 12px;
   margin-bottom: 12px;
   border: none;
@@ -568,13 +570,16 @@ input[type='number'] {
 }
 
 .center-box button {
-  width: 100%;
+  width: 120px;
+  height: 100%;
   padding: 12px;
   color: white;
+  font-weight: 700;
   border: 2px solid;
   border-radius: 6px;
   border-color: #ffffff;
   cursor: pointer;
+  /* background-color: #000000; */
   font-size: 16px;
 }
 

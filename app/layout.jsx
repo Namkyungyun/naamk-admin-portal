@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import Head from "next/head";
 import QueryProvider from "./provider/QueryClientProvider";
 import ToastMessageProvider from "./provider/MessageProvider";
+import { UserProvider } from "./provider/UserProvider";
 
 const pretendard = localFont({
   src: [
@@ -38,7 +39,9 @@ export default function RootLayout({ children }) {
       </Head>
       <body className={`${pretendard.variable} antialiased mb-12`}>
         <QueryProvider>
-          <ToastMessageProvider>{children}</ToastMessageProvider>
+          <UserProvider>
+            <ToastMessageProvider>{children}</ToastMessageProvider>
+          </UserProvider>
         </QueryProvider>
       </body>
     </html>

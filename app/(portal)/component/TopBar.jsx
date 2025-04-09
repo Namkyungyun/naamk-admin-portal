@@ -26,7 +26,7 @@ const TopBar = ({ onLogout }) => {
         <Link href="/dashboard" replace>
           <img
             src="/assets/gemhubplay.png"
-            className="w-40 rounded-lg bg-gray px-6 py-2"
+            className="w-50 rounded-lg bg-gray px-8 py-2"
             alt="Logo"
           />
         </Link>

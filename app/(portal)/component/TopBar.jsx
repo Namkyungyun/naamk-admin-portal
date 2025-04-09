@@ -24,7 +24,11 @@ const TopBar = ({ onLogout }) => {
     <header className="topbar">
       <div className="flex justify-between">
         <Link href="/dashboard" replace>
-          <h2 className="sidebar-title">Community Admin</h2>
+          <img
+            src="/assets/gemhubplay.png"
+            className="w-40 rounded-lg bg-gray px-6 py-2"
+            alt="Logo"
+          />
         </Link>
         <div className="flex">
           {/* user info */}

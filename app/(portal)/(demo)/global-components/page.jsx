@@ -9,15 +9,15 @@ import {
   CancelButton,
   ConfirmButton,
   DownloadButton,
-} from "../component/Buttons";
+} from "../../component/Buttons";
 
-import { ListTable } from "../component/ListTable";
-import { RangeDatePicker } from "../component/DatePicker";
-import { SelectBox } from "../component/SelectBox";
-import { SearchInput } from "../component/SearchInput";
-import { LimitedLengthTextArea } from "../component/TextArea";
-import { RowFor3Column, RowFor2Column } from "../component/Row";
-import { FullColumn, MDColumn } from "../component/Column";
+import { ListTable } from "../../component/ListTable";
+import { RangeDatePicker } from "../../component/DatePicker";
+import { SelectBox } from "../../component/SelectBox";
+import { SearchInput } from "../../component/SearchInput";
+import { LimitedLengthTextArea } from "../../component/TextArea";
+import { RowFor3Column, RowFor2Column } from "../../component/Row";
+import { FullColumn, MDColumn } from "../../component/Column";
 
 export default function Test() {
   const [reset, setReset] = useState(false);

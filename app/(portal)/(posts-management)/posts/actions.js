@@ -1,4 +1,4 @@
-import globalAxios from '@/app/lib/api';
+import globalAxios from '@/app/api/api';
 
 const api = globalAxios();
 const prefixUrl = "/posts"

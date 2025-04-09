@@ -1,40 +1,24 @@
-import { cookies } from 'next/headers';
+'use server';
+
 import globalAxios from './api';
+import { getAccessToken, clearAccessToken, setAccessToken } from './token';
+import { redirect } from "next/navigation";
 
-export async function getAccessToken(){ 
-  const cookiesStore = await cookies();
-  // console.log(cookiesStore.get('accessToken')?.value);
+export async function login(prevState, formData) {
+  const username = formData.get("username");
+  const password = formData.get("password");
 
-  return cookiesStore.get('accessToken')?.value;
-}
-
-export async function clearAccessToken() {
-  const cookiesStore = await cookies();
-  cookiesStore.delete('accessToken');
-}
-
-
-export async function login({username, password}) {
   const api = globalAxios();
   const res = await api.post('/login', { username, password });
   const data = res.data.body.entity;
-  
-  if (!data?.accessToken) {
-    return null;
+
+  if (data == null) {
+    return { error: '입력한 정보가 맞지 않습니다. 확인 후 다시 입력해 주세요.' };
   }
 
-  const cookiesStore = await cookies();
+  await setAccessToken(data.accessToken)
 
-  cookiesStore.set('accessToken', data.accessToken, {
-    httpOnly: true,
-    path: '/',
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 8,
-  });
-
-  
-  return data;
+  return { success: true , expiredAt: data.expiredAt }
 }
 
 export async function logout() {
@@ -43,6 +27,8 @@ export async function logout() {
   
   const api = globalAxios(accessToken);
   await api.get("/logout");
+
+  redirect("/login");
 }
 
 

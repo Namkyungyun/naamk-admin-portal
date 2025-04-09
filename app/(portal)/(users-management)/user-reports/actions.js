@@ -1,73 +1,7 @@
-import globalAxios from '@/app/lib/api';
+import globalAxios from '@/app/api/api';
 
 const api = globalAxios();
 const prefixUrl = "/user-reports"
-
-/// list page
-export function userReportListSearchAPI() {
-  const visiblePageNo =  5;
-  const defaultPageOptionIndex = 1;
-
-  const pageOptions = [
-    { id: 1, value: 20, label: "20개씩" },
-    { id: 2, value: 50, label: "50개씩" },
-    { id: 3, value: 100, label: "100개씩" },
-  ];
-
-  const defaultPageParam = {
-    pageNo: 1,
-    pageSize: pageOptions[defaultPageOptionIndex].value,
-  };
-
-
-  const fetchAPI = async () => {
-    const url = `${prefixUrl}/search-options`;
-
-    return await api.get(url)
-      .then((response) => {
-        const entity = response.data.body.entity;
-        return entity;
-      })
-      .catch((e)=> console.log(e));
-  };
-
-  return { visiblePageNo, defaultPageParam, defaultPageOptionIndex, pageOptions, fetchAPI };
-}
-
-export function userReportListAPI() {
-  const responseData = (router) => [
-    { name: "rowNum", label: "구분" },
-    { name: "id", label: "", hidden: true },
-    { name: "latestCreatedAt", label: "최근신고일시" },
-    { name: "reportedUserId", label: "", hidden: true },
-    {
-      name: "reportedUserName",
-      label: "대상자ID",
-      url: "reportedUserId",
-      onButton: (url) => router.push(`/user-reports/${url}`),
-    },
-    { name: "reportCount", label: "신고 건수" },
-    { name: "reportStatus", label: "신고 상태" },
-    { name: "penaltyStatus", label: "처리 상태" },
-    { name: "penaltyCreatedAt", label: "처리일시" },
-    { name: "penaltyCreatedBy", label: "처리자" },
-  ];
-
-  const fetchAPI = async (data) => {
-    const url = `${prefixUrl}/list`;
-    
-    return await api.post(url, data, {
-          params: {page: data.pageNo-1, size: data.pageSize}
-      })
-      .then((response) => {
-        const entity = response.data.body.entity;
-        return entity;
-      })
-      .catch((e)=> console.log(e));
-  };
-
-  return { responseData, fetchAPI};
-}
 
 
 /// detail page

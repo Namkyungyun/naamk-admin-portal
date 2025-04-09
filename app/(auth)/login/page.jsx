@@ -2,11 +2,11 @@
 
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { tryLogin } from "./actions";
+import { login } from "@/app/api/authAPI";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [state, formAction] = useActionState(tryLogin, {
+  const [state, formAction] = useActionState(login, {
     error: null,
     success: false,
   });

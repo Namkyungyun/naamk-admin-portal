@@ -8,12 +8,15 @@ import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import UserReportSearchBox from "./component/SearchBox";
 
-import { userReportListSearchAPI, userReportListAPI } from "./actions";
+import {
+  getUserReportSearchOptions,
+  getUserReportList,
+} from "@/app/api/userReportListAPI";
+import { userReportListData } from "@/app/api/userReportListData";
 
 export default function UserReportListPage() {
   const router = useRouter();
-  const userReports = userReportListAPI();
-  const searchOptions = userReportListSearchAPI();
+  const apiData = userReportListData();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -22,16 +25,14 @@ export default function UserReportListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(apiData.defaultPageParam);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
 
   /// table result
-  const tableHeader = userReports.responseData(router);
+  const tableHeader = apiData.tableData(router);
   const [tableBody, setTableBody] = useState([]);
 
   /// searchOptions API
@@ -39,7 +40,7 @@ export default function UserReportListPage() {
     const fetchInitData = async () => {
       setLoading(true);
 
-      const data = await Promise.resolve(searchOptions.fetchAPI());
+      const data = await getUserReportSearchOptions();
       setInitSearchData(data);
 
       setFetchedInit(true);
@@ -55,7 +56,7 @@ export default function UserReportListPage() {
       setLoading(true);
 
       /// Search Result API fetch
-      const entity = await Promise.resolve(userReports.fetchAPI(data));
+      const entity = await getUserReportList(data);
 
       setTotalPageNo(entity.totalPages);
       setTotalItemCount(entity.totalElements);
@@ -128,8 +129,8 @@ export default function UserReportListPage() {
           <ListCount
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={searchOptions.pageOptions}
-            defaultIndex={searchOptions.defaultPageOptionIndex}
+            optionData={apiData.pageOptions}
+            defaultIndex={apiData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -144,7 +145,7 @@ export default function UserReportListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={searchOptions.visiblePageNo}
+              maxVisible={apiData.visiblePageNo}
             />
           ) : null}
         </div>

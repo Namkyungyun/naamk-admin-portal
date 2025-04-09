@@ -6,7 +6,7 @@ import TopBar from "@/app/(portal)/component/TopBar";
 import { useUser } from "@/app/provider/UserProvider";
 import { useToastMessage } from "@/app/provider/MessageProvider";
 
-import { tryLogout, getLoginUserInfo, getLoginUserMenutree } from "./actions";
+import { logout, getMe, getMenuTree } from "../api/authAPI";
 
 export default function PortalLayout({ children }) {
   const { userInfo, setUserInfo, menuInfo, setMenuInfo } = useUser();
@@ -35,7 +35,7 @@ export default function PortalLayout({ children }) {
     if (userInfo == null) {
       // api 연결
       try {
-        const result = await getLoginUserInfo();
+        const result = await getMe();
         if (result.error) throw result.error;
 
         setUserInfo(result);
@@ -54,7 +54,7 @@ export default function PortalLayout({ children }) {
     if (menu == null) {
       // api 연결
       try {
-        const result = await getLoginUserMenutree();
+        const result = await getMenuTree();
         if (result.error) throw result.error;
         setMenuInfo(result);
       } catch (e) {
@@ -87,7 +87,7 @@ export default function PortalLayout({ children }) {
     <div className="flex flex-col h-screen overflow-hidden">
       {/* ✅ TopBar: 상단 고정 */}
       <div className="h-[64px] shrink-0 z-10">
-        <TopBar onLogout={tryLogout} />
+        <TopBar onLogout={logout} />
       </div>
 
       {/* ✅ 사이드바 + 콘텐츠 영역 */}

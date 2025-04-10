@@ -7,6 +7,6 @@ export const POST = withServerTokenApiHandler(async (api, req, context) => {
   const request = await req.json();
 
 
-  const url = `${API_PREFIX.userReports}/penalty/${userId}`;
+  const url = `${API_PREFIX.users}/${userId}/penalty`;
     return serverApiWrapper(() => api.post(url, request))
   });

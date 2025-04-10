@@ -61,7 +61,7 @@ export default function UserReportDetailPage() {
     init: () => setLoading(true),
     handler: () => {
       const query = new URLSearchParams(reqSearchData).toString();
-      return fetch(`/api/user-reports/${userId}/hist?${query}`, {
+      return fetch(`/api/user-reports/${userId}/report-hist?${query}`, {
         method: "GET",
       });
     },
@@ -86,7 +86,7 @@ export default function UserReportDetailPage() {
     withClientApiHandler({
       init: () => setLoading(true),
       handler: () =>
-        fetch(`/api/user-reports/${userId}/penalty-update`, {
+        fetch(`/api/users/${userId}/penalty-update`, {
           method: "POST",
           body: JSON.stringify(formData),
         }),

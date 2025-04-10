@@ -23,9 +23,11 @@ import {
   userDetailSearchAPI,
   userPenaltyUpdateAPI,
 } from "../actions";
+import { useClientApiHandler } from "@/app/api/useApiHandler";
 
 export default function UserDetailPage() {
   const { userId } = useParams();
+  const { withClientApiHandler } = useClientApiHandler();
   const { showPenaltyMessage, showMessage } = useToastMessage();
 
   const user = userDetailAPI();
@@ -57,46 +59,87 @@ export default function UserDetailPage() {
   const [updatablePenalty, setUptablePenalty] = useState(false);
   const [updatePenaltyData, setUpdatePenaltyData] = useState({});
 
+  /// API [ reportDetailData, reportHistData ]
+  const fetchDetailApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () =>
+      fetch(`/api/users/${userId}/detail`, {
+        method: "GET",
+      }),
+    then: (body) => {
+      setDetailData(body);
+      setPenaltyData(body);
+
+      setFetchedInit(true);
+    },
+    final: () => {
+      setLoading(false);
+    },
+  });
+
+  const fetchHisApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => {
+      const query = new URLSearchParams(reqSearchData).toString();
+      return fetch(`/api/users/${userId}/penalty-hist?${query}`, {
+        method: "GET",
+      });
+    },
+    then: (body) => {
+      setPenaltyHistTableBody(body?.content);
+      setTotalPageNo(body?.totalPages);
+      setTotalItemCount(body?.totalElements);
+
+      setFetchedInit(true);
+    },
+    final: () => {
+      setLoading(false);
+    },
+  });
+
   const fetchInit = async () => {
-    setLoading(true);
-
-    const [userDetailData, penaltyHistData] = await Promise.all([
-      user.fetchAPI(userId),
-      penaltyHist.fetchAPI(userId, reqSearchData),
-    ]);
-
-    // detail
-    if (userDetailData) {
-      setDetailData(userDetailData);
-      setPenaltyData(userDetailData);
-    }
-
-    // history
-    if (penaltyHistData) {
-      setPenaltyHistTableBody(penaltyHistData.content);
-      setTotalPageNo(penaltyHistData?.totalPages);
-      setTotalItemCount(penaltyHistData?.totalElements);
-    }
-
-    setFetchedInit(true);
-    setLoading(false);
+    fetchDetailApi();
+    fetchHisApi();
   };
 
-  const fetchUpdate = async () => {
-    setLoading(true);
+  const fetchUpdate = async () =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch(`/api/users/${userId}/penalty-update`, {
+          method: "POST",
+          body: JSON.stringify(updatePenaltyData),
+        }),
+      then: (body) => {
+        const result = body.linkedId != null;
 
-    const updated = await Promise.resolve(
-      penaltyUpdate.fetchAPI(userId, updatePenaltyData)
-    );
-    const result = updated.linkedId != null;
-    setLoading(false);
-    showPenaltyMessage(result);
+        showPenaltyMessage(result);
 
-    if (result) {
-      setShowPenaltyPopup(false);
-      setRefresh(true);
-    }
-  };
+        if (result) {
+          setShowPenaltyPopup(false);
+          setRefresh(true);
+        }
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
+
+  //   {
+  //   setLoading(true);
+
+  //   const updated = await Promise.resolve(
+  //     penaltyUpdate.fetchAPI(userId, updatePenaltyData)
+  //   );
+  //   const result = updated.linkedId != null;
+  //   setLoading(false);
+  //   showPenaltyMessage(result);
+
+  //   if (result) {
+  //     setShowPenaltyPopup(false);
+  //     setRefresh(true);
+  //   }
+  // };
 
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {

@@ -9,6 +9,6 @@ export const POST = withServerTokenApiHandler(async (api, req) => {
         size: request.pageSize
     }
 
-    const url =`${API_PREFIX.userReports}/list`;
-    return serverApiWrapper(() => api.post(url, request, {params}))
+    const url =`${API_PREFIX.users}/list`;
+    return serverApiWrapper(() => api.post(url, request, {params}));
   });

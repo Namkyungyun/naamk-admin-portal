@@ -9,9 +9,13 @@ import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import Loading from "../../component/Loading";
 
 import { userListSearchAPI, UserListAPI } from "./actions";
+import { useClientApiHandler } from "@/app/api/useApiHandler";
 
 export default function UserListPage() {
   const router = useRouter();
+
+  const { withClientApiHandler } = useClientApiHandler();
+
   const searchOptions = userListSearchAPI();
   const users = UserListAPI();
 
@@ -35,39 +39,68 @@ export default function UserListPage() {
   const tableHeader = users.responseData(router);
   const [tableBody, setTableBody] = useState([]);
 
-  /// init API
-  const onInit = () => {
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const data = await Promise.resolve(searchOptions.fetchAPI());
-      setInitSearchData(data);
-
+  /// searchOptions API
+  const onInit = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => fetch("/api/users/search-options", { method: "GET" }),
+    then: (body) => setInitSearchData(body),
+    final: () => {
       setFetchedInit(true);
       setLoading(false);
-    };
-
-    fetchInitData();
-  };
+    },
+  });
 
   /// search API
-  const onSearch = (data) => {
-    const fetchResultData = async () => {
-      setLoading(true);
+  const onSearch = (data) =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch("/api/users/list", {
+          method: "POST",
+          body: JSON.stringify(data),
+        }),
+      then: (body) => {
+        setTotalPageNo(body.totalPages);
+        setTotalItemCount(body.totalElements);
+        setTableBody(body.content);
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
 
-      /// Search Result API fetch
-      const result = await Promise.resolve(users.fetchAPI(data));
-      if (result) {
-        setTotalPageNo(result.totalPages);
-        setTotalItemCount(result.totalElements);
-        setTableBody(result.content);
-      }
+  // () => {
+  //   const fetchInitData = async () => {
+  //     setLoading(true);
 
-      setLoading(false);
-    };
+  //     const data = await Promise.resolve(searchOptions.fetchAPI());
+  //     setInitSearchData(data);
 
-    fetchResultData();
-  };
+  //     setFetchedInit(true);
+  //     setLoading(false);
+  //   };
+
+  //   fetchInitData();
+  // };
+
+  /// search API
+  // const onSearch = (data) => {
+  //   const fetchResultData = async () => {
+  //     setLoading(true);
+
+  //     /// Search Result API fetch
+  //     const result = await Promise.resolve(users.fetchAPI(data));
+  //     if (result) {
+  //       setTotalPageNo(result.totalPages);
+  //       setTotalItemCount(result.totalElements);
+  //       setTableBody(result.content);
+  //     }
+
+  //     setLoading(false);
+  //   };
+
+  //   fetchResultData();
+  // };
 
   const onPageChange = (page) => {
     setReqSearchData((prev) => ({

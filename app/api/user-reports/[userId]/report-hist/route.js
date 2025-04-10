@@ -9,7 +9,7 @@ export const GET = withServerTokenApiHandler(async (api, req, context) => {
         page: searchParams.pageNo-1, 
         size: searchParams.pageSize
     }
-  
-      const url =`${API_PREFIX.userReports}/${userId}/report-hist`;
-      return serverApiWrapper(() => api.get(url, {params}))
-    });
+    
+    const url =`${API_PREFIX.userReports}/${userId}/report-hist`;
+    return serverApiWrapper(() => api.get(url, {params}))
+});

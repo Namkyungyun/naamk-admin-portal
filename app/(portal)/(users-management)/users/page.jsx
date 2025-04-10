@@ -8,16 +8,14 @@ import UserSearchBox from "./component/SearchBox";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import Loading from "../../component/Loading";
 
-import { userListSearchAPI, UserListAPI } from "./actions";
 import { useClientApiHandler } from "@/app/api/useApiHandler";
+import { userListData } from "@/app/api/users/view-data";
 
 export default function UserListPage() {
   const router = useRouter();
 
   const { withClientApiHandler } = useClientApiHandler();
-
-  const searchOptions = userListSearchAPI();
-  const users = UserListAPI();
+  const viewData = userListData();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -26,17 +24,15 @@ export default function UserListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const pageItemCountOptions = searchOptions.pageOptions;
+  const pageItemCountOptions = viewData.pageOptions;
 
   /// table result
-  const tableHeader = users.responseData(router);
+  const tableHeader = viewData.tableData(router);
   const [tableBody, setTableBody] = useState([]);
 
   /// searchOptions API
@@ -165,7 +161,7 @@ export default function UserListPage() {
             disabled={loading}
             totalItemCount={totalItemCount}
             optionData={pageItemCountOptions}
-            defaultIndex={searchOptions.defaultPageOptionIndex}
+            defaultIndex={viewData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -180,7 +176,7 @@ export default function UserListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={searchOptions.visiblePageNo}
+              maxVisible={viewData.visiblePageNo}
             />
           ) : null}
         </div>

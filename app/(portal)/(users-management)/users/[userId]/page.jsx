@@ -17,42 +17,32 @@ import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import UserPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 import Loading from "@/app/(portal)/component/Loading";
 
-import {
-  userDetailAPI,
-  userPenaltyHistAPI,
-  userDetailSearchAPI,
-  userPenaltyUpdateAPI,
-} from "../actions";
 import { useClientApiHandler } from "@/app/api/useApiHandler";
+import { userDetailData } from "@/app/api/users/[userId]/view-data";
 
 export default function UserDetailPage() {
   const { userId } = useParams();
+  const viewData = userDetailData();
   const { withClientApiHandler } = useClientApiHandler();
-  const { showPenaltyMessage, showMessage } = useToastMessage();
 
-  const user = userDetailAPI();
-  const penaltyHist = userPenaltyHistAPI();
-  const searchOptions = userDetailSearchAPI();
-  const penaltyUpdate = userPenaltyUpdateAPI();
+  const { showPenaltyMessage } = useToastMessage();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
 
   /// userdatail data
-  const initUserDetailData = user.responseData;
+  const initUserDetailData = viewData.detailData;
   const [detailData, setDetailData] = useState(null);
 
   /// penalty data
-  const penaltyHistTableHeader = penaltyHist.responseData;
+  const penaltyHistTableHeader = viewData.histTableData;
   const [penaltyHistTableBody, setPenaltyHistTableBody] = useState([]);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// penalty update pop
   const [showPenaltyPopup, setShowPenaltyPopup] = useState(false);
@@ -70,7 +60,7 @@ export default function UserDetailPage() {
       setDetailData(body);
       setPenaltyData(body);
 
-      setFetchedInit(true);
+      // setFetchedInit(true);
     },
     final: () => {
       setLoading(false);
@@ -125,33 +115,17 @@ export default function UserDetailPage() {
       },
     })();
 
-  //   {
-  //   setLoading(true);
-
-  //   const updated = await Promise.resolve(
-  //     penaltyUpdate.fetchAPI(userId, updatePenaltyData)
-  //   );
-  //   const result = updated.linkedId != null;
-  //   setLoading(false);
-  //   showPenaltyMessage(result);
-
-  //   if (result) {
-  //     setShowPenaltyPopup(false);
-  //     setRefresh(true);
-  //   }
-  // };
-
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {
     if (data) {
-      penaltyUpdate.requestData.label = data.penaltyStatus;
-      penaltyUpdate.requestData.isActive = data.penalty;
+      viewData.penaltyReqData.label = data.penaltyStatus;
+      viewData.penaltyReqData.isActive = data.penalty;
     } else {
-      penaltyUpdate.requestData.label = detailData?.penaltyStatus;
-      penaltyUpdate.requestData.isActive = detailData?.penalty;
+      viewData.penaltyReqData.label = detailData?.penaltyStatus;
+      viewData.penaltyReqData.isActive = detailData?.penalty;
     }
 
-    setUpdatePenaltyData({ ...penaltyUpdate.requestData });
+    setUpdatePenaltyData({ ...viewData.penaltyReqData });
   };
 
   const onValidatePenaltyStatus = (obj) => {
@@ -201,7 +175,6 @@ export default function UserDetailPage() {
 
   /// init
   useEffect(() => {
-    /// UserDetail API fetch
     fetchInit();
   }, []);
 
@@ -252,8 +225,8 @@ export default function UserDetailPage() {
                         title="신규접수"
                         disabled={loading}
                         totalItemCount={totalItemCount}
-                        optionData={searchOptions.pageOptions}
-                        defaultIndex={searchOptions.defaultPageOptionIndex}
+                        optionData={viewData.pageOptions}
+                        defaultIndex={viewData.defaultPageOptionIndex}
                         onChange={onPageItemCountChange}
                       />
                     </div>
@@ -270,7 +243,7 @@ export default function UserDetailPage() {
                           currentPage={reqSearchData.pageNo}
                           totalPages={totalPageNo}
                           onPageChange={onPageChange}
-                          maxVisible={searchOptions.visiblePageNo}
+                          maxVisible={viewData.visiblePageNo}
                         />
                       ) : null}
                     </div>

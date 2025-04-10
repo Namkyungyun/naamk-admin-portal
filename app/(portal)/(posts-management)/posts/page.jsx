@@ -3,17 +3,19 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { postListData } from "@/app/api/posts/view-data";
+import { useClientApiHandler } from "@/app/api/useApiHandler";
+
 import PageTitle from "../../component/PageTitle";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
-
-import { postListSearchAPI, postListAPI } from "./actions";
 import PostsSearchBox from "./component/SearchBox";
 
 export default function PostListPage() {
   const router = useRouter();
-  const searchOptions = postListSearchAPI();
-  const posts = postListAPI();
+
+  const viewData = postListData();
+  const { withClientApiHandler } = useClientApiHandler();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -22,50 +24,45 @@ export default function PostListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
 
   /// table result
-  const tableHeader = posts.responseData(router);
+  const tableHeader = viewData.tableData(router);
   const [tableBody, setTableBody] = useState([]);
 
   /// init API
-  const onInit = () => {
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const data = await Promise.resolve(searchOptions.fetchAPI());
-      setInitSearchData(data);
-
+  const onInit = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => fetch("/api/posts/search-options", { method: "GET" }),
+    then: (body) => setInitSearchData(body),
+    final: () => {
       setFetchedInit(true);
       setLoading(false);
-    };
-
-    fetchInitData();
-  };
+    },
+  });
 
   /// search API
-  const onSearch = (data) => {
-    const fetchResultData = async () => {
-      setLoading(true);
-
-      /// Search Result API fetch
-      const entity = await Promise.resolve(posts.fetchAPI(data));
-
-      setTotalPageNo(entity.totalPages);
-      setTotalItemCount(entity.totalElements);
-      setTableBody(entity.content);
-
-      setLoading(false);
-    };
-
-    fetchResultData();
-  };
+  const onSearch = (data) =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch("/api/posts/list", {
+          method: "POST",
+          body: JSON.stringify(data),
+        }),
+      then: (body) => {
+        setTotalPageNo(body.totalPages);
+        setTotalItemCount(body.totalElements);
+        setTableBody(body.content);
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
 
   const onPageChange = (page) => {
     setReqSearchData((prev) => ({
@@ -127,8 +124,8 @@ export default function PostListPage() {
           <ListCount
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={searchOptions.pageOptions}
-            defaultIndex={searchOptions.defaultPageOptionIndex}
+            optionData={viewData.pageOptions}
+            defaultIndex={viewData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -143,7 +140,7 @@ export default function PostListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={searchOptions.visiblePageNo}
+              maxVisible={viewData.visiblePageNo}
             />
           ) : null}
         </div>

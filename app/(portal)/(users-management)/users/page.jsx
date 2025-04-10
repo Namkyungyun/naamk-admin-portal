@@ -65,39 +65,6 @@ export default function UserListPage() {
       },
     })();
 
-  // () => {
-  //   const fetchInitData = async () => {
-  //     setLoading(true);
-
-  //     const data = await Promise.resolve(searchOptions.fetchAPI());
-  //     setInitSearchData(data);
-
-  //     setFetchedInit(true);
-  //     setLoading(false);
-  //   };
-
-  //   fetchInitData();
-  // };
-
-  /// search API
-  // const onSearch = (data) => {
-  //   const fetchResultData = async () => {
-  //     setLoading(true);
-
-  //     /// Search Result API fetch
-  //     const result = await Promise.resolve(users.fetchAPI(data));
-  //     if (result) {
-  //       setTotalPageNo(result.totalPages);
-  //       setTotalItemCount(result.totalElements);
-  //       setTableBody(result.content);
-  //     }
-
-  //     setLoading(false);
-  //   };
-
-  //   fetchResultData();
-  // };
-
   const onPageChange = (page) => {
     setReqSearchData((prev) => ({
       ...prev,

@@ -2,6 +2,8 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
+import { useClientApiHandler } from "@/app/api/useApiHandler";
+
 import { useToastMessage } from "@/app/provider/MessageProvider";
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
@@ -12,89 +14,99 @@ import {
   Pagination,
 } from "@/app/(portal)/component/ListTable";
 import Loading from "@/app/(portal)/component/Loading";
-
-import {
-  postReportDetailSearchAPI,
-  postReportDetailAPI,
-  postReportHistAPI,
-  postPenaltyUpdateAPI,
-} from "../actions";
+import { postReportDetailData } from "@/app/api/post-reports/[postId]/view-data";
 
 export default function PostReportDetailPage() {
   const { postId } = useParams();
-  const { showPenaltyMessage, showMessage } = useToastMessage();
+  const { showPenaltyMessage } = useToastMessage();
 
-  const searchOptions = postReportDetailSearchAPI();
-  const postReport = postReportDetailAPI();
-  const postReportHist = postReportHistAPI();
-  const penaltyUpdate = postPenaltyUpdateAPI();
+  const viewData = postReportDetailData();
+  const { withClientApiHandler } = useClientApiHandler();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
 
   // reported post data
-  const initReportedDetailData = postReport.responseData;
+  const initReportedDetailData = viewData.detailData;
   const [reportedDetailData, setReportedDetailData] = useState(null);
 
   /// report history list
-  const reportHistTableHeader = postReportHist.responseData;
+  const reportHistTableHeader = viewData.histTableData;
   const [reportHistTableBody, setReportHistTableBody] = useState([]);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// API [ reportDetailData, reportHistData ]
+  const fetchDetailApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () =>
+      fetch(`/api/post-reports/${postId}/detail`, {
+        method: "GET",
+      }),
+    then: (body) => {
+      setReportedDetailData(body);
+      viewData.penaltyReqData.isActive = body?.penalty;
+      viewData.penaltyReqData.description = body?.penaltyDescription;
+    },
+    final: () => {
+      setFetchedInit(true);
+      setLoading(false);
+    },
+  });
+
+  const fetchHisApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => {
+      const query = new URLSearchParams(reqSearchData).toString();
+      return fetch(`/api/post-reports/${postId}/report-hist?${query}`, {
+        method: "GET",
+      });
+    },
+    then: (body) => {
+      const pagenation = body?.pagenation;
+      setReportHistTableBody(pagenation?.content);
+      setTotalPageNo(pagenation?.totalPages);
+      setTotalItemCount(body?.newReportCount);
+    },
+    final: () => {
+      setLoading(false);
+    },
+  });
+
   const fetchInit = async () => {
-    setLoading(true);
-
-    const [reportDetailData, reportHisData] = await Promise.all([
-      postReport.fetchAPI(postId),
-      postReportHist.fetchAPI(postId, reqSearchData),
-    ]);
-
-    // detail
-    if (reportDetailData) {
-      setReportedDetailData(reportDetailData);
-      penaltyUpdate.requestData.isActive = reportDetailData.penalty;
-      penaltyUpdate.requestData.description =
-        reportDetailData.penaltyDescription;
-    }
-
-    // history
-    if (reportHisData) {
-      const pagenation = reportHisData?.pagenation;
-      setReportHistTableBody(pagenation.content);
-      setTotalPageNo(pagenation.totalPages);
-      setTotalItemCount(reportHisData?.newReportCount);
-    }
-
-    setFetchedInit(true);
-    setLoading(false);
+    fetchDetailApi();
+    fetchHisApi();
   };
 
   /// API [ penalty ]
-  const fetchUpdate = async (formData) => {
-    setLoading(true);
+  const fetchUpdate = async (formData) =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch(`/api/posts/${postId}/penalty-update`, {
+          method: "POST",
+          body: JSON.stringify(formData),
+        }),
+      then: (body) => {
+        const result = body.linkedId != null;
 
-    const updated = await Promise.resolve(
-      penaltyUpdate.fetchAPI(postId, formData)
-    );
-    const result = updated.linkedId != null;
+        setLoading(false);
+        showPenaltyMessage(result);
 
-    setLoading(false);
-    showPenaltyMessage(result);
+        if (result) {
+          setRefresh(true);
+        }
 
-    if (result) {
-      setRefresh(true);
-    }
-
-    return result;
-  };
+        return result;
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
 
   const onPageChange = (page) => {
     setReqSearchData((prev) => ({
@@ -146,7 +158,7 @@ export default function PostReportDetailPage() {
             loading={loading}
             fetched={fetchedInit}
             detailData={reportedDetailData ?? initReportedDetailData}
-            penaltyForm={penaltyUpdate.requestData}
+            penaltyForm={viewData.penaltyReqData}
             onUpdate={fetchUpdate}
             onCancel={() => showPenaltyMessage(null)}
           />
@@ -158,8 +170,8 @@ export default function PostReportDetailPage() {
             title="신규접수"
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={searchOptions.pageOptions}
-            defaultIndex={searchOptions.defaultPageOptionIndex}
+            optionData={viewData.pageOptions}
+            defaultIndex={viewData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -178,7 +190,7 @@ export default function PostReportDetailPage() {
                 currentPage={reqSearchData.pageNo}
                 totalPages={totalPageNo}
                 onPageChange={onPageChange}
-                maxVisible={searchOptions.visiblePageNo}
+                maxVisible={viewData.visiblePageNo}
               />
             ) : null}
           </div>

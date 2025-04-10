@@ -3,6 +3,9 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useToastMessage } from "@/app/provider/MessageProvider";
 
+import { useClientApiHandler } from "@/app/api/useApiHandler";
+import { postDetailData } from "@/app/api/posts/[postId]/view-data";
+
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
 import PostDetailGrid from "../component/DetailGrid";
@@ -16,101 +19,109 @@ import PostPenaltyPopupGrid from "../component/PenaltyPopupGrid";
 import { CancelButton, SaveButton } from "@/app/(portal)/component/Buttons";
 import Loading from "@/app/(portal)/component/Loading";
 
-import {
-  postDetailSearchAPI,
-  postDetailAPI,
-  postPenaltyHistAPI,
-  postPenaltyUpdateAPI,
-} from "../actions";
-
 export default function PostDetailPage() {
   const { postId } = useParams();
   const { showPenaltyMessage, showMessage } = useToastMessage();
 
-  const searchOptions = postDetailSearchAPI();
-  const post = postDetailAPI();
-  const penaltyHist = postPenaltyHistAPI();
-  const penaltyUpdate = postPenaltyUpdateAPI();
+  const { withClientApiHandler } = useClientApiHandler();
+  const viewData = postDetailData();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
 
   // post detail data
-  const initPostDetailData = post.responseData;
+  const initPostDetailData = viewData.detailData;
   const [detailData, setDetailData] = useState(null);
 
   /// penalty history list
-  const penaltyHistTableHeader = penaltyHist.responseData;
+  const penaltyHistTableHeader = viewData.histTableData;
   const [penaltyHistTableBody, setPenaltyHistTableBody] = useState([]);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// penalty update popup
   const [showPenaltyPopup, setShowPenaltyPopup] = useState(false);
   const [updatablePenalty, setUptablePenalty] = useState(false);
   const [updatePenaltyData, setUpdatePenaltyData] = useState({});
 
-  /// API [ postDetailData, penaltyHistData ]
+  const fetchDetailApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () =>
+      fetch(`/api/posts/${postId}/detail`, {
+        method: "GET",
+      }),
+    then: (body) => {
+      setDetailData(body);
+      setPenaltyData(body);
+    },
+    final: () => {
+      setLoading(false);
+    },
+  });
+
+  const fetchHisApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => {
+      const query = new URLSearchParams(reqSearchData).toString();
+      return fetch(`/api/posts/${postId}/penalty-hist?${query}`, {
+        method: "GET",
+      });
+    },
+    then: (body) => {
+      setPenaltyHistTableBody(body?.content ?? []);
+      setTotalPageNo(body?.totalPages ?? 0);
+      setTotalItemCount(body?.totalElements ?? 0);
+    },
+    final: () => {
+      setFetchedInit(true);
+      setLoading(false);
+    },
+  });
+
   const fetchInit = async () => {
-    setLoading(true);
-
-    const [postDetailData, penaltyHistData] = await Promise.all([
-      post.fetchAPI(postId),
-      penaltyHist.fetchAPI(postId, reqSearchData),
-    ]);
-
-    // detail
-    if (postDetailData) {
-      setDetailData(postDetailData);
-      setPenaltyData(postDetailData);
-    }
-
-    // history
-    if (penaltyHistData) {
-      setPenaltyHistTableBody(penaltyHistData.content);
-      setTotalPageNo(penaltyHistData.totalPages);
-      setTotalItemCount(penaltyHistData.totalElements);
-    }
-
-    setFetchedInit(true);
-    setLoading(false);
+    fetchDetailApi();
+    fetchHisApi();
   };
 
   /// API [ penalty ]
-  const fetchUpdate = async () => {
-    setLoading(true);
+  const fetchUpdate = async () =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch(`/api/posts/${postId}/penalty-update`, {
+          method: "POST",
+          body: JSON.stringify(updatePenaltyData),
+        }),
+      then: (body) => {
+        const result = body.linkedId != null;
 
-    const updated = await Promise.resolve(
-      penaltyUpdate.fetchAPI(postId, updatePenaltyData)
-    );
-    const result = updated.linkedId != null;
+        showPenaltyMessage(result);
 
-    setLoading(false);
-    showPenaltyMessage(result);
-
-    if (result) {
-      setShowPenaltyPopup(false);
-      setRefresh(true);
-    }
-  };
+        if (result) {
+          setShowPenaltyPopup(false);
+          setRefresh(true);
+        }
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
 
   /// penalty ( 팝업 때메 )
   const setPenaltyData = (data) => {
     if (data) {
-      penaltyUpdate.requestData.label = data.penaltyStatus;
-      penaltyUpdate.requestData.isActive = data.penalty;
+      viewData.penaltyReqData.label = data.penaltyStatus;
+      viewData.penaltyReqData.isActive = data.penalty;
     } else {
-      penaltyUpdate.requestData.label = detailData.penaltyStatus;
-      penaltyUpdate.requestData.isActive = detailData.penalty;
+      viewData.penaltyReqData.label = detailData.penaltyStatus;
+      viewData.penaltyReqData.isActive = detailData.penalty;
     }
 
-    setUpdatePenaltyData({ ...penaltyUpdate.requestData });
+    setUpdatePenaltyData({ ...viewData.requestData });
   };
 
   const onValidatePenaltyStatus = (obj) => {
@@ -194,8 +205,8 @@ export default function PostDetailPage() {
             title="총"
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={searchOptions.pageOptions}
-            defaultIndex={searchOptions.defaultPageOptionIndex}
+            optionData={viewData.pageOptions}
+            defaultIndex={viewData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -214,7 +225,7 @@ export default function PostDetailPage() {
                 currentPage={reqSearchData.pageNo}
                 totalPages={totalPageNo}
                 onPageChange={onPageChange}
-                maxVisible={searchOptions.visiblePageNo}
+                maxVisible={viewData.visiblePageNo}
               />
             ) : null}
           </div>

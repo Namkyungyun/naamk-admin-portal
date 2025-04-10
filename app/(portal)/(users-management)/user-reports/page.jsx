@@ -3,20 +3,18 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { useClientApiHandler } from "@/app/api/useApiHandler";
+import { userReportListData } from "@/app/api/user-reports/view-data";
+
 import PageTitle from "../../component/PageTitle";
 import Loading from "../../component/Loading";
 import { ListCount, ListTable, Pagination } from "../../component/ListTable";
 import UserReportSearchBox from "./component/SearchBox";
 
-import {
-  getUserReportSearchOptions,
-  getUserReportList,
-} from "@/app/api/userReportListAPI";
-import { userReportListData } from "@/app/api/userReportListData";
-
 export default function UserReportListPage() {
   const router = useRouter();
-  const apiData = userReportListData();
+  const viewData = userReportListData();
+  const { withClientApiHandler } = useClientApiHandler();
 
   /// data status
   const [loading, setLoading] = useState(false);
@@ -25,48 +23,45 @@ export default function UserReportListPage() {
 
   /// search data
   const [initSearchData, setInitSearchData] = useState({});
-  const [reqSearchData, setReqSearchData] = useState(apiData.defaultPageParam);
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
 
   /// table result
-  const tableHeader = apiData.tableData(router);
+  const tableHeader = viewData.tableData(router);
   const [tableBody, setTableBody] = useState([]);
 
   /// searchOptions API
-  const onInit = () => {
-    const fetchInitData = async () => {
-      setLoading(true);
-
-      const data = await getUserReportSearchOptions();
-      setInitSearchData(data);
-
+  const onInit = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => fetch("/api/user-reports/search-options", { method: "GET" }),
+    then: (body) => setInitSearchData(body),
+    final: () => {
       setFetchedInit(true);
       setLoading(false);
-    };
-
-    fetchInitData();
-  };
+    },
+  });
 
   /// search API
-  const onSearch = (data) => {
-    const fetchResultData = async () => {
-      setLoading(true);
-
-      /// Search Result API fetch
-      const entity = await getUserReportList(data);
-
-      setTotalPageNo(entity.totalPages);
-      setTotalItemCount(entity.totalElements);
-      setTableBody(entity.content);
-
-      setLoading(false);
-    };
-
-    fetchResultData();
-  };
+  const onSearch = (data) =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch("/api/user-reports/list", {
+          method: "POST",
+          body: JSON.stringify(data),
+        }),
+      then: (body) => {
+        setTotalPageNo(body.totalPages);
+        setTotalItemCount(body.totalElements);
+        setTableBody(body.content);
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
 
   const onPageChange = (page) => {
     setReqSearchData((prev) => ({
@@ -129,8 +124,8 @@ export default function UserReportListPage() {
           <ListCount
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={apiData.pageOptions}
-            defaultIndex={apiData.defaultPageOptionIndex}
+            optionData={viewData.pageOptions}
+            defaultIndex={viewData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -145,7 +140,7 @@ export default function UserReportListPage() {
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
-              maxVisible={apiData.visiblePageNo}
+              maxVisible={viewData.visiblePageNo}
             />
           ) : null}
         </div>

@@ -2,6 +2,7 @@
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useToastMessage } from "@/app/provider/MessageProvider";
+import { useClientApiHandler } from "@/app/api/useApiHandler";
 
 import PageSubTitle from "@/app/(portal)/component/PageSubTitle";
 import SectionTitle from "@/app/(portal)/component/SectionTitle";
@@ -12,89 +13,99 @@ import {
   Pagination,
 } from "@/app/(portal)/component/ListTable";
 import Loading from "@/app/(portal)/component/Loading";
-
-import {
-  userPenaltyUpdateAPI,
-  userReportDetailSearchAPI,
-  userReportDetailAPI,
-  userReportHistAPI,
-} from "../actions";
+import { userReportDetailData } from "@/app/api/user-reports/[userId]/view-data";
 
 export default function UserReportDetailPage() {
   const { userId } = useParams();
-  const { showPenaltyMessage, showMessage } = useToastMessage();
+  const viewData = userReportDetailData();
+  const { withClientApiHandler } = useClientApiHandler();
 
-  const userReport = userReportDetailAPI();
-  const searchOptions = userReportDetailSearchAPI();
-  const userReportHist = userReportHistAPI();
-  const penaltyUpdate = userPenaltyUpdateAPI();
+  const { showPenaltyMessage } = useToastMessage();
 
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [fetchedInit, setFetchedInit] = useState(false);
 
   // reported user data
-  const initReportedDetailData = userReport.responseData;
+  const initReportedDetailData = viewData.detailData;
   const [reportedDetailData, setReportedDetailData] = useState(null);
 
   /// report history list
-  const reportHistTableHeader = userReportHist.responseData;
+  const reportHistTableHeader = viewData.histTableData;
   const [reportHistTableBody, setReportHistTableBody] = useState([]);
 
   /// pagination data
   const [totalPageNo, setTotalPageNo] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-  const [reqSearchData, setReqSearchData] = useState(
-    searchOptions.defaultPageParam
-  );
+  const [reqSearchData, setReqSearchData] = useState(viewData.defaultPageParam);
 
   /// API [ reportDetailData, reportHistData ]
-  const fetchInit = async () => {
-    setLoading(true);
+  const fetchDetailApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () =>
+      fetch(`/api/user-reports/${userId}/detail`, {
+        method: "GET",
+      }),
+    then: (body) => {
+      setReportedDetailData(body);
+      viewData.penaltyReqData.isActive = body?.penalty;
+      viewData.penaltyReqData.description = body?.penaltyDescription;
+    },
+    final: () => {
+      setFetchedInit(true);
+      setLoading(false);
+    },
+  });
 
-    const [reportDetailData, reportHisData] = await Promise.all([
-      userReport.fetchAPI(userId),
-      userReportHist.fetchAPI(userId, reqSearchData),
-    ]);
-
-    // detail
-    if (reportDetailData) {
-      setReportedDetailData(reportDetailData);
-      penaltyUpdate.requestData.isActive = reportDetailData?.penalty;
-      penaltyUpdate.requestData.description =
-        reportDetailData?.penaltyDescription;
-    }
-
-    // history
-    if (reportHisData) {
-      const pagenation = reportHisData?.pagenation;
+  const fetchHisApi = withClientApiHandler({
+    init: () => setLoading(true),
+    handler: () => {
+      const query = new URLSearchParams(reqSearchData).toString();
+      return fetch(`/api/user-reports/${userId}/hist?${query}`, {
+        method: "GET",
+      });
+    },
+    then: (body) => {
+      const pagenation = body?.pagenation;
       setReportHistTableBody(pagenation?.content);
       setTotalPageNo(pagenation?.totalPages);
-      setTotalItemCount(reportHisData?.newReportCount);
-    }
+      setTotalItemCount(body?.newReportCount);
+    },
+    final: () => {
+      setLoading(false);
+    },
+  });
 
-    setFetchedInit(true);
-    setLoading(false);
+  const fetchInit = async () => {
+    fetchDetailApi();
+    fetchHisApi();
   };
 
   /// API [ penalty ]
-  const fetchUpdate = async (formData) => {
-    setLoading(true);
+  const fetchUpdate = (formData) =>
+    withClientApiHandler({
+      init: () => setLoading(true),
+      handler: () =>
+        fetch(`/api/user-reports/${userId}/penalty-update`, {
+          method: "POST",
+          body: JSON.stringify(formData),
+        }),
+      then: (body) => {
+        const result = body.linkedId != null;
 
-    const updated = await Promise.resolve(
-      penaltyUpdate.fetchAPI(userId, formData)
-    );
-    const result = updated.linkedId != null;
+        setLoading(false);
+        showPenaltyMessage(result);
 
-    setLoading(false);
-    showPenaltyMessage(result);
+        if (result) {
+          setRefresh(true);
+        }
 
-    if (result) {
-      setRefresh(true);
-    }
-
-    return result;
-  };
+        return result;
+      },
+      final: () => {
+        setLoading(false);
+      },
+    })();
 
   const onPageChange = (page) => {
     setReqSearchData((prev) => ({
@@ -146,7 +157,7 @@ export default function UserReportDetailPage() {
             loading={loading}
             fetched={fetchedInit}
             detailData={reportedDetailData ?? initReportedDetailData}
-            penaltyForm={penaltyUpdate.requestData}
+            penaltyForm={viewData.penaltyReqData}
             onUpdate={fetchUpdate}
             onCancel={() => showPenaltyMessage(null)}
           />
@@ -158,8 +169,8 @@ export default function UserReportDetailPage() {
             title="신규접수"
             disabled={loading}
             totalItemCount={totalItemCount}
-            optionData={searchOptions.pageOptions}
-            defaultIndex={searchOptions.defaultPageOptionIndex}
+            optionData={viewData.pageOptions}
+            defaultIndex={viewData.defaultPageOptionIndex}
             onChange={onPageItemCountChange}
           />
         </div>
@@ -177,7 +188,7 @@ export default function UserReportDetailPage() {
                 currentPage={reqSearchData.pageNo}
                 totalPages={totalPageNo}
                 onPageChange={onPageChange}
-                maxVisible={searchOptions.visiblePageNo}
+                maxVisible={viewData.visiblePageNo}
               />
             ) : null}
           </div>

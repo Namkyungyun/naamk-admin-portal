@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const globalAxios = (token) => {
+ export default function globalAxios (token)  {
   const instance = axios.create({
     baseURL: "http://127.0.0.1:38080/api/v1",
     headers: {
@@ -19,14 +19,7 @@ const globalAxios = (token) => {
   instance.interceptors.response.use(
   (response) => response,
   (error) => {
-    // if (error.response?.status === 401 || error.response?.status === 403) {
-    //   removeAccessToken();
-    //   window.location.href = "/login";
-    // }
 
-    if (error.response?.status === 401) {
-      // window.location.href = "/login";
-    }
     return Promise.reject(error);
   }
 );
@@ -34,4 +27,3 @@ const globalAxios = (token) => {
   return instance;
 };
 
-export default globalAxios;

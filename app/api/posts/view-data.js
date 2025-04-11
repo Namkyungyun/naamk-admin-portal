@@ -1,4 +1,4 @@
-export function postReportListData() {
+export function postListData() {
     const visiblePageNo =  5;
     const defaultPageOptionIndex = 1;
   
@@ -15,22 +15,19 @@ export function postReportListData() {
 
     const tableData = (router) => [
       { name: "rowNum", label: "구분", widthKey: 'w-[10px]' },
-      { name: "id", label: "신고SEQ", hidden: true},
-      { name: "latestCreatedAt", label: "최근 신고 일시", widthKey: 'w-[30px]' },
+      { name: "createdAt", label: "등록 일시", widthKey: 'w-[30px]'},
+      { name: "userName", label: "작성자ID", widthKey: 'w-[20px]'},
+      { name: "channelName", label: "채널ID", widthKey: 'w-[20px]'},
+      { name: "type", label: "글타입", widthKey: 'w-[10px]'},
       {
-        name: "reportedPostId",
-        label: "게시글ID",
-        widthKey: 'w-[10px]',
-        url: "reportedPostId",
-        onButton: (url) => router.push(`/post-reports/${url}`),
+        name: "content",
+        label: "본문 내용",
+        url: "id",
+        widthKey: 'w-[40px]',
+        onButton: (url) => router.push(`/posts/${url}`),
       },
-      { name: "reportedUserName", label: "작성자ID", widthKey: 'w-[10px]'  },
-      { name: "reportedChannelName", label: "채널ID", widthKey: 'w-[10px]' },
-      { name: "reportCount", label: "신고 건수",widthKey: 'w-[10px]'  },
-      { name: "reportStatus", label: "신고 상태",widthKey: 'w-[20px]'  },
-      { name: "penaltyStatus", label: "처리 상태",widthKey: 'w-[10px]'  },
-      { name: "penaltyCreatedAt", label: "처리일시",widthKey: 'w-[30px]' },
-      { name: "penaltyCreatedBy", label: "처리자",widthKey: 'w-[20px]' },
+      { name: "id", label: "게시글ID", widthKey: 'w-[5px]'  },
+      { name: "penaltyStatus", label: "제재 상태", widthKey: 'w-[10px]' },
       ];
 
     return { 

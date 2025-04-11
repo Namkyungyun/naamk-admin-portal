@@ -6,7 +6,7 @@ import TopBar from "@/app/(portal)/component/TopBar";
 import { useUser } from "@/app/provider/UserProvider";
 import { useToastMessage } from "@/app/provider/MessageProvider";
 
-import { logout, getMe, getMenuTree } from "../api/auth";
+import { logout, getMe, getMenuTree, forceLogout } from "../api/auth";
 
 export default function PortalLayout({ children }) {
   const { userInfo, setUserInfo, menuInfo, setMenuInfo } = useUser();
@@ -44,6 +44,8 @@ export default function PortalLayout({ children }) {
           type: "error",
           content: "사용자 조회에 실패하였습니다. ",
         });
+
+        forceLogout();
       }
     }
   };

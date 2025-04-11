@@ -1,9 +1,8 @@
 "use client";
 import editorFile from "@/app/(portal)/(demo)/editor/editorFile";
 import { useState } from "react";
-import { CancelButton, SaveButton } from "../component/Buttons";
 import Editor from "@/app/(portal)/(demo)/editor/components/Editor";
-import exportStyles from "@/app/components/editor/export.css?inline";
+import { CancelButton, SaveButton } from "../../component/Buttons";
 
 export default function EditorPage() {
   const fileManagement = editorFile();

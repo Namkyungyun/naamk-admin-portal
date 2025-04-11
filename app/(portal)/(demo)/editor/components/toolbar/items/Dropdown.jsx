@@ -1,4 +1,4 @@
-import "@/app/components/editor/styles.scss";
+import "@/app/(portal)/(demo)/editor/components/styles.scss";
 import { useState, useRef, useEffect } from "react";
 
 export function Dropdown({
@@ -36,7 +36,9 @@ export function Dropdown({
         {/* Dropdown button */}
         <button
           type="button"
-          className={`${isSmall ? "rounded-lg" : "px-1 py-1 rounded-md"} dropdown-current-item`}
+          className={`${
+            isSmall ? "rounded-lg" : "px-1 py-1 rounded-md"
+          } dropdown-current-item`}
           onClick={(e) => {
             e.stopPropagation();
             toggleDropdown();

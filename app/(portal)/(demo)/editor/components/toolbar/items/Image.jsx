@@ -1,4 +1,4 @@
-import "@/app/components/editor/styles.scss";
+import "@/app/(portal)/(demo)/editor/components/styles.scss";
 import { useState, useRef } from "react";
 import { Dropdown } from "./Dropdown";
 import { ImageIcon, LinkIcon, FileUploadOutlined } from "../ToolbarIcons";

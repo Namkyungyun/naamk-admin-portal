@@ -57,7 +57,7 @@ export async function getMe() {
     return entity;
 
   } catch(e) {
-
+    
     throw e;
   }
 }

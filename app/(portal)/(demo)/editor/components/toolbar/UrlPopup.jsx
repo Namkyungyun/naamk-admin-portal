@@ -1,4 +1,4 @@
-import "@/app/components/editor/styles.scss";
+import "@/app/(portal)/(demo)/editor/components/styles.scss";
 import { useRef, useEffect } from "react";
 
 export default function UrlPopup({ onConfirm, onCancel }) {

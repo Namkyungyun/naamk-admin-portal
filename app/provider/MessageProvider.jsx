@@ -18,13 +18,13 @@ export default function ToastMessageProvider({ children }) {
 
     if (result == null) {
       type = "info";
-      content = "(TP)신고 처리취소";
+      content = "저장되지 않았습니다.";
     } else if (result) {
       type = "success";
-      content = "(TP)신고 처리완료";
+      content = "저장 되었습니다.";
     } else {
       type = "error";
-      content = "(TP)신고 처리실패";
+      content = "저장 실패되었습니다.";
     }
 
     showMessage({

@@ -29,7 +29,9 @@ export default function PostDetailGrid({
             <span className="underline">{detailData.userName}</span>
           </button>
         </MDColumn>
-        <MDColumn title="POPSCORE">{detailData.popScore}</MDColumn>
+        <MDColumn title="POPSCORE">
+          {detailData.popScore == 0 ? null : detailData.popScore}
+        </MDColumn>
       </RowFor2Column>
 
       <RowFor2Column>

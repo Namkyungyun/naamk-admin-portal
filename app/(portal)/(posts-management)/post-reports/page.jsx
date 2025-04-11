@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { useClientApiHandler } from "@/app/api/useApiHandler";
-import { postReportListData } from "@/app/api/posts/view-data";
+import { postReportListData } from "@/app/api/post-reports/view-data";
 
 import PageTitle from "../../component/PageTitle";
 import PostReportSearchBox from "./component/SearchBox";

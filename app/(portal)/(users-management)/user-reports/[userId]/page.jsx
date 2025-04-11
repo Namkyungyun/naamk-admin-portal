@@ -183,14 +183,14 @@ export default function UserReportDetailPage() {
             />
           </div>
           <div className="h-12 flex items-center justify-center text-black gap-2 mb-4">
-            {!loading && reportHistTableBody.length !== 0 ? (
+            {/* {!loading && reportHistTableBody.length !== 0 ? (
               <Pagination
                 currentPage={reqSearchData.pageNo}
                 totalPages={totalPageNo}
                 onPageChange={onPageChange}
                 maxVisible={viewData.visiblePageNo}
               />
-            ) : null}
+            ) : null} */}
           </div>
         </div>
       </div>

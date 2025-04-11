@@ -68,7 +68,7 @@ export default function UserReportDetailGrid({
     }, "500");
 
     if (onCancel) {
-      onCancel("success", "(TP)신고 처리취소");
+      onCancel("success", "저장되지 않았습니다.");
     }
   };
 

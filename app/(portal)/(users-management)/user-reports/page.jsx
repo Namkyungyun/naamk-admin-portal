@@ -135,14 +135,14 @@ export default function UserReportListPage() {
 
         {/* 페이지네이션 영역 */}
         <div className="h-12 flex items-center justify-center text-black gap-2">
-          {!loading && tableBody.length !== 0 ? (
+          {/* {!loading && tableBody.length !== 0 ? (
             <Pagination
               currentPage={reqSearchData.pageNo}
               totalPages={totalPageNo}
               onPageChange={onPageChange}
               maxVisible={viewData.visiblePageNo}
             />
-          ) : null}
+          ) : null} */}
         </div>
 
         {/* loading  */}

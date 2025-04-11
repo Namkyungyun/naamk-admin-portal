@@ -6,7 +6,7 @@ import TopBar from "@/app/(portal)/component/TopBar";
 import { useUser } from "@/app/provider/UserProvider";
 import { useToastMessage } from "@/app/provider/MessageProvider";
 
-import { logout, getMe, getMenuTree } from "../api/authAPI";
+import { logout, getMe, getMenuTree } from "../api/auth";
 
 export default function PortalLayout({ children }) {
   const { userInfo, setUserInfo, menuInfo, setMenuInfo } = useUser();

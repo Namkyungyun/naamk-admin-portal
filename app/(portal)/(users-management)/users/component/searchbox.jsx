@@ -102,8 +102,8 @@ export default function UserSearchBox({
               isReset={reset}
               useDefault={false}
               isRequired={false}
-              defaultPeriod={365 * 2}
-              maxPeriod={365 * 2}
+              defaultPeriod={365 * 3}
+              maxPeriod={365 * 3}
               onCallback={(value) => {
                 setDates({
                   startDate: value.startDate,

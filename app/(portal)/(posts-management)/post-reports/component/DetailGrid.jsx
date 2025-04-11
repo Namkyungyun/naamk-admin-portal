@@ -67,7 +67,7 @@ export default function PostReportDetailGrid({
     }, "500");
 
     if (onCancel) {
-      onCancel("success", "(TP)신고 처리취소");
+      onCancel("success", "저장되지 않았습니다.");
     }
   };
 
@@ -134,7 +134,7 @@ export default function PostReportDetailGrid({
             <MDColumn borderTop={true} title="처리일시">
               {detailData.penaltyCreatedAt}
             </MDColumn>
-            <MDColumn borderTop={true} title="처리자ID">
+            <MDColumn borderTop={true} title="처리자">
               {detailData.penaltyCreatedBy}
             </MDColumn>
             <MDColumn borderTop={true} title="처리 상태*">

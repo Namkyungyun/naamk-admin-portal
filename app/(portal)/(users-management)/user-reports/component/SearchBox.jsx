@@ -105,8 +105,8 @@ export default function UserReportSearchBox({
               isReset={reset}
               useDefault={false}
               isRequired={false}
-              defaultPeriod={365}
-              maxPeriod={365}
+              defaultPeriod={365 * 3}
+              maxPeriod={365 * 3}
               onCallback={(value) => {
                 setDates({
                   startDate: value.startDate,

@@ -34,9 +34,9 @@ const TopBar = ({ onLogout }) => {
           {/* user info */}
           <div className="mx-5">
             <div className="flex">
-              <p className="text-left">{user?.loginAt}</p>
-              <div className="mx-2"></div>
               <p className="text-left">{user?.name}</p>
+              <div className="mx-2"></div>
+              <p className="text-left">{user?.loginAt}</p>
             </div>
           </div>
           <div>

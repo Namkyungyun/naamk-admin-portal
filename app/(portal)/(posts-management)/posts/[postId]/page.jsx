@@ -220,14 +220,14 @@ export default function PostDetailPage() {
             />
           </div>
           <div className="h-12 flex items-center justify-center text-black gap-2 mb-4">
-            {!loading && penaltyHistTableBody.length !== 0 ? (
+            {/* {!loading && penaltyHistTableBody.length !== 0 ? (
               <Pagination
                 currentPage={reqSearchData.pageNo}
                 totalPages={totalPageNo}
                 onPageChange={onPageChange}
                 maxVisible={viewData.visiblePageNo}
               />
-            ) : null}
+            ) : null} */}
           </div>
         </div>
       </div>

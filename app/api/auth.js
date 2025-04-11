@@ -31,6 +31,11 @@ export async function logout() {
   redirect("/login");
 }
 
+export async function forceLogout() {
+  await clearAccessToken();
+  redirect("/login");
+}
+
 
 export async function getMe() {
  const accessToken = await getAccessToken();

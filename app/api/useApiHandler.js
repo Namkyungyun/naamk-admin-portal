@@ -1,25 +1,25 @@
 "use client";
 
 import { useToastMessage } from "@/app/provider/MessageProvider";
-import { useRouter } from "next/navigation";
+import {forceLogout} from '@/app/api/auth';
 
 export function useClientApiHandler() {
   const { showMessage } = useToastMessage();
-  const router = useRouter();
 
   const withClientApiHandler = ({handler, init, then, beforeCatch, final, toLogin}) => {
-    const unAuthorizedException= (message) => {
+    const unAuthorizedException= () => {
       showMessage({
         type: "error",
-        content: message + " : 인증되지 않았습니다.",
+        content: "UnAuthorized",
       });
-      router.replace("/login");
+
+      forceLogout();
     };
 
-    const accessDeniedException= (message) => {
+    const accessDeniedException= () => {
       showMessage({
         type: "error",
-        content: message + " : 접근 권한이 없습니다.",
+        content: "접근 권한이 없습니다.",
       });
     };
 
@@ -41,11 +41,11 @@ export function useClientApiHandler() {
           const errorData = await res.json();
 
           if (status === 401) { // 인증안됨.
-            unAuthorizedException(errorData.message);
+            unAuthorizedException();
             return;
 
           } else if (status === 403) {  // 권한없음
-            accessDeniedException(errorData.message);
+            accessDeniedException();
             return;
 
           } else if (status === 500) {
